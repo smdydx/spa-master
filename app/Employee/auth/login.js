@@ -192,13 +192,13 @@ const styles = StyleSheet.create({
   // Top Section
   topSection: {
     paddingHorizontal: Math.min(width * 0.06, 24),
-    paddingTop: height * 0.015,
-    paddingBottom: height * 0.02,
+    paddingTop: height * 0.005,
+    paddingBottom: height * 0.015,
     alignItems: 'center',
     zIndex: 1,
   },
   logoContainer: {
-    marginBottom: height * 0.012,
+    marginBottom: height * 0.008,
   },
   logoGradient: {
     width: Math.min(width * 0.15, 60),
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     fontWeight: "900",
     color: "#2C2C2C",
     letterSpacing: 2,
-    marginBottom: height * 0.008,
+    marginBottom: height * 0.005,
     textShadowColor: "rgba(200, 182, 166, 0.3)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
@@ -232,7 +232,7 @@ const styles = StyleSheet.create({
     fontSize: Math.min(width * 0.058, 22),
     fontWeight: "900",
     color: "#1A1A1A",
-    marginBottom: height * 0.006,
+    marginBottom: height * 0.004,
     textAlign: "center",
     textShadowColor: "rgba(200, 182, 166, 0.2)",
     textShadowOffset: { width: 0, height: 1 },
