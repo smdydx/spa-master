@@ -220,6 +220,8 @@ export default function WelcomeScreen() {
   const slideAnim = useRef(new Animated.Value(50)).current;
   const buttonScale = useRef(new Animated.Value(0.9)).current;
 
+  const floatAnim = useRef(new Animated.Value(0)).current;
+
   useEffect(() => {
     Animated.parallel([
       Animated.timing(fadeAnim, {
@@ -241,20 +243,36 @@ export default function WelcomeScreen() {
         useNativeDriver: true,
       }),
     ]).start();
+
+    // Floating animation for text
+    Animated.loop(
+      Animated.sequence([
+        Animated.timing(floatAnim, {
+          toValue: -10,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+        Animated.timing(floatAnim, {
+          toValue: 10,
+          duration: 2000,
+          useNativeDriver: true,
+        }),
+      ])
+    ).start();
   }, []);
 
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="transparent" barStyle="light-content" translucent />
 
-      {/* Background with Anime Girl Image */}
+      {/* Background with Animated Anime Girl Image */}
       <ImageBackground
-        source={{ uri: 'https://images.unsplash.com/photo-1578632292335-df3abbb0d586?q=80&w=1000' }}
+        source={{ uri: 'https://i.pinimg.com/originals/3e/1d/73/3e1d73b0e3c5f8c8f9d0c0a8b6e5d1a2.jpg' }}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
         <LinearGradient
-          colors={["rgba(26, 26, 46, 0.8)", "rgba(26, 26, 46, 0.75)", "rgba(26, 26, 46, 0.85)"]}
+          colors={["rgba(26, 26, 46, 0.75)", "rgba(26, 26, 46, 0.7)", "rgba(26, 26, 46, 0.8)"]}
           style={StyleSheet.absoluteFillObject}
         />
         <SakuraPattern />
@@ -273,15 +291,47 @@ export default function WelcomeScreen() {
             ]}
           >
             <AppLogo />
-            <Text style={styles.brandName}>OMBARO</Text>
-            <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
+            <Animated.Text 
+              style={[
+                styles.brandName,
+                {
+                  transform: [{ translateY: floatAnim }],
+                },
+              ]}
+            >
+              OMBARO
+            </Animated.Text>
+            <Animated.Text 
+              style={[
+                styles.tagline,
+                {
+                  transform: [{ translateY: floatAnim }],
+                },
+              ]}
+            >
+              Beauty & Wellness Hub
+            </Animated.Text>
 
-            <Text style={styles.heading}>
+            <Animated.Text 
+              style={[
+                styles.heading,
+                {
+                  transform: [{ translateY: floatAnim }],
+                },
+              ]}
+            >
               Welcome to Your{'\n'}Beauty Journey
-            </Text>
-            <Text style={styles.subheading}>
+            </Animated.Text>
+            <Animated.Text 
+              style={[
+                styles.subheading,
+                {
+                  transform: [{ translateY: floatAnim }],
+                },
+              ]}
+            >
               Discover and book premium spa, salon, and wellness services near you.
-            </Text>
+            </Animated.Text>
           </Animated.View>
         </View>
 
@@ -343,7 +393,9 @@ export default function WelcomeScreen() {
             <PillLink label="Employee" nav="/Employee/auth/login" router={router} index={0} />
             <PillLink label="Vendor" nav="/Vendor/auth/login" router={router} index={1} />
             <PillLink label="Therapist" nav="/Therapist/auth/login" router={router} index={2} />
-            <PillLink label="Admin" nav="/Admin/auth/login" router={router} index={3} />
+            <PillLink label="Beautician" nav="/Therapist/auth/login" router={router} index={3} />
+            <PillLink label="Admin" nav="/Admin/auth/login" router={router} index={4} />
+            <PillLink label="Departments" nav="/Department/auth/login" router={router} index={5} />
           </View>
         </Animated.View>
       </View>
