@@ -27,58 +27,96 @@ const COLORS = {
   overlay: "rgba(44, 44, 44, 0.45)",
 };
 
-const AtmosphericLight = () => {
-  const opacity1 = useRef(new Animated.Value(0.15)).current;
-  const opacity2 = useRef(new Animated.Value(0.1)).current;
-  const scale = useRef(new Animated.Value(1)).current;
+const CherryBlossomPetal = ({ delay, startX, endX }) => {
+  const translateY = useRef(new Animated.Value(-50)).current;
+  const translateX = useRef(new Animated.Value(startX)).current;
+  const rotate = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.loop(
+    const animation = Animated.loop(
       Animated.parallel([
         Animated.sequence([
-          Animated.timing(opacity1, {
-            toValue: 0.25,
-            duration: 12000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacity1, {
-            toValue: 0.15,
-            duration: 12000,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.sequence([
-          Animated.timing(opacity2, {
-            toValue: 0.2,
-            duration: 15000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacity2, {
-            toValue: 0.1,
-            duration: 15000,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.sequence([
-          Animated.timing(scale, {
-            toValue: 1.1,
-            duration: 13000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(scale, {
+          Animated.delay(delay),
+          Animated.timing(opacity, {
             toValue: 1,
-            duration: 13000,
+            duration: 1000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(translateY, {
+            toValue: height + 50,
+            duration: 8000 + Math.random() * 4000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(opacity, {
+            toValue: 0,
+            duration: 1000,
             useNativeDriver: true,
           }),
         ]),
+        Animated.sequence([
+          Animated.delay(delay),
+          Animated.timing(translateX, {
+            toValue: endX,
+            duration: 8000 + Math.random() * 4000,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.loop(
+          Animated.timing(rotate, {
+            toValue: 1,
+            duration: 3000,
+            useNativeDriver: true,
+          })
+        ),
       ])
-    ).start();
+    );
+    animation.start();
+    return () => animation.stop();
   }, []);
+
+  const rotateInterpolate = rotate.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.petal,
+        {
+          opacity,
+          transform: [
+            { translateX },
+            { translateY },
+            { rotate: rotateInterpolate },
+          ],
+        },
+      ]}
+    >
+      <Text style={styles.petalText}>🌸</Text>
+    </Animated.View>
+  );
+};
+
+const AtmosphericLight = () => {
+  const petals = Array.from({ length: 15 }, (_, i) => ({
+    key: i,
+    delay: i * 800,
+    startX: Math.random() * width,
+    endX: Math.random() * width,
+  }));
 
   return (
     <View style={styles.atmosphericContainer}>
-      <Animated.View style={[styles.lightBloom1, { opacity: opacity1, transform: [{ scale }] }]} />
-      <Animated.View style={[styles.lightBloom2, { opacity: opacity2 }]} />
+      {petals.map((petal) => (
+        <CherryBlossomPetal
+          key={petal.key}
+          delay={petal.delay}
+          startX={petal.startX}
+          endX={petal.endX}
+        />
+      ))}
     </View>
   );
 };
@@ -413,24 +451,15 @@ const styles = StyleSheet.create({
   },
   atmosphericContainer: {
     ...StyleSheet.absoluteFillObject,
+    pointerEvents: 'none',
   },
-  lightBloom1: {
-    position: "absolute",
-    width: width * 0.8,
-    height: width * 0.8,
-    borderRadius: width * 0.4,
-    backgroundColor: "#C8B6A6",
-    top: -width * 0.2,
-    right: -width * 0.2,
+  petal: {
+    position: 'absolute',
+    top: -50,
   },
-  lightBloom2: {
-    position: "absolute",
-    width: width * 0.6,
-    height: width * 0.6,
-    borderRadius: width * 0.3,
-    backgroundColor: "#D4A59A",
-    bottom: -width * 0.1,
-    left: -width * 0.1,
+  petalText: {
+    fontSize: 20,
+    opacity: 0.8,
   },
   splitContainer: {
     flex: 1,
@@ -438,19 +467,31 @@ const styles = StyleSheet.create({
   },
   topSection: {
     flex: 2,
-    backgroundColor: 'rgba(200, 182, 166, 0.15)',
+    backgroundColor: 'rgba(255, 245, 235, 0.95)',
     borderBottomRightRadius: 32,
+    borderBottomLeftRadius: 32,
     justifyContent: 'center',
     paddingHorizontal: width * 0.05,
     paddingVertical: height * 0.03,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 8,
+    elevation: 5,
   },
   bottomSection: {
     flex: 3,
-    backgroundColor: 'rgba(44, 44, 44, 0.25)',
+    backgroundColor: 'rgba(30, 30, 30, 0.92)',
     borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
     paddingHorizontal: width * 0.05,
     paddingVertical: height * 0.03,
     justifyContent: 'space-between',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: -4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 8,
+    elevation: 5,
   },
   topContent: {
     alignItems: "center",
@@ -477,16 +518,16 @@ const styles = StyleSheet.create({
   brandName: {
     fontSize: Math.min(width * 0.055, 22),
     fontWeight: "900",
-    color: "#FFF",
+    color: "#2C2C2C",
     letterSpacing: 2.5,
     marginBottom: height * 0.005,
-    textShadowColor: "rgba(200, 182, 166, 0.5)",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 8,
+    textShadowColor: "rgba(200, 182, 166, 0.3)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 4,
   },
   tagline: {
     fontSize: Math.min(width * 0.025, 10),
-    color: "#C8B6A6",
+    color: "#8B6F47",
     fontWeight: "700",
     marginBottom: height * 0.015,
     letterSpacing: 0.5,
@@ -495,17 +536,17 @@ const styles = StyleSheet.create({
   heading: {
     fontSize: Math.min(width * 0.045, 18),
     fontWeight: "900",
-    color: "#FFF",
+    color: "#1A1A1A",
     lineHeight: Math.min(width * 0.055, 22),
     marginBottom: height * 0.008,
     textAlign: "center",
-    textShadowColor: "rgba(0, 0, 0, 0.3)",
-    textShadowOffset: { width: 0, height: 2 },
-    textShadowRadius: 6,
+    textShadowColor: "rgba(200, 182, 166, 0.2)",
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
   },
   subheading: {
     fontSize: Math.min(width * 0.025, 10),
-    color: "rgba(255, 255, 255, 0.85)",
+    color: "rgba(44, 44, 44, 0.75)",
     lineHeight: Math.min(width * 0.035, 14),
     textAlign: "center",
     paddingHorizontal: width * 0.02,
