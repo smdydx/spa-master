@@ -456,9 +456,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#1A1A2E",
+    width: '100%',
+    maxWidth: '100%',
+    overflow: 'hidden',
   },
   backgroundContainer: {
     ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    overflow: 'hidden',
   },
   decorativeCircles: {
     position: 'absolute',
@@ -467,6 +472,7 @@ const styles = StyleSheet.create({
     right: 0,
     bottom: 0,
     pointerEvents: 'none',
+    overflow: 'hidden',
   },
   circle: {
     position: 'absolute',
@@ -477,20 +483,20 @@ const styles = StyleSheet.create({
     width: width * 0.6,
     height: width * 0.6,
     top: height * 0.15,
-    right: -width * 0.2,
+    right: -width * 0.25,
   },
   circle2: {
     width: width * 0.5,
     height: width * 0.5,
     top: height * 0.1,
-    left: -width * 0.15,
+    left: -width * 0.2,
     backgroundColor: 'rgba(212, 165, 154, 0.12)',
   },
   circle3: {
     width: width * 0.4,
     height: width * 0.4,
     bottom: height * 0.35,
-    left: width * 0.05,
+    left: -width * 0.05,
     backgroundColor: 'rgba(243, 237, 230, 0.1)',
   },
   backgroundImage: {
@@ -513,6 +519,8 @@ const styles = StyleSheet.create({
   splitContainer: {
     flex: 1,
     flexDirection: 'column',
+    width: '100%',
+    maxWidth: '100%',
   },
   topSection: {
     flex: 2,
@@ -522,6 +530,8 @@ const styles = StyleSheet.create({
     paddingBottom: height * 0.05,
     overflow: 'hidden',
     zIndex: 1,
+    width: '100%',
+    maxWidth: '100%',
   },
   topSectionBg: {
     ...StyleSheet.absoluteFillObject,
@@ -530,6 +540,7 @@ const styles = StyleSheet.create({
   },
   topSectionOverlay: {
     ...StyleSheet.absoluteFillObject,
+    width: '100%',
   },
   bottomSection: {
     flex: 3,
@@ -542,9 +553,13 @@ const styles = StyleSheet.create({
     borderTopRightRadius: 40,
     marginTop: -30,
     zIndex: 2,
+    width: '100%',
+    maxWidth: '100%',
   },
   topContent: {
     alignItems: "center",
+    width: '100%',
+    maxWidth: '100%',
   },
   logoContainer: {
     marginBottom: height * 0.012,
@@ -606,6 +621,8 @@ const styles = StyleSheet.create({
     gap: width * 0.025,
     justifyContent: 'space-between',
     paddingVertical: height * 0.01,
+    width: '100%',
+    maxWidth: '100%',
   },
   featureCard: {
     flex: 1,
@@ -617,6 +634,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(255, 255, 255, 0.25)',
     minHeight: height * 0.13,
     justifyContent: 'center',
+    maxWidth: width * 0.28,
   },
   featureIconBox: {
     width: 44,
@@ -643,6 +661,8 @@ const styles = StyleSheet.create({
   ctaSection: {
     gap: height * 0.01,
     marginVertical: height * 0.008,
+    width: '100%',
+    maxWidth: '100%',
   },
   primaryBtn: {
     paddingVertical: height * 0.014,
@@ -695,6 +715,8 @@ const styles = StyleSheet.create({
   quickAccessSection: {
     alignItems: "center",
     paddingBottom: height * 0.01,
+    width: '100%',
+    maxWidth: '100%',
   },
   quickAccessLabel: {
     fontSize: Math.min(width * 0.026, 10),
@@ -709,6 +731,9 @@ const styles = StyleSheet.create({
     gap: width * 0.02,
     flexWrap: "wrap",
     justifyContent: "center",
+    width: '100%',
+    maxWidth: '100%',
+    paddingHorizontal: width * 0.02,
   },
   pill: {
     paddingHorizontal: width * 0.035,
