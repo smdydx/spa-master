@@ -507,16 +507,17 @@ const styles = StyleSheet.create({
   },
   topSection: {
     flex: 2,
-    backgroundColor: 'rgba(255, 245, 235, 0.95)',
+    backgroundColor: 'rgb(255, 245, 235)',
     justifyContent: 'center',
     paddingHorizontal: width * 0.05,
     paddingTop: height * 0.03,
     paddingBottom: height * 0.05,
     overflow: 'hidden',
+    zIndex: 1,
   },
   bottomSection: {
     flex: 3,
-    backgroundColor: 'rgba(30, 30, 30, 0.92)',
+    backgroundColor: 'rgb(30, 30, 30)',
     paddingHorizontal: width * 0.05,
     paddingTop: height * 0.04,
     paddingBottom: height * 0.03,
@@ -524,6 +525,7 @@ const styles = StyleSheet.create({
     borderTopLeftRadius: 40,
     borderTopRightRadius: 40,
     marginTop: -30,
+    zIndex: 2,
   },
   topContent: {
     alignItems: "center",
