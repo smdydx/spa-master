@@ -26,18 +26,17 @@ const COLORS = {
   overlay: "rgba(26, 26, 46, 0.75)",
 };
 
-const FloatingLeaf = ({ delay = 0, duration = 4000, style }) => {
+const FloatingSparkle = ({ delay = 0, duration = 3000, style, icon = "✨" }) => {
   const translateY = useRef(new Animated.Value(0)).current;
-  const translateX = useRef(new Animated.Value(0)).current;
-  const rotate = useRef(new Animated.Value(0)).current;
-  const opacity = useRef(new Animated.Value(0.4)).current;
+  const scale = useRef(new Animated.Value(0.5)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.loop(
       Animated.parallel([
         Animated.sequence([
           Animated.timing(translateY, {
-            toValue: 60,
+            toValue: -40,
             duration: duration,
             delay,
             useNativeDriver: true,
@@ -49,33 +48,27 @@ const FloatingLeaf = ({ delay = 0, duration = 4000, style }) => {
           }),
         ]),
         Animated.sequence([
-          Animated.timing(translateX, {
-            toValue: 30,
+          Animated.timing(scale, {
+            toValue: 1,
             duration: duration / 2,
             delay,
             useNativeDriver: true,
           }),
-          Animated.timing(translateX, {
-            toValue: -30,
+          Animated.timing(scale, {
+            toValue: 0.5,
             duration: duration / 2,
             useNativeDriver: true,
           }),
         ]),
-        Animated.loop(
-          Animated.timing(rotate, {
-            toValue: 1,
-            duration: duration * 2,
-            useNativeDriver: true,
-          })
-        ),
         Animated.sequence([
           Animated.timing(opacity, {
-            toValue: 0.8,
+            toValue: 0.9,
             duration: duration / 2,
+            delay,
             useNativeDriver: true,
           }),
           Animated.timing(opacity, {
-            toValue: 0.4,
+            toValue: 0.2,
             duration: duration / 2,
             useNativeDriver: true,
           }),
@@ -84,38 +77,33 @@ const FloatingLeaf = ({ delay = 0, duration = 4000, style }) => {
     ).start();
   }, []);
 
-  const rotateInterpolate = rotate.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
-
   return (
     <Animated.Text
       style={[
-        styles.floatingLeaf,
+        styles.floatingSparkle,
         style,
         {
           opacity,
           transform: [
             { translateY },
-            { translateX },
-            { rotate: rotateInterpolate },
+            { scale },
           ],
         },
       ]}
     >
-      🌸
+      {icon}
     </Animated.Text>
   );
 };
 
-const SakuraPattern = () => (
-  <View style={styles.sakuraContainer}>
-    <FloatingLeaf style={{ top: height * 0.08, left: 30 }} delay={0} />
-    <FloatingLeaf style={{ top: height * 0.2, right: 50 }} delay={500} duration={5000} />
-    <FloatingLeaf style={{ top: height * 0.35, left: 70 }} delay={1000} duration={4500} />
-    <FloatingLeaf style={{ top: height * 0.5, right: 90 }} delay={1500} />
-    <FloatingLeaf style={{ top: height * 0.7, left: 110 }} delay={2000} duration={5500} />
+const BeautyPattern = () => (
+  <View style={styles.beautyContainer}>
+    <FloatingSparkle style={{ top: height * 0.12, left: 40 }} delay={0} icon="✨" duration={3500} />
+    <FloatingSparkle style={{ top: height * 0.25, right: 60 }} delay={600} icon="💎" duration={4000} />
+    <FloatingSparkle style={{ top: height * 0.4, left: 80 }} delay={1200} icon="⭐" duration={3000} />
+    <FloatingSparkle style={{ top: height * 0.55, right: 100 }} delay={1800} icon="✨" duration={3800} />
+    <FloatingSparkle style={{ top: height * 0.7, left: 120 }} delay={2400} icon="💫" duration={3200} />
+    <FloatingSparkle style={{ top: height * 0.85, right: 140 }} delay={3000} icon="💎" duration={3600} />
   </View>
 );
 
@@ -272,7 +260,7 @@ export default function WelcomeScreen() {
           colors={["rgba(26, 26, 46, 0.60)", "rgba(26, 26, 46, 0.55)", "rgba(26, 26, 46, 0.65)"]}
           style={StyleSheet.absoluteFillObject}
         />
-        <SakuraPattern />
+        <BeautyPattern />
       </ImageBackground>
 
       <View style={styles.content}>
@@ -441,12 +429,12 @@ const styles = StyleSheet.create({
     width: '100%',
     height: '100%',
   },
-  sakuraContainer: {
+  beautyContainer: {
     ...StyleSheet.absoluteFillObject,
   },
-  floatingLeaf: {
+  floatingSparkle: {
     position: "absolute",
-    fontSize: 24,
+    fontSize: 20,
   },
   content: {
     flex: 1,
