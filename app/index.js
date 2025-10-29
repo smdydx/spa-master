@@ -17,59 +17,56 @@ import {
 const { width, height } = Dimensions.get('window');
 
 const COLORS = {
-  primary: "#E91E63",
-  secondary: "#FF4081",
-  accent: "#FFC107",
-  dark: "#1A1A2E",
-  light: "#F8F9FA",
+  primary: "#C8B6A6",
+  secondary: "#F3EDE6",
+  accent: "#D4A59A",
+  dark: "#2C2C2C",
+  light: "#F8F6F3",
   white: "#FFFFFF",
-  overlay: "rgba(26, 26, 46, 0.75)",
+  overlay: "rgba(44, 44, 44, 0.45)",
 };
 
-const FloatingSparkle = ({ delay = 0, duration = 3000, style, icon = "✨" }) => {
-  const translateY = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(0.5)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
+const AtmosphericLight = () => {
+  const opacity1 = useRef(new Animated.Value(0.15)).current;
+  const opacity2 = useRef(new Animated.Value(0.1)).current;
+  const scale = useRef(new Animated.Value(1)).current;
 
   useEffect(() => {
     Animated.loop(
       Animated.parallel([
         Animated.sequence([
-          Animated.timing(translateY, {
-            toValue: -40,
-            duration: duration,
-            delay,
+          Animated.timing(opacity1, {
+            toValue: 0.25,
+            duration: 12000,
             useNativeDriver: true,
           }),
-          Animated.timing(translateY, {
-            toValue: 0,
-            duration: duration,
+          Animated.timing(opacity1, {
+            toValue: 0.15,
+            duration: 12000,
             useNativeDriver: true,
           }),
         ]),
         Animated.sequence([
+          Animated.timing(opacity2, {
+            toValue: 0.2,
+            duration: 15000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(opacity2, {
+            toValue: 0.1,
+            duration: 15000,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.sequence([
+          Animated.timing(scale, {
+            toValue: 1.1,
+            duration: 13000,
+            useNativeDriver: true,
+          }),
           Animated.timing(scale, {
             toValue: 1,
-            duration: duration / 2,
-            delay,
-            useNativeDriver: true,
-          }),
-          Animated.timing(scale, {
-            toValue: 0.5,
-            duration: duration / 2,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.sequence([
-          Animated.timing(opacity, {
-            toValue: 0.9,
-            duration: duration / 2,
-            delay,
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacity, {
-            toValue: 0.2,
-            duration: duration / 2,
+            duration: 13000,
             useNativeDriver: true,
           }),
         ]),
@@ -78,34 +75,12 @@ const FloatingSparkle = ({ delay = 0, duration = 3000, style, icon = "✨" }) =>
   }, []);
 
   return (
-    <Animated.Text
-      style={[
-        styles.floatingSparkle,
-        style,
-        {
-          opacity,
-          transform: [
-            { translateY },
-            { scale },
-          ],
-        },
-      ]}
-    >
-      {icon}
-    </Animated.Text>
+    <View style={styles.atmosphericContainer}>
+      <Animated.View style={[styles.lightBloom1, { opacity: opacity1, transform: [{ scale }] }]} />
+      <Animated.View style={[styles.lightBloom2, { opacity: opacity2 }]} />
+    </View>
   );
 };
-
-const BeautyPattern = () => (
-  <View style={styles.beautyContainer}>
-    <FloatingSparkle style={{ top: height * 0.12, left: 40 }} delay={0} icon="✨" duration={3500} />
-    <FloatingSparkle style={{ top: height * 0.25, right: 60 }} delay={600} icon="💎" duration={4000} />
-    <FloatingSparkle style={{ top: height * 0.4, left: 80 }} delay={1200} icon="⭐" duration={3000} />
-    <FloatingSparkle style={{ top: height * 0.55, right: 100 }} delay={1800} icon="✨" duration={3800} />
-    <FloatingSparkle style={{ top: height * 0.7, left: 120 }} delay={2400} icon="💫" duration={3200} />
-    <FloatingSparkle style={{ top: height * 0.85, right: 140 }} delay={3000} icon="💎" duration={3600} />
-  </View>
-);
 
 const AppLogo = () => {
   const scaleAnim = useRef(new Animated.Value(0.5)).current;
@@ -144,12 +119,12 @@ const AppLogo = () => {
         styles.logoContainer,
         {
           opacity: opacityAnim,
-          transform: [{ scale: scaleAnim }, { rotate }],
+          transform: [{ scale: scaleAnim }],
         },
       ]}
     >
       <LinearGradient
-        colors={["#E91E63", "#FF4081", "#FFC107"]}
+        colors={["#C8B6A6", "#D4A59A", "#F3EDE6"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.logoGradient}
@@ -257,10 +232,10 @@ export default function WelcomeScreen() {
         resizeMode="cover"
       >
         <LinearGradient
-          colors={["rgba(26, 26, 46, 0.60)", "rgba(26, 26, 46, 0.55)", "rgba(26, 26, 46, 0.65)"]}
+          colors={["rgba(44, 44, 44, 0.50)", "rgba(44, 44, 44, 0.40)", "rgba(44, 44, 44, 0.55)"]}
           style={StyleSheet.absoluteFillObject}
         />
-        <BeautyPattern />
+        <AtmosphericLight />
       </ImageBackground>
 
       <View style={styles.content}>
@@ -367,7 +342,7 @@ export default function WelcomeScreen() {
             onPress={() => router.push('/auth/phone-register')}
           >
             <LinearGradient
-              colors={["#E91E63", "#FF4081", "#FFC107"]}
+              colors={["#C8B6A6", "#D4A59A"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 0 }}
               style={styles.primaryBtn}
@@ -385,12 +360,12 @@ export default function WelcomeScreen() {
             activeOpacity={0.9}
           >
             <LinearGradient
-              colors={["rgba(255, 193, 7, 0.2)", "rgba(255, 193, 7, 0.1)"]}
+              colors={["rgba(200, 182, 166, 0.2)", "rgba(212, 165, 154, 0.15)"]}
               start={{ x: 0, y: 0 }}
               end={{ x: 1, y: 1 }}
               style={styles.vendorBtn}
             >
-              <Building2 size={16} color="#FFC107" />
+              <Building2 size={16} color="#C8B6A6" />
               <Text style={styles.vendorBtnText}>Become a Partner</Text>
             </LinearGradient>
           </TouchableOpacity>
