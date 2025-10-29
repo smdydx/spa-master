@@ -121,6 +121,114 @@ const AtmosphericLight = () => {
   );
 };
 
+const JapaneseLeaf = ({ delay, startX, endX, emoji }) => {
+  const translateY = useRef(new Animated.Value(-30)).current;
+  const translateX = useRef(new Animated.Value(startX)).current;
+  const rotate = useRef(new Animated.Value(0)).current;
+  const opacity = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(0.8)).current;
+
+  useEffect(() => {
+    const animation = Animated.loop(
+      Animated.parallel([
+        Animated.sequence([
+          Animated.delay(delay),
+          Animated.parallel([
+            Animated.timing(opacity, {
+              toValue: 0.9,
+              duration: 1500,
+              useNativeDriver: true,
+            }),
+            Animated.spring(scale, {
+              toValue: 1,
+              friction: 3,
+              useNativeDriver: true,
+            }),
+          ]),
+          Animated.timing(translateY, {
+            toValue: height * 0.65,
+            duration: 12000 + Math.random() * 6000,
+            useNativeDriver: true,
+          }),
+          Animated.timing(opacity, {
+            toValue: 0,
+            duration: 1500,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.sequence([
+          Animated.delay(delay),
+          Animated.timing(translateX, {
+            toValue: endX,
+            duration: 12000 + Math.random() * 6000,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.loop(
+          Animated.timing(rotate, {
+            toValue: 1,
+            duration: 4000 + Math.random() * 2000,
+            useNativeDriver: true,
+          })
+        ),
+      ])
+    );
+    animation.start();
+    return () => animation.stop();
+  }, []);
+
+  const rotateInterpolate = rotate.interpolate({
+    inputRange: [0, 1],
+    outputRange: ['0deg', '360deg'],
+  });
+
+  return (
+    <Animated.View
+      style={[
+        styles.leaf,
+        {
+          opacity,
+          transform: [
+            { translateX },
+            { translateY },
+            { rotate: rotateInterpolate },
+            { scale },
+          ],
+        },
+      ]}
+    >
+      <Text style={styles.leafText}>{emoji}</Text>
+    </Animated.View>
+  );
+};
+
+const BottomSectionAnimation = () => {
+  const elements = Array.from({ length: 20 }, (_, i) => {
+    const emojis = ['🌸', '🍃', '🌺', '🍂', '🌼'];
+    return {
+      key: `leaf-${i}`,
+      delay: i * 1200,
+      startX: Math.random() * width,
+      endX: (Math.random() - 0.5) * width + width / 2,
+      emoji: emojis[Math.floor(Math.random() * emojis.length)],
+    };
+  });
+
+  return (
+    <View style={styles.bottomAnimationContainer}>
+      {elements.map((element) => (
+        <JapaneseLeaf
+          key={element.key}
+          delay={element.delay}
+          startX={element.startX}
+          endX={element.endX}
+          emoji={element.emoji}
+        />
+      ))}
+    </View>
+  );
+};
+
 const AppLogo = () => {
   const scaleAnim = useRef(new Animated.Value(0.5)).current;
   const opacityAnim = useRef(new Animated.Value(0)).current;
@@ -351,6 +459,12 @@ export default function WelcomeScreen() {
 
         {/* Bottom Section (3 parts) */}
         <View style={styles.bottomSection}>
+          <LinearGradient
+            colors={['#1e1e1e', '#2a2520', '#1a1a1a']}
+            style={styles.bottomSectionGradient}
+          />
+          <BottomSectionAnimation />
+          
           {/* Features Section */}
           <Animated.View
             style={[
@@ -516,6 +630,22 @@ const styles = StyleSheet.create({
     fontSize: 20,
     opacity: 0.8,
   },
+  leaf: {
+    position: 'absolute',
+    top: -30,
+  },
+  leafText: {
+    fontSize: 18,
+    opacity: 0.85,
+  },
+  bottomAnimationContainer: {
+    ...StyleSheet.absoluteFillObject,
+    pointerEvents: 'none',
+    zIndex: 0,
+  },
+  bottomSectionGradient: {
+    ...StyleSheet.absoluteFillObject,
+  },
   splitContainer: {
     flex: 1,
     flexDirection: 'column',
@@ -544,7 +674,6 @@ const styles = StyleSheet.create({
   },
   bottomSection: {
     flex: 3,
-    backgroundColor: 'rgb(30, 30, 30)',
     paddingHorizontal: width * 0.05,
     paddingTop: height * 0.04,
     paddingBottom: height * 0.03,
@@ -555,6 +684,7 @@ const styles = StyleSheet.create({
     zIndex: 2,
     width: '100%',
     maxWidth: '100%',
+    overflow: 'hidden',
   },
   topContent: {
     alignItems: "center",
@@ -623,6 +753,7 @@ const styles = StyleSheet.create({
     paddingVertical: height * 0.01,
     width: '100%',
     maxWidth: '100%',
+    zIndex: 1,
   },
   featureCard: {
     flex: 1,
@@ -663,6 +794,7 @@ const styles = StyleSheet.create({
     marginVertical: height * 0.008,
     width: '100%',
     maxWidth: '100%',
+    zIndex: 1,
   },
   primaryBtn: {
     paddingVertical: height * 0.014,
@@ -717,6 +849,7 @@ const styles = StyleSheet.create({
     paddingBottom: height * 0.01,
     width: '100%',
     maxWidth: '100%',
+    zIndex: 1,
   },
   quickAccessLabel: {
     fontSize: Math.min(width * 0.026, 10),
