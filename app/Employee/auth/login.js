@@ -144,6 +144,7 @@ export default function EmployeeLogin() {
               </View>
             </View>
           </View>
+        </View>
       </SafeAreaView>
   );
 }
