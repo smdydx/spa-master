@@ -568,9 +568,10 @@ const styles = StyleSheet.create({
   },
   primaryBtnText: {
     color: "#FFF",
-    fontSize: Math.min(width * 0.038, 15),
+    fontSize: Math.min(width * 0.04, 16),
     fontWeight: "900",
-    letterSpacing: 1,
+    letterSpacing: 1.5,
+    textTransform: 'uppercase',
   },
   secondaryBtn: {
     paddingVertical: height * 0.014,
@@ -582,8 +583,9 @@ const styles = StyleSheet.create({
   },
   secondaryBtnText: {
     color: "#FFF",
-    fontSize: Math.min(width * 0.036, 14),
+    fontSize: Math.min(width * 0.038, 15),
     fontWeight: "800",
+    letterSpacing: 0.5,
   },
   vendorBtn: {
     paddingVertical: height * 0.012,
@@ -597,9 +599,10 @@ const styles = StyleSheet.create({
     borderColor: "rgba(255, 193, 7, 0.35)",
   },
   vendorBtnText: {
-    fontSize: Math.min(width * 0.034, 13),
+    fontSize: Math.min(width * 0.036, 14),
     fontWeight: "800",
     color: "#FFC107",
+    letterSpacing: 0.5,
   },
   quickAccessSection: {
     alignItems: "center",
