@@ -286,6 +286,15 @@ export default function WelcomeScreen() {
       <View style={styles.splitContainer}>
         {/* Top Section (2 parts) */}
         <View style={styles.topSection}>
+          <Image
+            source={require('../assets/images/japanese-girl-bg.jpg')}
+            style={styles.topSectionBg}
+            resizeMode="cover"
+          />
+          <LinearGradient
+            colors={['rgba(243, 237, 230, 0.92)', 'rgba(243, 237, 230, 0.88)', 'rgba(248, 246, 243, 0.90)']}
+            style={styles.topSectionOverlay}
+          />
           <Animated.View
             style={[
               styles.topContent,
@@ -507,13 +516,20 @@ const styles = StyleSheet.create({
   },
   topSection: {
     flex: 2,
-    backgroundColor: 'rgb(255, 245, 235)',
     justifyContent: 'center',
     paddingHorizontal: width * 0.05,
     paddingTop: height * 0.03,
     paddingBottom: height * 0.05,
     overflow: 'hidden',
     zIndex: 1,
+  },
+  topSectionBg: {
+    ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: '100%',
+  },
+  topSectionOverlay: {
+    ...StyleSheet.absoluteFillObject,
   },
   bottomSection: {
     flex: 3,
