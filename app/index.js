@@ -480,8 +480,6 @@ const styles = StyleSheet.create({
   bottomSection: {
     flex: 3,
     backgroundColor: 'rgba(30, 30, 30, 0.92)',
-    borderTopLeftRadius: 32,
-    borderTopRightRadius: 32,
     paddingHorizontal: width * 0.05,
     paddingVertical: height * 0.03,
     justifyContent: 'space-between',
