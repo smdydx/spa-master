@@ -1,4 +1,3 @@
-
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Building2 } from "lucide-react-native";
@@ -242,16 +241,17 @@ export default function WelcomeScreen() {
       }),
     ]).start();
 
+    // Smooth pulse animation for text
     Animated.loop(
       Animated.sequence([
         Animated.timing(floatAnim, {
-          toValue: -8,
-          duration: 2000,
+          toValue: 1,
+          duration: 2500,
           useNativeDriver: true,
         }),
         Animated.timing(floatAnim, {
-          toValue: 8,
-          duration: 2000,
+          toValue: 0,
+          duration: 2500,
           useNativeDriver: true,
         }),
       ])
@@ -262,13 +262,14 @@ export default function WelcomeScreen() {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="transparent" barStyle="light-content" translucent />
 
+      {/* Background with Anime Girl Image */}
       <ImageBackground
-        source={{ uri: 'https://i.pinimg.com/originals/e4/32/15/e43215c0c8f0a5f5e5e5e5e5e5e5e5e5.jpg' }}
+        source={{ uri: 'https://wallpapercave.com/wp/wp4676582.jpg' }}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
         <LinearGradient
-          colors={["rgba(26, 26, 46, 0.70)", "rgba(26, 26, 46, 0.65)", "rgba(26, 26, 46, 0.75)"]}
+          colors={["rgba(26, 26, 46, 0.65)", "rgba(26, 26, 46, 0.60)", "rgba(26, 26, 46, 0.70)"]}
           style={StyleSheet.absoluteFillObject}
         />
         <SakuraPattern />
@@ -286,7 +287,7 @@ export default function WelcomeScreen() {
             ]}
           >
             <AppLogo />
-            <Animated.Text 
+            <Animated.Text
               style={[
                 styles.brandName,
                 {
@@ -296,7 +297,7 @@ export default function WelcomeScreen() {
             >
               OMBARO
             </Animated.Text>
-            <Animated.Text 
+            <Animated.Text
               style={[
                 styles.tagline,
                 {
@@ -307,7 +308,7 @@ export default function WelcomeScreen() {
               Beauty & Wellness Hub
             </Animated.Text>
 
-            <Animated.Text 
+            <Animated.Text
               style={[
                 styles.heading,
                 {
@@ -317,7 +318,7 @@ export default function WelcomeScreen() {
             >
               Welcome to Your{'\n'}Beauty Journey
             </Animated.Text>
-            <Animated.Text 
+            <Animated.Text
               style={[
                 styles.subheading,
                 {
@@ -331,7 +332,7 @@ export default function WelcomeScreen() {
         </View>
 
         {/* Features Section */}
-        <Animated.View 
+        <Animated.View
           style={[
             styles.featuresSection,
             {
@@ -364,7 +365,7 @@ export default function WelcomeScreen() {
           </View>
         </Animated.View>
 
-        <Animated.View 
+        <Animated.View
           style={[
             styles.ctaSection,
             {
@@ -407,7 +408,7 @@ export default function WelcomeScreen() {
           </TouchableOpacity>
         </Animated.View>
 
-        <Animated.View 
+        <Animated.View
           style={[
             styles.quickAccessSection,
             {
