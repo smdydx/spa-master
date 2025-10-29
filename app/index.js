@@ -2,9 +2,8 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Building2, MapPin, Zap, Sparkles } from "lucide-react-native";
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import {
-  Animated,
   Dimensions,
   Image,
   SafeAreaView,
@@ -27,238 +26,9 @@ const COLORS = {
   overlay: "rgba(44, 44, 44, 0.45)",
 };
 
-const CherryBlossomPetal = ({ delay, startX, endX }) => {
-  const translateY = useRef(new Animated.Value(-50)).current;
-  const translateX = useRef(new Animated.Value(startX)).current;
-  const rotate = useRef(new Animated.Value(0)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    const animation = Animated.loop(
-      Animated.parallel([
-        Animated.sequence([
-          Animated.delay(delay),
-          Animated.timing(opacity, {
-            toValue: 1,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(translateY, {
-            toValue: height + 50,
-            duration: 8000 + Math.random() * 4000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacity, {
-            toValue: 0,
-            duration: 1000,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.sequence([
-          Animated.delay(delay),
-          Animated.timing(translateX, {
-            toValue: endX,
-            duration: 8000 + Math.random() * 4000,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.loop(
-          Animated.timing(rotate, {
-            toValue: 1,
-            duration: 3000,
-            useNativeDriver: true,
-          })
-        ),
-      ])
-    );
-    animation.start();
-    return () => animation.stop();
-  }, []);
-
-  const rotateInterpolate = rotate.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
-
-  return (
-    <Animated.View
-      style={[
-        styles.petal,
-        {
-          opacity,
-          transform: [
-            { translateX },
-            { translateY },
-            { rotate: rotateInterpolate },
-          ],
-        },
-      ]}
-    >
-      <Text style={styles.petalText}>🌸</Text>
-    </Animated.View>
-  );
-};
-
-const AtmosphericLight = () => {
-  const petals = Array.from({ length: 10 }, (_, i) => ({
-    key: i,
-    delay: i * 800,
-    startX: Math.random() * width,
-    endX: Math.random() * width,
-  }));
-
-  return (
-    <View style={styles.atmosphericContainer}>
-      {petals.map((petal) => (
-        <CherryBlossomPetal
-          key={petal.key}
-          delay={petal.delay}
-          startX={petal.startX}
-          endX={petal.endX}
-        />
-      ))}
-    </View>
-  );
-};
-
-const JapaneseLeaf = ({ delay, startX, endX, emoji }) => {
-  const translateY = useRef(new Animated.Value(-30)).current;
-  const translateX = useRef(new Animated.Value(startX)).current;
-  const rotate = useRef(new Animated.Value(0)).current;
-  const opacity = useRef(new Animated.Value(0)).current;
-  const scale = useRef(new Animated.Value(0.8)).current;
-
-  useEffect(() => {
-    const animation = Animated.loop(
-      Animated.parallel([
-        Animated.sequence([
-          Animated.delay(delay),
-          Animated.parallel([
-            Animated.timing(opacity, {
-              toValue: 0.9,
-              duration: 1500,
-              useNativeDriver: true,
-            }),
-            Animated.spring(scale, {
-              toValue: 1,
-              friction: 3,
-              useNativeDriver: true,
-            }),
-          ]),
-          Animated.timing(translateY, {
-            toValue: height * 0.65,
-            duration: 12000 + Math.random() * 6000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(opacity, {
-            toValue: 0,
-            duration: 1500,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.sequence([
-          Animated.delay(delay),
-          Animated.timing(translateX, {
-            toValue: endX,
-            duration: 12000 + Math.random() * 6000,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.loop(
-          Animated.timing(rotate, {
-            toValue: 1,
-            duration: 4000 + Math.random() * 2000,
-            useNativeDriver: true,
-          })
-        ),
-      ])
-    );
-    animation.start();
-    return () => animation.stop();
-  }, []);
-
-  const rotateInterpolate = rotate.interpolate({
-    inputRange: [0, 1],
-    outputRange: ['0deg', '360deg'],
-  });
-
-  return (
-    <Animated.View
-      style={[
-        styles.leaf,
-        {
-          opacity,
-          transform: [
-            { translateX },
-            { translateY },
-            { rotate: rotateInterpolate },
-            { scale },
-          ],
-        },
-      ]}
-    >
-      <Text style={styles.leafText}>{emoji}</Text>
-    </Animated.View>
-  );
-};
-
-const BottomSectionAnimation = () => {
-  const elements = Array.from({ length: 15 }, (_, i) => {
-    const emojis = ['🌸', '🌼', '🏵️', '💮'];
-    return {
-      key: `leaf-${i}`,
-      delay: i * 1200,
-      startX: Math.random() * width,
-      endX: (Math.random() - 0.5) * width + width / 2,
-      emoji: emojis[Math.floor(Math.random() * emojis.length)],
-    };
-  });
-
-  return (
-    <View style={styles.bottomAnimationContainer}>
-      {elements.map((element) => (
-        <JapaneseLeaf
-          key={element.key}
-          delay={element.delay}
-          startX={element.startX}
-          endX={element.endX}
-          emoji={element.emoji}
-        />
-      ))}
-    </View>
-  );
-};
-
 const AppLogo = () => {
-  const scaleAnim = useRef(new Animated.Value(0.5)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        friction: 3,
-        tension: 40,
-        useNativeDriver: true,
-      }),
-      Animated.timing(opacityAnim, {
-        toValue: 1,
-        duration: 1200,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
   return (
-    <Animated.View
-      style={[
-        styles.logoContainer,
-        {
-          opacity: opacityAnim,
-          transform: [{ scale: scaleAnim }],
-        },
-      ]}
-    >
+    <View style={styles.logoContainer}>
       <LinearGradient
         colors={["#C8B6A6", "#D4A59A", "#F3EDE6"]}
         start={{ x: 0, y: 0 }}
@@ -267,95 +37,25 @@ const AppLogo = () => {
       >
         <Text style={styles.logoText}>✧</Text>
       </LinearGradient>
-    </Animated.View>
+    </View>
   );
 };
 
-const PillLink = ({ label, nav, router, index }) => {
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
-  const opacityAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.spring(scaleAnim, {
-        toValue: 1,
-        friction: 5,
-        tension: 40,
-        delay: index * 100,
-        useNativeDriver: true,
-      }),
-      Animated.timing(opacityAnim, {
-        toValue: 1,
-        duration: 500,
-        delay: index * 100,
-        useNativeDriver: true,
-      }),
-    ]).start();
-  }, []);
-
+const PillLink = ({ label, nav, router }) => {
   return (
-    <Animated.View
-      style={{
-        opacity: opacityAnim,
-        transform: [{ scale: scaleAnim }],
-      }}
+    <TouchableOpacity
+      style={styles.pill}
+      onPress={() => router.push(nav)}
+      activeOpacity={0.7}
     >
-      <TouchableOpacity
-        style={styles.pill}
-        onPress={() => router.push(nav)}
-        activeOpacity={0.7}
-      >
-        <Text style={styles.pillText}>{label}</Text>
-      </TouchableOpacity>
-    </Animated.View>
+      <Text style={styles.pillText}>{label}</Text>
+    </TouchableOpacity>
   );
 };
 
 export default function WelcomeScreen() {
   const router = useRouter();
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(50)).current;
-  const buttonScale = useRef(new Animated.Value(0.9)).current;
-  const floatAnim = useRef(new Animated.Value(0)).current;
   const [imageLoaded, setImageLoaded] = useState(false);
-
-  useEffect(() => {
-    Animated.parallel([
-      Animated.timing(fadeAnim, {
-        toValue: 1,
-        duration: 1200,
-        useNativeDriver: true,
-      }),
-      Animated.spring(slideAnim, {
-        toValue: 0,
-        friction: 8,
-        tension: 40,
-        useNativeDriver: true,
-      }),
-      Animated.spring(buttonScale, {
-        toValue: 1,
-        friction: 5,
-        tension: 40,
-        delay: 800,
-        useNativeDriver: true,
-      }),
-    ]).start();
-
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(floatAnim, {
-          toValue: 1,
-          duration: 2500,
-          useNativeDriver: true,
-        }),
-        Animated.timing(floatAnim, {
-          toValue: 0,
-          duration: 2500,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, []);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -363,26 +63,14 @@ export default function WelcomeScreen() {
 
       {/* Background with optimized image loading */}
       <View style={styles.backgroundContainer}>
-        {!imageLoaded && (
-          <LinearGradient
-            colors={["#C8B6A6", "#D4A59A", "#F3EDE6"]}
-            style={StyleSheet.absoluteFillObject}
-          />
-        )}
-        <Image
-          source={require('../assets/images/japanese-girl-bg.jpg')}
-          style={styles.backgroundImage}
-          resizeMode="cover"
-          onLoad={() => setImageLoaded(true)}
-          fadeDuration={200}
-          progressiveRenderingEnabled={true}
-          defaultSource={require('../assets/images/icon.png')}
+        <LinearGradient
+          colors={["#C8B6A6", "#D4A59A", "#F3EDE6"]}
+          style={StyleSheet.absoluteFillObject}
         />
         <LinearGradient
           colors={["rgba(44, 44, 44, 0.25)", "rgba(44, 44, 44, 0.20)", "rgba(44, 44, 44, 0.30)"]}
           style={StyleSheet.absoluteFillObject}
         />
-        <AtmosphericLight />
       </View>
 
       {/* Decorative Circles */}
@@ -407,58 +95,13 @@ export default function WelcomeScreen() {
             colors={['rgba(243, 237, 230, 0.92)', 'rgba(243, 237, 230, 0.88)', 'rgba(248, 246, 243, 0.90)']}
             style={styles.topSectionOverlay}
           />
-          <Animated.View
-            style={[
-              styles.topContent,
-              {
-                opacity: fadeAnim,
-                transform: [{ translateY: slideAnim }],
-              },
-            ]}
-          >
+          <View style={styles.topContent}>
             <AppLogo />
-            <Animated.Text
-              style={[
-                styles.brandName,
-                {
-                  transform: [{ translateY: floatAnim }],
-                },
-              ]}
-            >
-              OMBARO
-            </Animated.Text>
-            <Animated.Text
-              style={[
-                styles.tagline,
-                {
-                  transform: [{ translateY: floatAnim }],
-                },
-              ]}
-            >
-              Beauty & Wellness Hub
-            </Animated.Text>
-
-            <Animated.Text
-              style={[
-                styles.heading,
-                {
-                  transform: [{ translateY: floatAnim }],
-                },
-              ]}
-            >
-              Welcome to Your Beauty Journey
-            </Animated.Text>
-            <Animated.Text
-              style={[
-                styles.subheading,
-                {
-                  transform: [{ translateY: floatAnim }],
-                },
-              ]}
-            >
-              Premium spa & wellness services
-            </Animated.Text>
-          </Animated.View>
+            <Text style={styles.brandName}>OMBARO</Text>
+            <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
+            <Text style={styles.heading}>Welcome to Your Beauty Journey</Text>
+            <Text style={styles.subheading}>Premium spa & wellness services</Text>
+          </View>
         </View>
 
         {/* Bottom Section (3 parts) */}
@@ -467,17 +110,9 @@ export default function WelcomeScreen() {
             colors={['#1e1e1e', '#2a2520', '#1a1a1a']}
             style={styles.bottomSectionGradient}
           />
-          <BottomSectionAnimation />
           
           {/* Features Section */}
-          <Animated.View
-            style={[
-              styles.featuresSection,
-              {
-                opacity: fadeAnim,
-              },
-            ]}
-          >
+          <View style={styles.featuresSection}>
             <View style={styles.featureCard}>
               <View style={styles.featureIconBox}>
                 <MapPin size={24} color="#C8B6A6" strokeWidth={2.5} />
@@ -501,17 +136,9 @@ export default function WelcomeScreen() {
               <Text style={styles.featureTitle}>Premium Quality</Text>
               <Text style={styles.featureDesc}>Verified professionals</Text>
             </View>
-          </Animated.View>
+          </View>
 
-          <Animated.View
-            style={[
-              styles.ctaSection,
-              {
-                opacity: fadeAnim,
-                transform: [{ scale: buttonScale }],
-              },
-            ]}
-          >
+          <View style={styles.ctaSection}>
             <TouchableOpacity
               activeOpacity={0.9}
               onPress={() => router.push('/auth/phone-register')}
@@ -544,26 +171,19 @@ export default function WelcomeScreen() {
                 <Text style={styles.vendorBtnText}>Become a Partner</Text>
               </LinearGradient>
             </TouchableOpacity>
-          </Animated.View>
+          </View>
 
-          <Animated.View
-            style={[
-              styles.quickAccessSection,
-              {
-                opacity: fadeAnim,
-              },
-            ]}
-          >
+          <View style={styles.quickAccessSection}>
             <Text style={styles.quickAccessLabel}>Quick Access</Text>
             <View style={styles.pillsContainer}>
-              <PillLink label="Employee" nav="/Employee/auth/login" router={router} index={0} />
-              <PillLink label="Vendor" nav="/Vendor/auth/login" router={router} index={1} />
-              <PillLink label="Therapist" nav="/Therapist/auth/login" router={router} index={2} />
-              <PillLink label="Beautician" nav="/Therapist/auth/login" router={router} index={3} />
-              <PillLink label="Admin" nav="/Admin/auth/login" router={router} index={4} />
-              <PillLink label="Departments" nav="/Department/auth/login" router={router} index={5} />
+              <PillLink label="Employee" nav="/Employee/auth/login" router={router} />
+              <PillLink label="Vendor" nav="/Vendor/auth/login" router={router} />
+              <PillLink label="Therapist" nav="/Therapist/auth/login" router={router} />
+              <PillLink label="Beautician" nav="/Therapist/auth/login" router={router} />
+              <PillLink label="Admin" nav="/Admin/auth/login" router={router} />
+              <PillLink label="Departments" nav="/Department/auth/login" router={router} />
             </View>
-          </Animated.View>
+          </View>
         </View>
       </View>
     </SafeAreaView>
@@ -621,31 +241,6 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     width: '100%',
     height: '100%',
-  },
-  atmosphericContainer: {
-    ...StyleSheet.absoluteFillObject,
-    pointerEvents: 'none',
-  },
-  petal: {
-    position: 'absolute',
-    top: -50,
-  },
-  petalText: {
-    fontSize: 20,
-    opacity: 0.8,
-  },
-  leaf: {
-    position: 'absolute',
-    top: -30,
-  },
-  leafText: {
-    fontSize: 18,
-    opacity: 0.85,
-  },
-  bottomAnimationContainer: {
-    ...StyleSheet.absoluteFillObject,
-    pointerEvents: 'none',
-    zIndex: 0,
   },
   bottomSectionGradient: {
     ...StyleSheet.absoluteFillObject,
