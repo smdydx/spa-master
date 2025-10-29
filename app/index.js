@@ -100,7 +100,7 @@ const CherryBlossomPetal = ({ delay, startX, endX }) => {
 };
 
 const AtmosphericLight = () => {
-  const petals = Array.from({ length: 15 }, (_, i) => ({
+  const petals = Array.from({ length: 10 }, (_, i) => ({
     key: i,
     delay: i * 800,
     startX: Math.random() * width,
@@ -203,8 +203,8 @@ const JapaneseLeaf = ({ delay, startX, endX, emoji }) => {
 };
 
 const BottomSectionAnimation = () => {
-  const elements = Array.from({ length: 20 }, (_, i) => {
-    const emojis = ['🌸', '🍃', '🌺', '🍂', '🌼'];
+  const elements = Array.from({ length: 15 }, (_, i) => {
+    const emojis = ['🌸', '🌼', '🏵️', '💮'];
     return {
       key: `leaf-${i}`,
       delay: i * 1200,
@@ -374,7 +374,9 @@ export default function WelcomeScreen() {
           style={styles.backgroundImage}
           resizeMode="cover"
           onLoad={() => setImageLoaded(true)}
-          fadeDuration={300}
+          fadeDuration={200}
+          progressiveRenderingEnabled={true}
+          defaultSource={require('../assets/images/icon.png')}
         />
         <LinearGradient
           colors={["rgba(44, 44, 44, 0.25)", "rgba(44, 44, 44, 0.20)", "rgba(44, 44, 44, 0.30)"]}
@@ -398,6 +400,8 @@ export default function WelcomeScreen() {
             source={require('../assets/images/japanese-girl-bg.jpg')}
             style={styles.topSectionBg}
             resizeMode="cover"
+            fadeDuration={200}
+            progressiveRenderingEnabled={true}
           />
           <LinearGradient
             colors={['rgba(243, 237, 230, 0.92)', 'rgba(243, 237, 230, 0.88)', 'rgba(248, 246, 243, 0.90)']}
