@@ -263,7 +263,7 @@ export default function WelcomeScreen() {
       <StatusBar backgroundColor="transparent" barStyle="light-content" translucent />
 
       <ImageBackground
-        source={{ uri: 'https://i.pinimg.com/originals/df/6c/98/df6c98f0eb0e4e3e8c0a6e5e3f5e5e5e.jpg' }}
+        source={{ uri: 'https://i.pinimg.com/originals/e4/32/15/e43215c0c8f0a5f5e5e5e5e5e5e5e5e5.jpg' }}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
@@ -329,6 +329,40 @@ export default function WelcomeScreen() {
             </Animated.Text>
           </Animated.View>
         </View>
+
+        {/* Features Section */}
+        <Animated.View 
+          style={[
+            styles.featuresSection,
+            {
+              opacity: fadeAnim,
+            },
+          ]}
+        >
+          <View style={styles.featureCard}>
+            <View style={styles.featureIcon}>
+              <Text style={styles.featureEmoji}>📍</Text>
+            </View>
+            <Text style={styles.featureTitle}>Find Nearby</Text>
+            <Text style={styles.featureDesc}>Discover salons & spas around you</Text>
+          </View>
+
+          <View style={styles.featureCard}>
+            <View style={styles.featureIcon}>
+              <Text style={styles.featureEmoji}>⚡</Text>
+            </View>
+            <Text style={styles.featureTitle}>Easy Booking</Text>
+            <Text style={styles.featureDesc}>Book appointments in seconds</Text>
+          </View>
+
+          <View style={styles.featureCard}>
+            <View style={styles.featureIcon}>
+              <Text style={styles.featureEmoji}>✨</Text>
+            </View>
+            <Text style={styles.featureTitle}>Premium Quality</Text>
+            <Text style={styles.featureDesc}>Verified professionals</Text>
+          </View>
+        </Animated.View>
 
         <Animated.View 
           style={[
@@ -416,13 +450,49 @@ const styles = StyleSheet.create({
   content: {
     flex: 1,
     paddingHorizontal: width * 0.05,
-    paddingTop: height * 0.04,
+    paddingTop: height * 0.02,
     paddingBottom: height * 0.02,
     justifyContent: 'space-between',
   },
+  featuresSection: {
+    flexDirection: 'row',
+    gap: width * 0.03,
+    justifyContent: 'space-between',
+    paddingVertical: height * 0.015,
+  },
+  featureCard: {
+    flex: 1,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 16,
+    padding: width * 0.035,
+    alignItems: 'center',
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    minHeight: height * 0.14,
+    justifyContent: 'center',
+  },
+  featureIcon: {
+    marginBottom: height * 0.008,
+  },
+  featureEmoji: {
+    fontSize: Math.min(width * 0.08, 30),
+  },
+  featureTitle: {
+    fontSize: Math.min(width * 0.032, 13),
+    fontWeight: '800',
+    color: '#FFF',
+    marginBottom: height * 0.004,
+    textAlign: 'center',
+  },
+  featureDesc: {
+    fontSize: Math.min(width * 0.026, 10),
+    color: 'rgba(255, 255, 255, 0.75)',
+    textAlign: 'center',
+    lineHeight: Math.min(width * 0.035, 14),
+  },
   heroSection: {
     alignItems: "center",
-    paddingTop: height * 0.02,
+    paddingTop: height * 0.01,
   },
   leftContent: {
     alignItems: "center",
@@ -431,102 +501,102 @@ const styles = StyleSheet.create({
     marginBottom: height * 0.012,
   },
   logoGradient: {
-    width: Math.min(width * 0.18, 70),
-    height: Math.min(width * 0.18, 70),
-    borderRadius: 18,
+    width: Math.min(width * 0.14, 56),
+    height: Math.min(width * 0.14, 56),
+    borderRadius: 16,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#E91E63",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.5,
-    shadowRadius: 16,
-    elevation: 10,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.4,
+    shadowRadius: 12,
+    elevation: 8,
   },
   logoText: {
-    fontSize: Math.min(width * 0.09, 36),
+    fontSize: Math.min(width * 0.07, 28),
     color: "#FFF",
   },
   brandName: {
-    fontSize: Math.min(width * 0.085, 32),
+    fontSize: Math.min(width * 0.07, 28),
     fontWeight: "900",
     color: "#FFF",
-    letterSpacing: 4,
-    marginBottom: height * 0.008,
+    letterSpacing: 3,
+    marginBottom: height * 0.006,
     textShadowColor: "rgba(233, 30, 99, 0.5)",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 10,
   },
   tagline: {
-    fontSize: Math.min(width * 0.035, 14),
+    fontSize: Math.min(width * 0.03, 12),
     color: "#FF4081",
     fontWeight: "700",
-    marginBottom: height * 0.015,
-    letterSpacing: 0.8,
+    marginBottom: height * 0.01,
+    letterSpacing: 0.6,
   },
   heading: {
-    fontSize: Math.min(width * 0.07, 26),
+    fontSize: Math.min(width * 0.058, 22),
     fontWeight: "900",
     color: "#FFF",
-    lineHeight: Math.min(width * 0.085, 32),
-    marginBottom: height * 0.012,
+    lineHeight: Math.min(width * 0.07, 28),
+    marginBottom: height * 0.008,
     textAlign: "center",
     textShadowColor: "rgba(0, 0, 0, 0.3)",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 6,
   },
   subheading: {
-    fontSize: Math.min(width * 0.035, 14),
+    fontSize: Math.min(width * 0.03, 12),
     color: "rgba(255, 255, 255, 0.85)",
-    lineHeight: Math.min(width * 0.05, 20),
+    lineHeight: Math.min(width * 0.042, 17),
     textAlign: "center",
     paddingHorizontal: width * 0.05,
   },
   ctaSection: {
-    gap: height * 0.014,
-    marginVertical: height * 0.01,
+    gap: height * 0.01,
+    marginVertical: height * 0.008,
   },
   primaryBtn: {
-    paddingVertical: height * 0.018,
-    borderRadius: 16,
+    paddingVertical: height * 0.014,
+    borderRadius: 14,
     alignItems: "center",
     shadowColor: "#E91E63",
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.4,
-    shadowRadius: 16,
-    elevation: 8,
+    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.3,
+    shadowRadius: 12,
+    elevation: 6,
   },
   primaryBtnText: {
     color: "#FFF",
-    fontSize: Math.min(width * 0.042, 16),
+    fontSize: Math.min(width * 0.038, 15),
     fontWeight: "900",
-    letterSpacing: 1.2,
+    letterSpacing: 1,
   },
   secondaryBtn: {
-    paddingVertical: height * 0.018,
-    borderRadius: 16,
-    borderWidth: 2,
+    paddingVertical: height * 0.014,
+    borderRadius: 14,
+    borderWidth: 1.5,
     borderColor: "rgba(255, 255, 255, 0.3)",
     backgroundColor: "rgba(255, 255, 255, 0.06)",
     alignItems: "center",
   },
   secondaryBtnText: {
     color: "#FFF",
-    fontSize: Math.min(width * 0.04, 15),
+    fontSize: Math.min(width * 0.036, 14),
     fontWeight: "800",
   },
   vendorBtn: {
-    paddingVertical: height * 0.016,
-    paddingHorizontal: width * 0.05,
-    borderRadius: 16,
+    paddingVertical: height * 0.012,
+    paddingHorizontal: width * 0.04,
+    borderRadius: 14,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 8,
+    gap: 6,
     borderWidth: 1.5,
     borderColor: "rgba(255, 193, 7, 0.35)",
   },
   vendorBtnText: {
-    fontSize: Math.min(width * 0.037, 14),
+    fontSize: Math.min(width * 0.034, 13),
     fontWeight: "800",
     color: "#FFC107",
   },
