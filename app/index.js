@@ -262,14 +262,14 @@ export default function WelcomeScreen() {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="transparent" barStyle="light-content" translucent />
 
-      {/* Background with Anime Girl Image */}
+      {/* Background with Japanese Anime Girl Image */}
       <ImageBackground
-        source={{ uri: 'https://wallpapercave.com/wp/wp4676582.jpg' }}
+        source={{ uri: 'https://i.pinimg.com/originals/df/3c/43/df3c43424046c9c71235ca0b0a0b1c65.jpg' }}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
         <LinearGradient
-          colors={["rgba(26, 26, 46, 0.65)", "rgba(26, 26, 46, 0.60)", "rgba(26, 26, 46, 0.70)"]}
+          colors={["rgba(26, 26, 46, 0.60)", "rgba(26, 26, 46, 0.55)", "rgba(26, 26, 46, 0.65)"]}
           style={StyleSheet.absoluteFillObject}
         />
         <SakuraPattern />
