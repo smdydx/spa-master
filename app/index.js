@@ -264,7 +264,7 @@ export default function WelcomeScreen() {
 
       {/* Background with Japanese Anime Girl Image */}
       <ImageBackground
-        source={{ uri: 'https://i.pinimg.com/originals/df/3c/43/df3c43424046c9c71235ca0b0a0b1c65.jpg' }}
+        source={require('../assets/images/japanese-girl-bg.jpg')}
         style={styles.backgroundImage}
         resizeMode="cover"
       >
