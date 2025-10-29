@@ -237,13 +237,13 @@ export default function WelcomeScreen() {
         <AtmosphericLight />
       </View>
 
-      {/* 1:4 Split Layout */}
+      {/* 2:3 Split Layout */}
       <View style={styles.splitContainer}>
-        {/* Left Section (1 part) */}
-        <View style={styles.leftSection}>
+        {/* Top Section (2 parts) */}
+        <View style={styles.topSection}>
           <Animated.View
             style={[
-              styles.leftContent,
+              styles.topContent,
               {
                 opacity: fadeAnim,
                 transform: [{ translateY: slideAnim }],
@@ -295,8 +295,8 @@ export default function WelcomeScreen() {
           </Animated.View>
         </View>
 
-        {/* Right Section (4 parts) */}
-        <View style={styles.rightSection}>
+        {/* Bottom Section (3 parts) */}
+        <View style={styles.bottomSection}>
           {/* Features Section */}
           <Animated.View
             style={[
@@ -434,27 +434,25 @@ const styles = StyleSheet.create({
   },
   splitContainer: {
     flex: 1,
-    flexDirection: 'row',
+    flexDirection: 'column',
   },
-  leftSection: {
-    flex: 1,
+  topSection: {
+    flex: 2,
     backgroundColor: 'rgba(200, 182, 166, 0.15)',
-    borderTopRightRadius: 32,
     borderBottomRightRadius: 32,
     justifyContent: 'center',
-    paddingHorizontal: width * 0.03,
-    paddingVertical: height * 0.02,
+    paddingHorizontal: width * 0.05,
+    paddingVertical: height * 0.03,
   },
-  rightSection: {
-    flex: 4,
+  bottomSection: {
+    flex: 3,
     backgroundColor: 'rgba(44, 44, 44, 0.25)',
     borderTopLeftRadius: 32,
-    borderBottomLeftRadius: 32,
-    paddingHorizontal: width * 0.04,
-    paddingVertical: height * 0.02,
+    paddingHorizontal: width * 0.05,
+    paddingVertical: height * 0.03,
     justifyContent: 'space-between',
   },
-  leftContent: {
+  topContent: {
     alignItems: "center",
   },
   logoContainer: {
