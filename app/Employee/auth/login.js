@@ -1,6 +1,7 @@
+import { BlurView } from 'expo-blur';
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
-import { ArrowLeft, Lock, User } from "lucide-react-native";
+import { ArrowLeft, Lock, User, UserCircle2 } from "lucide-react-native";
 import { useState } from "react";
 import {
   Dimensions,
@@ -39,15 +40,25 @@ export default function EmployeeLogin() {
           style={StyleSheet.absoluteFillObject}
         />
         <LinearGradient
-          colors={["rgba(44, 44, 44, 0.20)", "rgba(44, 44, 44, 0.15)", "rgba(44, 44, 44, 0.25)"]}
+          colors={["rgba(44, 44, 44, 0.15)", "rgba(44, 44, 44, 0.10)", "rgba(44, 44, 44, 0.20)"]}
           style={StyleSheet.absoluteFillObject}
         />
       </View>
 
-      {/* Decorative Circles */}
-      <View style={styles.decorativeCircles}>
-        <View style={[styles.circle, styles.circle1]} />
-        <View style={[styles.circle, styles.circle2]} />
+      {/* Blur Bubbles */}
+      <View style={styles.bubblesContainer}>
+        <View style={[styles.bubble, styles.bubble1]}>
+          <BlurView intensity={40} style={styles.blurBubble} tint="light" />
+        </View>
+        <View style={[styles.bubble, styles.bubble2]}>
+          <BlurView intensity={50} style={styles.blurBubble} tint="light" />
+        </View>
+        <View style={[styles.bubble, styles.bubble3]}>
+          <BlurView intensity={35} style={styles.blurBubble} tint="light" />
+        </View>
+        <View style={[styles.bubble, styles.bubble4]}>
+          <BlurView intensity={45} style={styles.blurBubble} tint="light" />
+        </View>
       </View>
 
       <ScrollView
@@ -70,7 +81,7 @@ export default function EmployeeLogin() {
               end={{ x: 1, y: 1 }}
               style={styles.logoGradient}
             >
-              <Text style={styles.logoText}>👨‍💼</Text>
+              <UserCircle2 size={width * 0.08} color="#FFFFFF" strokeWidth={2} />
             </LinearGradient>
           </View>
           <Text style={styles.brandName}>EMPLOYEE PORTAL</Text>
@@ -91,7 +102,7 @@ export default function EmployeeLogin() {
               <Text style={styles.label}>Mobile Number</Text>
               <View style={styles.inputWrap}>
                 <View style={styles.iconBox}>
-                  <User size={20} color="#C8B6A6" strokeWidth={2.5} />
+                  <User size={width * 0.05} color="#C8B6A6" strokeWidth={2.5} />
                 </View>
                 <TextInput
                   placeholder="Enter 10-digit mobile number"
@@ -110,7 +121,7 @@ export default function EmployeeLogin() {
               <Text style={styles.label}>Password</Text>
               <View style={styles.inputWrap}>
                 <View style={styles.iconBox}>
-                  <Lock size={20} color="#C8B6A6" strokeWidth={2.5} />
+                  <Lock size={width * 0.05} color="#C8B6A6" strokeWidth={2.5} />
                 </View>
                 <TextInput
                   placeholder="Enter your password"
@@ -172,7 +183,7 @@ const styles = StyleSheet.create({
     width: '100%',
     overflow: 'hidden',
   },
-  decorativeCircles: {
+  bubblesContainer: {
     position: 'absolute',
     top: 0,
     left: 0,
@@ -181,110 +192,138 @@ const styles = StyleSheet.create({
     pointerEvents: 'none',
     overflow: 'hidden',
   },
-  circle: {
+  bubble: {
     position: 'absolute',
     borderRadius: 9999,
-    backgroundColor: 'rgba(200, 182, 166, 0.15)',
+    overflow: 'hidden',
   },
-  circle1: {
-    width: width * 0.6,
-    height: width * 0.6,
-    top: height * 0.05,
-    right: -width * 0.25,
+  blurBubble: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(255, 255, 255, 0.12)',
   },
-  circle2: {
+  bubble1: {
     width: width * 0.5,
     height: width * 0.5,
+    top: height * 0.08,
+    right: -width * 0.15,
+  },
+  bubble2: {
+    width: width * 0.35,
+    height: width * 0.35,
     top: height * 0.02,
-    left: -width * 0.2,
-    backgroundColor: 'rgba(212, 165, 154, 0.12)',
+    left: -width * 0.1,
+  },
+  bubble3: {
+    width: width * 0.4,
+    height: width * 0.4,
+    top: height * 0.15,
+    left: width * 0.15,
+  },
+  bubble4: {
+    width: width * 0.25,
+    height: width * 0.25,
+    top: height * 0.05,
+    right: width * 0.2,
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: 40,
+    paddingBottom: height * 0.05,
   },
 
   // Header
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
+    paddingHorizontal: width * 0.05,
+    paddingTop: height * 0.02,
+    paddingBottom: height * 0.015,
     zIndex: 10,
   },
   backBtn: {
-    width: 40,
-    height: 40,
+    width: width * 0.11,
+    height: width * 0.11,
+    maxWidth: 48,
+    maxHeight: 48,
     borderRadius: 12,
     backgroundColor: "rgba(255, 255, 255, 0.95)",
     alignItems: "center",
     justifyContent: "center",
     borderWidth: 1.5,
     borderColor: "rgba(200, 182, 166, 0.3)",
-    shadowColor: "#C8B6A6",
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
-    elevation: 3,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#C8B6A6",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
 
   // Top Section
   topSection: {
-    paddingHorizontal: width * 0.05,
+    paddingHorizontal: width * 0.06,
     paddingTop: height * 0.02,
     paddingBottom: height * 0.04,
     alignItems: 'center',
     zIndex: 1,
   },
   logoContainer: {
-    marginBottom: height * 0.015,
+    marginBottom: height * 0.02,
   },
   logoGradient: {
-    width: 72,
-    height: 72,
-    borderRadius: 18,
+    width: width * 0.18,
+    height: width * 0.18,
+    maxWidth: 80,
+    maxHeight: 80,
+    borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#C8B6A6",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  logoText: {
-    fontSize: 36,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#C8B6A6",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 6,
+      },
+    }),
   },
   brandName: {
-    fontSize: Math.min(width * 0.045, 18),
+    fontSize: width * 0.042,
     fontWeight: "900",
     color: "#2C2C2C",
     letterSpacing: 2.5,
-    marginBottom: height * 0.01,
+    marginBottom: height * 0.012,
     textShadowColor: "rgba(200, 182, 166, 0.3)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
   },
   heading: {
-    fontSize: Math.min(width * 0.065, 26),
+    fontSize: width * 0.065,
     fontWeight: "900",
     color: "#1A1A1A",
-    lineHeight: Math.min(width * 0.075, 30),
-    marginBottom: height * 0.008,
+    marginBottom: height * 0.01,
     textAlign: "center",
     textShadowColor: "rgba(200, 182, 166, 0.2)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
   },
   subheading: {
-    fontSize: Math.min(width * 0.028, 11),
+    fontSize: width * 0.032,
     color: "rgba(44, 44, 44, 0.75)",
-    lineHeight: Math.min(width * 0.038, 15),
     textAlign: "center",
+    paddingHorizontal: width * 0.05,
   },
 
   // Bottom Section - Form
   bottomSection: {
     flex: 1,
-    paddingHorizontal: width * 0.05,
+    paddingHorizontal: width * 0.06,
     paddingTop: height * 0.04,
     paddingBottom: height * 0.03,
     borderTopLeftRadius: 40,
@@ -292,6 +331,7 @@ const styles = StyleSheet.create({
     marginTop: -20,
     zIndex: 2,
     overflow: 'hidden',
+    minHeight: height * 0.5,
   },
   bottomSectionGradient: {
     ...StyleSheet.absoluteFillObject,
@@ -302,13 +342,13 @@ const styles = StyleSheet.create({
 
   // Input Groups
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: height * 0.025,
   },
   label: {
-    fontSize: 13,
+    fontSize: width * 0.032,
     fontWeight: '800',
     color: 'rgba(255, 255, 255, 0.7)',
-    marginBottom: 10,
+    marginBottom: height * 0.012,
     letterSpacing: 1,
     textTransform: 'uppercase',
   },
@@ -319,85 +359,93 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 14,
-    paddingHorizontal: 4,
-    paddingVertical: 4,
+    paddingHorizontal: width * 0.015,
+    paddingVertical: height * 0.008,
   },
   iconBox: {
-    width: 44,
-    height: 44,
+    width: width * 0.11,
+    height: width * 0.11,
+    maxWidth: 48,
+    maxHeight: 48,
     borderRadius: 10,
     backgroundColor: 'rgba(200, 182, 166, 0.15)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 10,
+    marginRight: width * 0.025,
   },
   input: {
     flex: 1,
-    fontSize: 15,
+    fontSize: width * 0.038,
     color: '#FFF',
-    paddingRight: 12,
+    paddingRight: width * 0.03,
   },
 
   // Login Button
   loginBtnWrap: {
-    marginTop: 12,
+    marginTop: height * 0.015,
   },
   loginBtn: {
-    paddingVertical: height * 0.016,
+    paddingVertical: height * 0.018,
     borderRadius: 14,
     alignItems: "center",
-    shadowColor: "#C8B6A6",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 5,
+    ...Platform.select({
+      ios: {
+        shadowColor: "#C8B6A6",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
   },
   loginBtnText: {
     color: "#FFF",
-    fontSize: Math.min(width * 0.04, 16),
+    fontSize: width * 0.04,
     fontWeight: "900",
     letterSpacing: 1.5,
   },
 
   // Demo Box
   demoBox: {
-    marginTop: 28,
+    marginTop: height * 0.035,
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderRadius: 16,
     borderWidth: 1.5,
     borderColor: 'rgba(200, 182, 166, 0.3)',
-    padding: 18,
+    padding: width * 0.045,
   },
   demoBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(200, 182, 166, 0.25)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: width * 0.03,
+    paddingVertical: height * 0.008,
     borderRadius: 8,
-    marginBottom: 14,
+    marginBottom: height * 0.018,
     borderWidth: 1,
     borderColor: 'rgba(200, 182, 166, 0.4)',
   },
   demoBadgeText: {
     color: '#C8B6A6',
-    fontSize: 11,
+    fontSize: width * 0.028,
     fontWeight: '900',
     letterSpacing: 1.2,
   },
   demoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: height * 0.01,
   },
   demoLabel: {
-    fontSize: 13,
+    fontSize: width * 0.034,
     fontWeight: '800',
     color: '#D4A59A',
-    width: 90,
+    width: width * 0.22,
     letterSpacing: 0.5,
   },
   demoValue: {
-    fontSize: 14,
+    fontSize: width * 0.036,
     color: 'rgba(255, 255, 255, 0.85)',
     fontWeight: '600',
   },
