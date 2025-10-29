@@ -275,6 +275,13 @@ export default function WelcomeScreen() {
         <AtmosphericLight />
       </View>
 
+      {/* Decorative Circles */}
+      <View style={styles.decorativeCircles}>
+        <View style={[styles.circle, styles.circle1]} />
+        <View style={[styles.circle, styles.circle2]} />
+        <View style={[styles.circle, styles.circle3]} />
+      </View>
+
       {/* 2:3 Split Layout */}
       <View style={styles.splitContainer}>
         {/* Top Section (2 parts) */}
@@ -444,6 +451,39 @@ const styles = StyleSheet.create({
   backgroundContainer: {
     ...StyleSheet.absoluteFillObject,
   },
+  decorativeCircles: {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    pointerEvents: 'none',
+  },
+  circle: {
+    position: 'absolute',
+    borderRadius: 9999,
+    backgroundColor: 'rgba(200, 182, 166, 0.15)',
+  },
+  circle1: {
+    width: width * 0.6,
+    height: width * 0.6,
+    top: height * 0.15,
+    right: -width * 0.2,
+  },
+  circle2: {
+    width: width * 0.5,
+    height: width * 0.5,
+    top: height * 0.1,
+    left: -width * 0.15,
+    backgroundColor: 'rgba(212, 165, 154, 0.12)',
+  },
+  circle3: {
+    width: width * 0.4,
+    height: width * 0.4,
+    bottom: height * 0.35,
+    left: width * 0.05,
+    backgroundColor: 'rgba(243, 237, 230, 0.1)',
+  },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
@@ -471,11 +511,14 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     paddingHorizontal: width * 0.05,
     paddingVertical: height * 0.03,
+    borderBottomLeftRadius: 80,
+    borderBottomRightRadius: 80,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.1,
     shadowRadius: 8,
     elevation: 5,
+    overflow: 'hidden',
   },
   bottomSection: {
     flex: 3,
@@ -483,6 +526,9 @@ const styles = StyleSheet.create({
     paddingHorizontal: width * 0.05,
     paddingVertical: height * 0.03,
     justifyContent: 'space-between',
+    marginTop: -60,
+    borderTopLeftRadius: 80,
+    borderTopRightRadius: 80,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: -4 },
     shadowOpacity: 0.2,
