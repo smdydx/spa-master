@@ -269,7 +269,7 @@ export default function WelcomeScreen() {
           fadeDuration={300}
         />
         <LinearGradient
-          colors={["rgba(44, 44, 44, 0.50)", "rgba(44, 44, 44, 0.40)", "rgba(44, 44, 44, 0.55)"]}
+          colors={["rgba(44, 44, 44, 0.25)", "rgba(44, 44, 44, 0.20)", "rgba(44, 44, 44, 0.30)"]}
           style={StyleSheet.absoluteFillObject}
         />
         <AtmosphericLight />
@@ -318,7 +318,7 @@ export default function WelcomeScreen() {
                 },
               ]}
             >
-              Welcome to Your{'\n'}Beauty Journey
+              Welcome to Your Beauty Journey
             </Animated.Text>
             <Animated.Text
               style={[
@@ -468,8 +468,6 @@ const styles = StyleSheet.create({
   topSection: {
     flex: 2,
     backgroundColor: 'rgba(255, 245, 235, 0.95)',
-    borderBottomRightRadius: 32,
-    borderBottomLeftRadius: 32,
     justifyContent: 'center',
     paddingHorizontal: width * 0.05,
     paddingVertical: height * 0.03,
@@ -534,10 +532,10 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
   heading: {
-    fontSize: Math.min(width * 0.045, 18),
+    fontSize: Math.min(width * 0.06, 24),
     fontWeight: "900",
     color: "#1A1A1A",
-    lineHeight: Math.min(width * 0.055, 22),
+    lineHeight: Math.min(width * 0.07, 28),
     marginBottom: height * 0.008,
     textAlign: "center",
     textShadowColor: "rgba(200, 182, 166, 0.2)",
