@@ -1,10 +1,11 @@
-
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Building2, Clock, MapPin, Star } from "lucide-react-native";
 import { useEffect, useRef } from "react";
 import {
   Animated,
+  Dimensions,
+  ImageBackground,
   SafeAreaView,
   ScrollView,
   StatusBar,
@@ -14,208 +15,174 @@ import {
   View
 } from "react-native";
 
+const { width, height } = Dimensions.get('window');
+
 const COLORS = {
-  bg: "#FFF",
-  subtle: "#FAFAFF",
-  title: "#3A39A7",
-  text: "#111827",
-  subText: "#4B5563",
-  cardBg: "#FFFFFF",
-  cardBorder: "#F1F5F9",
-  pill: "#111827",
-  pillText: "#FFFFFF",
-  muted: "#6B7280",
-  primary1: "#0EA5E9",
-  primary2: "#3B82F6",
-  accent: "#F59E0B",
+  primary: "#E91E63",
+  secondary: "#FF4081",
+  accent: "#FFC107",
+  dark: "#1A1A2E",
+  light: "#F8F9FA",
+  white: "#FFFFFF",
+  overlay: "rgba(26, 26, 46, 0.7)",
 };
 
-const AppLogo = () => {
-  const rotateAnim = useRef(new Animated.Value(0)).current;
-  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+const FloatingLeaf = ({ delay = 0, duration = 4000, style }) => {
+  const translateY = useRef(new Animated.Value(0)).current;
+  const translateX = useRef(new Animated.Value(0)).current;
+  const rotate = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.parallel([
-      Animated.timing(scaleAnim, {
-        toValue: 1,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-      Animated.loop(
-        Animated.timing(rotateAnim, {
-          toValue: 1,
-          duration: 3000,
-          useNativeDriver: true,
-        })
-      ),
-    ]).start();
+    Animated.loop(
+      Animated.parallel([
+        Animated.sequence([
+          Animated.timing(translateY, {
+            toValue: 50,
+            duration: duration,
+            delay,
+            useNativeDriver: true,
+          }),
+          Animated.timing(translateY, {
+            toValue: 0,
+            duration: duration,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.sequence([
+          Animated.timing(translateX, {
+            toValue: 20,
+            duration: duration / 2,
+            delay,
+            useNativeDriver: true,
+          }),
+          Animated.timing(translateX, {
+            toValue: -20,
+            duration: duration / 2,
+            useNativeDriver: true,
+          }),
+        ]),
+        Animated.loop(
+          Animated.timing(rotate, {
+            toValue: 1,
+            duration: duration * 2,
+            useNativeDriver: true,
+          })
+        ),
+      ])
+    ).start();
   }, []);
 
-  const rotate = rotateAnim.interpolate({
+  const rotateInterpolate = rotate.interpolate({
     inputRange: [0, 1],
     outputRange: ['0deg', '360deg'],
   });
 
   return (
-    <Animated.View style={[styles.logoWrap, { transform: [{ scale: scaleAnim }] }]}>
-      <LinearGradient
-        colors={["#6D28D9", "#9333EA", "#3B82F6"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.logoGradient}
-      >
-        <Animated.Text style={[styles.logoSpark, { transform: [{ rotate }] }]}>✧</Animated.Text>
-      </LinearGradient>
-    </Animated.View>
+    <Animated.Text
+      style={[
+        styles.floatingLeaf,
+        style,
+        {
+          transform: [
+            { translateY },
+            { translateX },
+            { rotate: rotateInterpolate },
+          ],
+        },
+      ]}
+    >
+      🌸
+    </Animated.Text>
   );
 };
 
-const FeatureCard = ({ icon, title, subtitle, tint = "#0EA5E9", delay = 0 }) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-  const slideAnim = useRef(new Animated.Value(30)).current;
+const SakuraPattern = () => (
+  <View style={styles.sakuraContainer}>
+    <FloatingLeaf style={{ top: 40, left: 20 }} delay={0} />
+    <FloatingLeaf style={{ top: 100, right: 40 }} delay={500} duration={5000} />
+    <FloatingLeaf style={{ top: 200, left: 60 }} delay={1000} duration={4500} />
+    <FloatingLeaf style={{ top: 300, right: 80 }} delay={1500} />
+    <FloatingLeaf style={{ top: 400, left: 100 }} delay={2000} duration={5500} />
+  </View>
+);
+
+const AppLogo = () => {
+  const scaleAnim = useRef(new Animated.Value(0.8)).current;
+  const opacityAnim = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.parallel([
-      Animated.timing(fadeAnim, {
+      Animated.spring(scaleAnim, {
         toValue: 1,
-        duration: 600,
-        delay,
+        friction: 4,
+        tension: 40,
         useNativeDriver: true,
       }),
-      Animated.timing(slideAnim, {
-        toValue: 0,
-        duration: 600,
-        delay,
+      Animated.timing(opacityAnim, {
+        toValue: 1,
+        duration: 1000,
         useNativeDriver: true,
       }),
     ]).start();
   }, []);
 
   return (
-    <Animated.View style={[styles.card, { opacity: fadeAnim, transform: [{ translateY: slideAnim }] }]}>
-      <View style={[styles.cardIconWrap, { backgroundColor: `${tint}15` }]}>
+    <Animated.View
+      style={[
+        styles.logoContainer,
+        {
+          opacity: opacityAnim,
+          transform: [{ scale: scaleAnim }],
+        },
+      ]}
+    >
+      <LinearGradient
+        colors={["#E91E63", "#FF4081", "#FFC107"]}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.logoGradient}
+      >
+        <Text style={styles.logoText}>✧</Text>
+      </LinearGradient>
+    </Animated.View>
+  );
+};
+
+const FeatureCard = ({ icon, title, subtitle, tint }) => {
+  const fadeAnim = useRef(new Animated.Value(0)).current;
+
+  useEffect(() => {
+    Animated.timing(fadeAnim, {
+      toValue: 1,
+      duration: 600,
+      useNativeDriver: true,
+    }).start();
+  }, []);
+
+  return (
+    <Animated.View style={[styles.featureCard, { opacity: fadeAnim }]}>
+      <View style={[styles.featureIcon, { backgroundColor: tint }]}>
         {icon}
       </View>
-      <View style={{ flex: 1 }}>
-        <Text style={styles.cardTitle}>{title}</Text>
-        <Text style={styles.cardSubtitle}>{subtitle}</Text>
+      <View style={styles.featureContent}>
+        <Text style={styles.featureTitle}>{title}</Text>
+        <Text style={styles.featureSubtitle}>{subtitle}</Text>
       </View>
     </Animated.View>
   );
 };
 
 const PillLink = ({ label, nav, router }) => (
-  <TouchableOpacity style={styles.pill} onPress={() => router.push(nav)} activeOpacity={0.7}>
+  <TouchableOpacity
+    style={styles.pill}
+    onPress={() => router.push(nav)}
+    activeOpacity={0.7}
+  >
     <Text style={styles.pillText}>{label}</Text>
   </TouchableOpacity>
 );
 
-const AnimatedBackground = () => {
-  const anim1 = useRef(new Animated.Value(0)).current;
-  const anim2 = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.parallel([
-        Animated.sequence([
-          Animated.timing(anim1, {
-            toValue: 1,
-            duration: 4000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(anim1, {
-            toValue: 0,
-            duration: 4000,
-            useNativeDriver: true,
-          }),
-        ]),
-        Animated.sequence([
-          Animated.timing(anim2, {
-            toValue: 1,
-            duration: 5000,
-            useNativeDriver: true,
-          }),
-          Animated.timing(anim2, {
-            toValue: 0,
-            duration: 5000,
-            useNativeDriver: true,
-          }),
-        ]),
-      ])
-    ).start();
-  }, []);
-
-  const translateX1 = anim1.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, 100],
-  });
-
-  const translateX2 = anim2.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -80],
-  });
-
-  return (
-    <>
-      <Animated.View
-        style={[
-          styles.bgCircle,
-          {
-            top: -100,
-            right: -50,
-            transform: [{ translateX: translateX1 }],
-          },
-        ]}
-      />
-      <Animated.View
-        style={[
-          styles.bgCircle2,
-          {
-            bottom: -80,
-            left: -40,
-            transform: [{ translateX: translateX2 }],
-          },
-        ]}
-      />
-    </>
-  );
-};
-
-const IndianLeafDecor = ({ style }) => {
-  const floatAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.loop(
-      Animated.sequence([
-        Animated.timing(floatAnim, {
-          toValue: 1,
-          duration: 3000,
-          useNativeDriver: true,
-        }),
-        Animated.timing(floatAnim, {
-          toValue: 0,
-          duration: 3000,
-          useNativeDriver: true,
-        }),
-      ])
-    ).start();
-  }, []);
-
-  const translateY = floatAnim.interpolate({
-    inputRange: [0, 1],
-    outputRange: [0, -10],
-  });
-
-  return (
-    <Animated.View style={[style, { transform: [{ translateY }] }]}>
-      <Text style={styles.leafIcon}>🌿</Text>
-    </Animated.View>
-  );
-};
-
-
-
-export default function WelcomeBeautyScreen() {
+export default function WelcomeScreen() {
   const router = useRouter();
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const slideAnim = useRef(new Animated.Value(50)).current;
@@ -224,389 +191,391 @@ export default function WelcomeBeautyScreen() {
     Animated.parallel([
       Animated.timing(fadeAnim, {
         toValue: 1,
-        duration: 800,
+        duration: 1000,
         useNativeDriver: true,
       }),
       Animated.timing(slideAnim, {
         toValue: 0,
-        duration: 800,
+        duration: 1000,
         useNativeDriver: true,
       }),
     ]).start();
   }, []);
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: "#FFF" }}>
-      <StatusBar backgroundColor="#FFE4E8" barStyle="dark-content" hidden={false} animated={true} />
+    <SafeAreaView style={styles.container}>
+      <StatusBar backgroundColor="transparent" barStyle="light-content" translucent />
+
+      {/* Background with Gradient Overlay */}
+      <View style={styles.backgroundContainer}>
+        <LinearGradient
+          colors={["#1A1A2E", "#16213E", "#0F3460"]}
+          style={StyleSheet.absoluteFillObject}
+        />
+        <SakuraPattern />
+      </View>
+
       <ScrollView
-        contentContainerStyle={{ flexGrow: 1, paddingBottom: 80 }}
+        contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Pink Section with Animated Background */}
-        <View style={styles.pinkSection}>
-          <AnimatedBackground />
-          
-          {/* Logo + Brand */}
-          <Animated.View style={{ alignItems: "center", marginTop: 40, opacity: fadeAnim, transform: [{ translateY: slideAnim }] }}>
+        {/* Hero Section with Sidebar Layout */}
+        <View style={styles.heroSection}>
+          {/* Left Content */}
+          <Animated.View
+            style={[
+              styles.leftContent,
+              {
+                opacity: fadeAnim,
+                transform: [{ translateY: slideAnim }],
+              },
+            ]}
+          >
             <AppLogo />
-            <Text style={styles.brand}>OMBARO</Text>
+            <Text style={styles.brandName}>OMBARO</Text>
             <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
-          </Animated.View>
 
-          {/* Headline */}
-          <Animated.View style={{ marginTop: 24, opacity: fadeAnim }}>
-            <Text style={styles.h1}>Welcome to Your Beauty{`\n`}Journey</Text>
-            <Text style={styles.lead}>
+            <View style={styles.japaneseDecor}>
+              <Text style={styles.japaneseText}>美と健康</Text>
+            </View>
+
+            <Text style={styles.heading}>
+              Welcome to Your{'\n'}Beauty Journey
+            </Text>
+            <Text style={styles.subheading}>
               Discover and book premium spa, salon, and wellness services near
               you. Experience luxury at your fingertips.
             </Text>
+
+            {/* Features */}
+            <View style={styles.featuresContainer}>
+              <FeatureCard
+                icon={<MapPin size={22} color="#FFF" />}
+                title="Find Nearby"
+                subtitle="Premium salons & spas"
+                tint="rgba(14, 165, 233, 0.3)"
+              />
+              <FeatureCard
+                icon={<Clock size={22} color="#FFF" />}
+                title="Easy Booking"
+                subtitle="Book in seconds"
+                tint="rgba(139, 92, 246, 0.3)"
+              />
+              <FeatureCard
+                icon={<Star size={22} color="#FFF" />}
+                title="Premium Service"
+                subtitle="Verified professionals"
+                tint="rgba(16, 185, 129, 0.3)"
+              />
+            </View>
           </Animated.View>
+
+          {/* Right Decorative Element (Girl Silhouette Area) */}
+          <View style={styles.rightDecor}>
+            <View style={styles.decorCircle1} />
+            <View style={styles.decorCircle2} />
+            <Text style={styles.decorSakura}>🌸</Text>
+            <Text style={[styles.decorSakura, styles.decorSakura2]}>🌸</Text>
+            <Text style={[styles.decorSakura, styles.decorSakura3]}>🌸</Text>
+          </View>
         </View>
 
-        {/* White Section */}
-        <View style={styles.whiteSection}>
-          {/* Indian Leaf Decorations */}
-          <IndianLeafDecor style={{ position: 'absolute', top: 20, left: 20, opacity: 0.3 }} />
-          <IndianLeafDecor style={{ position: 'absolute', top: 60, right: 30, opacity: 0.25 }} />
-          <IndianLeafDecor style={{ position: 'absolute', bottom: 100, left: 40, opacity: 0.2 }} />
-          <IndianLeafDecor style={{ position: 'absolute', bottom: 150, right: 25, opacity: 0.3 }} />
-          {/* Premium Services Header */}
-          <View style={styles.servicesHeader}>
-            <Text style={styles.servicesTitle}>Premium Services</Text>
-            <Text style={styles.servicesSubtitle}>Experience luxury wellness at its finest</Text>
-          </View>
-
-          {/* Features - Premium Grid Layout */}
-          <View style={styles.featuresGrid}>
-            <View style={styles.featureRow}>
-              <View style={styles.premiumCard}>
-                <LinearGradient
-                  colors={["#0EA5E9", "#06B6D4"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.premiumIconGradient}
-                >
-                  <MapPin size={26} color="#FFF" />
-                </LinearGradient>
-                <Text style={styles.premiumCardTitle}>Find Nearby</Text>
-                <Text style={styles.premiumCardDesc}>Discover premium salons & spas</Text>
-              </View>
-
-              <View style={styles.premiumCard}>
-                <LinearGradient
-                  colors={["#8B5CF6", "#A78BFA"]}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 1 }}
-                  style={styles.premiumIconGradient}
-                >
-                  <Clock size={26} color="#FFF" />
-                </LinearGradient>
-                <Text style={styles.premiumCardTitle}>Easy Booking</Text>
-                <Text style={styles.premiumCardDesc}>Book in seconds, relax instantly</Text>
-              </View>
-            </View>
-
-            <View style={styles.featuredCard}>
-              <LinearGradient
-                colors={["#10B981", "#34D399"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.featuredGradient}
-              >
-                <View style={styles.featuredContent}>
-                  <View style={styles.featuredIconWrap}>
-                    <Star size={32} color="#FFF" fill="#FFF" />
-                  </View>
-                  <View style={styles.featuredText}>
-                    <Text style={styles.featuredTitle}>Premium Service</Text>
-                    <Text style={styles.featuredDesc}>Verified professionals, guaranteed excellence</Text>
-                  </View>
-                </View>
-              </LinearGradient>
-            </View>
-          </View>
-
-          {/* CTAs - Premium Buttons */}
-          <View style={styles.ctaSection}>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => router.push('/auth/phone-register')}
+        {/* CTA Section */}
+        <View style={styles.ctaSection}>
+          <TouchableOpacity
+            activeOpacity={0.9}
+            onPress={() => router.push('/auth/phone-register')}
+          >
+            <LinearGradient
+              colors={["#E91E63", "#FF4081", "#FFC107"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 0 }}
+              style={styles.primaryBtn}
             >
-              <LinearGradient
-                colors={["#EC4899", "#F472B6", "#FB7185"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.primaryBtnNew}
-              >
-                <Text style={styles.primaryBtnTextNew}>Get Started</Text>
-                <View style={styles.btnShine} />
-              </LinearGradient>
-            </TouchableOpacity>
+              <Text style={styles.primaryBtnText}>Get Started</Text>
+            </LinearGradient>
+          </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.secondaryBtnNew}
-              activeOpacity={0.9}
+          <TouchableOpacity style={styles.secondaryBtn} activeOpacity={0.9}>
+            <Text style={styles.secondaryBtnText}>Login to Account</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={() => router.push('/Partner')}
+            activeOpacity={0.9}
+          >
+            <LinearGradient
+              colors={["rgba(255, 193, 7, 0.2)", "rgba(255, 193, 7, 0.1)"]}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.vendorBtn}
             >
-              <Text style={styles.secondaryBtnTextNew}>Login to Account</Text>
-            </TouchableOpacity>
+              <Building2 size={20} color="#FFC107" />
+              <Text style={styles.vendorBtnText}>Become a Partner</Text>
+            </LinearGradient>
+          </TouchableOpacity>
+        </View>
 
-            {/* Vendor Partner - Premium */}
-            <TouchableOpacity
-              onPress={() => router.push('/Partner')}
-              activeOpacity={0.9}
-            >
-              <LinearGradient
-                colors={["#FFFBEB", "#FEF3C7"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.vendorBtnNew}
-              >
-                <View style={styles.vendorIconWrap}>
-                  <Building2 size={20} color="#D97706" />
-                </View>
-                <Text style={styles.vendorBtnTextNew}>Become a Partner</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+        {/* Quick Access */}
+        <View style={styles.quickAccessSection}>
+          <Text style={styles.quickAccessLabel}>Quick Access</Text>
+          <View style={styles.pillsContainer}>
+            <PillLink label="Employee" nav="/Employee/auth/login" router={router} />
+            <PillLink label="Vendor" nav="/Vendor/auth/login" router={router} />
+            <PillLink label="Therapist" nav="/Therapist/auth/login" router={router} />
           </View>
-
-          {/* Quick Access Pills - Refined */}
-          <View style={styles.quickAccessSection}>
-            <Text style={styles.quickAccessLabel}>Quick Access</Text>
-            <View style={styles.pillsContainer}>
-              <PillLink label="Employee" nav="/Employee/auth/login" router={router} />
-              <PillLink label="Vendor" nav="/Vendor/auth/login" router={router} />
-              <PillLink label="Therapist" nav="/Therapist/auth/login" router={router} />
-            </View>
-            <View style={styles.pillsContainer}>
-              <PillLink label="Admin" nav="/Admin/auth/login" router={router} />
-              <PillLink label="Departments" nav="/Department/auth/login" router={router} />
-              <PillLink label="Doc" nav="/Doc/auth/login" router={router} />
-            </View>
+          <View style={styles.pillsContainer}>
+            <PillLink label="Admin" nav="/Admin/auth/login" router={router} />
+            <PillLink label="Departments" nav="/Department/auth/login" router={router} />
           </View>
+        </View>
 
-          {/* Terms - Elegant */}
-          <Text style={styles.termsNew}>
-            By continuing, you agree to our{" "}
-            <Text style={styles.linkNew}>Terms & Privacy Policy</Text>
-          </Text>
+        {/* Terms */}
+        <Text style={styles.terms}>
+          By continuing, you agree to our{" "}
+          <Text style={styles.link}>Terms & Privacy Policy</Text>
+        </Text>
+
+        {/* Japanese Pattern Footer */}
+        <View style={styles.patternFooter}>
+          <Text style={styles.patternText}>桜 • 美 • 和 • 心</Text>
         </View>
       </ScrollView>
-      
     </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  pinkSection: {
-    backgroundColor: "#FFE4E8",
-    paddingHorizontal: 24,
-    paddingTop: 20,
-    paddingBottom: 30,
-    flex: 2,
-    overflow: "hidden",
-    borderBottomLeftRadius: 40,
-    borderBottomRightRadius: 40,
-  },
-  whiteSection: {
-    backgroundColor: "#FFFFFF",
-    flex: 3,
-    paddingBottom: 30,
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    marginTop: -30,
-  },
-  servicesHeader: {
-    alignItems: "center",
-    marginTop: 32,
-    paddingHorizontal: 24,
-  },
-  servicesTitle: {
-    fontSize: 26,
-    fontWeight: "900",
-    color: "#111827",
-    letterSpacing: 0.5,
-  },
-  servicesSubtitle: {
-    marginTop: 6,
-    fontSize: 15,
-    color: "#6B7280",
-    fontWeight: "500",
-  },
-  featuresGrid: {
-    paddingHorizontal: 20,
-    marginTop: 24,
-    gap: 14,
-  },
-  featureRow: {
-    flexDirection: "row",
-    gap: 14,
-  },
-  premiumCard: {
+  container: {
     flex: 1,
-    backgroundColor: "#FAFAFA",
-    borderRadius: 24,
-    padding: 20,
-    alignItems: "center",
-    borderWidth: 1,
-    borderColor: "#F3F4F6",
-    shadowColor: "#000",
-    shadowOpacity: 0.06,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 3,
+    backgroundColor: "#1A1A2E",
   },
-  premiumIconGradient: {
-    width: 64,
-    height: 64,
+  backgroundContainer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  sakuraContainer: {
+    ...StyleSheet.absoluteFillObject,
+  },
+  floatingLeaf: {
+    position: "absolute",
+    fontSize: 24,
+    opacity: 0.6,
+  },
+  scrollContent: {
+    paddingBottom: 40,
+  },
+  heroSection: {
+    flexDirection: width > 768 ? "row" : "column",
+    paddingHorizontal: 24,
+    paddingTop: 60,
+    minHeight: height * 0.7,
+  },
+  leftContent: {
+    flex: 1,
+    alignItems: width > 768 ? "flex-start" : "center",
+    paddingRight: width > 768 ? 40 : 0,
+  },
+  logoContainer: {
+    marginBottom: 16,
+  },
+  logoGradient: {
+    width: 80,
+    height: 80,
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 12,
-  },
-  premiumCardTitle: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#111827",
-    marginTop: 4,
-  },
-  premiumCardDesc: {
-    fontSize: 12,
-    color: "#6B7280",
-    textAlign: "center",
-    marginTop: 4,
-    fontWeight: "500",
-  },
-  featuredCard: {
-    borderRadius: 24,
-    overflow: "hidden",
-    shadowColor: "#10B981",
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
+    shadowColor: "#E91E63",
     shadowOffset: { width: 0, height: 8 },
-    elevation: 6,
+    shadowOpacity: 0.5,
+    shadowRadius: 16,
+    elevation: 10,
   },
-  featuredGradient: {
-    padding: 24,
+  logoText: {
+    fontSize: 40,
+    color: "#FFF",
   },
-  featuredContent: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 16,
-  },
-  featuredIconWrap: {
-    width: 60,
-    height: 60,
-    borderRadius: 16,
-    backgroundColor: "rgba(255,255,255,0.25)",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  featuredText: {
-    flex: 1,
-  },
-  featuredTitle: {
-    fontSize: 20,
+  brandName: {
+    fontSize: 36,
     fontWeight: "900",
     color: "#FFF",
-    letterSpacing: 0.5,
+    letterSpacing: 4,
+    marginBottom: 8,
+    textShadowColor: "rgba(233, 30, 99, 0.5)",
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 10,
   },
-  featuredDesc: {
+  tagline: {
+    fontSize: 16,
+    color: "#FF4081",
+    fontWeight: "600",
+    marginBottom: 20,
+  },
+  japaneseDecor: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
+    marginBottom: 24,
+  },
+  japaneseText: {
     fontSize: 14,
+    color: "#FFC107",
+    fontWeight: "700",
+    letterSpacing: 2,
+  },
+  heading: {
+    fontSize: 32,
+    fontWeight: "900",
     color: "#FFF",
-    marginTop: 4,
-    fontWeight: "500",
-    opacity: 0.95,
+    lineHeight: 40,
+    marginBottom: 16,
+    textAlign: width > 768 ? "left" : "center",
   },
-  ctaSection: {
-    paddingHorizontal: 20,
-    marginTop: 28,
+  subheading: {
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.8)",
+    lineHeight: 24,
+    marginBottom: 32,
+    textAlign: width > 768 ? "left" : "center",
+  },
+  featuresContainer: {
+    width: "100%",
     gap: 12,
+    marginTop: 16,
   },
-  primaryBtnNew: {
-    paddingVertical: 18,
-    borderRadius: 24,
+  featureCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: "rgba(255, 255, 255, 0.1)",
+    gap: 14,
+  },
+  featureIcon: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#EC4899",
-    shadowOpacity: 0.4,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 8,
-    overflow: "hidden",
   },
-  primaryBtnTextNew: {
+  featureContent: {
+    flex: 1,
+  },
+  featureTitle: {
+    fontSize: 16,
+    fontWeight: "800",
+    color: "#FFF",
+    marginBottom: 4,
+  },
+  featureSubtitle: {
+    fontSize: 13,
+    color: "rgba(255, 255, 255, 0.6)",
+    fontWeight: "500",
+  },
+  rightDecor: {
+    width: width > 768 ? width * 0.4 : width,
+    height: width > 768 ? "100%" : 200,
+    position: "relative",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  decorCircle1: {
+    width: 200,
+    height: 200,
+    borderRadius: 100,
+    backgroundColor: "rgba(233, 30, 99, 0.1)",
+    position: "absolute",
+    top: 50,
+  },
+  decorCircle2: {
+    width: 150,
+    height: 150,
+    borderRadius: 75,
+    backgroundColor: "rgba(255, 193, 7, 0.1)",
+    position: "absolute",
+    bottom: 50,
+    right: 20,
+  },
+  decorSakura: {
+    fontSize: 48,
+    position: "absolute",
+    top: 100,
+    right: 40,
+  },
+  decorSakura2: {
+    top: 180,
+    left: 30,
+    fontSize: 36,
+  },
+  decorSakura3: {
+    bottom: 80,
+    right: 60,
+    fontSize: 40,
+  },
+  ctaSection: {
+    paddingHorizontal: 24,
+    marginTop: 32,
+    gap: 14,
+  },
+  primaryBtn: {
+    paddingVertical: 18,
+    borderRadius: 16,
+    alignItems: "center",
+    shadowColor: "#E91E63",
+    shadowOffset: { width: 0, height: 8 },
+    shadowOpacity: 0.4,
+    shadowRadius: 16,
+    elevation: 8,
+  },
+  primaryBtnText: {
     color: "#FFF",
     fontSize: 18,
     fontWeight: "900",
     letterSpacing: 1,
   },
-  btnShine: {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    backgroundColor: "rgba(255,255,255,0.1)",
-  },
-  secondaryBtnNew: {
+  secondaryBtn: {
     paddingVertical: 18,
-    borderRadius: 24,
+    borderRadius: 16,
     borderWidth: 2,
-    borderColor: "#E5E7EB",
-    backgroundColor: "#FAFAFA",
+    borderColor: "rgba(255, 255, 255, 0.3)",
+    backgroundColor: "rgba(255, 255, 255, 0.05)",
     alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.04,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
   },
-  secondaryBtnTextNew: {
-    color: "#111827",
+  secondaryBtnText: {
+    color: "#FFF",
     fontSize: 17,
     fontWeight: "800",
-    letterSpacing: 0.5,
   },
-  vendorBtnNew: {
+  vendorBtn: {
     paddingVertical: 16,
     paddingHorizontal: 20,
-    borderRadius: 24,
+    borderRadius: 16,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
-    borderWidth: 2,
-    borderColor: "#FDE68A",
-    shadowColor: "#F59E0B",
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 4,
+    borderWidth: 1,
+    borderColor: "rgba(255, 193, 7, 0.3)",
   },
-  vendorIconWrap: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: "#FEF3C7",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  vendorBtnTextNew: {
+  vendorBtnText: {
     fontSize: 16,
     fontWeight: "800",
-    color: "#B45309",
-    letterSpacing: 0.5,
+    color: "#FFC107",
   },
   quickAccessSection: {
     alignItems: "center",
-    marginTop: 28,
-    paddingHorizontal: 20,
+    marginTop: 32,
+    paddingHorizontal: 24,
   },
   quickAccessLabel: {
-    fontSize: 13,
+    fontSize: 12,
     fontWeight: "700",
-    color: "#9CA3AF",
-    letterSpacing: 1,
+    color: "rgba(255, 255, 255, 0.5)",
+    letterSpacing: 2,
     textTransform: "uppercase",
     marginBottom: 12,
   },
@@ -614,265 +583,44 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     gap: 8,
     marginTop: 8,
-  },
-  termsNew: {
-    textAlign: "center",
-    color: "#9CA3AF",
-    marginTop: 24,
-    fontSize: 12,
-    lineHeight: 18,
-    fontWeight: "500",
-    paddingHorizontal: 32,
-  },
-  linkNew: {
-    color: "#EC4899",
-    fontWeight: "700",
-  },
-  bgCircle: {
-    position: "absolute",
-    width: 250,
-    height: 250,
-    borderRadius: 125,
-    backgroundColor: "rgba(255, 182, 193, 0.3)",
-  },
-  bgCircle2: {
-    position: "absolute",
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: "rgba(255, 192, 203, 0.25)",
-  },
-  leafIcon: {
-    fontSize: 32,
-    transform: [{ rotate: '15deg' }],
-  },
-  bottomNav: {
-    position: "absolute",
-    bottom: 0,
-    left: 0,
-    right: 0,
-    backgroundColor: "#FFFFFF",
-    borderTopLeftRadius: 24,
-    borderTopRightRadius: 24,
-    paddingBottom: 8,
-    paddingTop: 12,
-    shadowColor: "#000",
-    shadowOpacity: 0.1,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: -4 },
-    elevation: 10,
-    borderTopWidth: 1,
-    borderTopColor: "#F3F4F6",
-  },
-  navContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    alignItems: "center",
-    paddingHorizontal: 16,
-  },
-  navItem: {
-    alignItems: "center",
+    flexWrap: "wrap",
     justifyContent: "center",
-    gap: 4,
-  },
-  navIconWrap: {
-    width: 48,
-    height: 48,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "transparent",
-  },
-  navIconActive: {
-    backgroundColor: "#FCE7F3",
-  },
-  navLabel: {
-    fontSize: 11,
-    fontWeight: "600",
-    color: "#9CA3AF",
-    marginTop: 2,
-  },
-  navLabelActive: {
-    color: "#EC4899",
-    fontWeight: "700",
-  },
-  logoWrap: {
-    width: 96,
-    height: 96,
-    borderRadius: 28,
-    shadowColor: "#6D28D9",
-    shadowOpacity: 0.3,
-    shadowRadius: 20,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 8,
-  },
-  logoGradient: {
-    flex: 1,
-    borderRadius: 28,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  logoSpark: {
-    fontSize: 34,
-    color: "#FFFFFF",
-    marginTop: -4,
-  },
-  brand: {
-    marginTop: 14,
-    fontSize: 34,
-    fontWeight: "900",
-    letterSpacing: 3,
-    color: "#5B21B6",
-  },
-  tagline: {
-    marginTop: 4,
-    fontSize: 16,
-    color: "#6B7280",
-    fontWeight: "500",
-  },
-  h1: {
-    fontSize: 28,
-    lineHeight: 36,
-    fontWeight: "800",
-    color: "#111827",
-    textAlign: "center",
-  },
-  lead: {
-    marginTop: 10,
-    fontSize: 16,
-    color: "#4B5563",
-    lineHeight: 24,
-    marginHorizontal: 15,
-    textAlign: "center",
-    fontWeight: "400",
-  },
-
-  card: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 14,
-    padding: 18,
-    borderRadius: 24,
-    backgroundColor: "#FFFFFF",
-    borderWidth: 1,
-    borderColor: "#F3F4F6",
-    shadowColor: "#000",
-    shadowOpacity: 0.08,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 4,
-  },
-  cardIconWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: 16,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  cardTitle: {
-    fontSize: 18,
-    fontWeight: "800",
-    color: "#111827",
-  },
-  cardSubtitle: {
-    marginTop: 4,
-    fontSize: 14,
-    color: "#6B7280",
-    fontWeight: "500",
-  },
-
-  primaryBtn: {
-    paddingVertical: 18,
-    borderRadius: 20,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#3B82F6",
-    shadowOpacity: 0.3,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 6,
-  },
-  primaryBtnText: { 
-    color: "#FFF", 
-    fontSize: 18, 
-    fontWeight: "800",
-    letterSpacing: 0.5,
-  },
-
-  secondaryBtn: {
-    marginTop: 14,
-    paddingVertical: 16,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#E5E7EB",
-    backgroundColor: "#FFFFFF",
-    alignItems: "center",
-    shadowColor: "#000",
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
-  },
-  secondaryBtnText: { 
-    color: "#111827", 
-    fontSize: 18, 
-    fontWeight: "700",
-    letterSpacing: 0.5,
-  },
-
-  vendorBtn: {
-    marginTop: 14,
-    paddingVertical: 16,
-    borderRadius: 20,
-    borderWidth: 2,
-    borderColor: "#F59E0B",
-    backgroundColor: "#FFFBEB",
-    alignItems: "center",
-    justifyContent: "center",
-    flexDirection: "row",
-    gap: 8,
-  },
-  vendorBtnText: {
-    fontSize: 16,
-    fontWeight: "700",
-    color: "#B45309",
-    letterSpacing: 0.3,
-  },
-
-  pillsRow: {
-    flexDirection: "row",
-    gap: 10,
   },
   pill: {
     paddingHorizontal: 18,
-    paddingVertical: 11,
-    borderRadius: 22,
-    backgroundColor: "#F9FAFB",
+    paddingVertical: 10,
+    borderRadius: 20,
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderWidth: 1,
-    borderColor: "#E5E7EB",
-    shadowColor: "#000",
-    shadowOpacity: 0.03,
-    shadowRadius: 4,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 1,
+    borderColor: "rgba(255, 255, 255, 0.2)",
   },
-  pillText: { 
-    color: "#4B5563", 
-    fontWeight: "700", 
+  pillText: {
+    color: "#FFF",
+    fontWeight: "700",
     fontSize: 12,
-    letterSpacing: 0.8,
   },
-
   terms: {
     textAlign: "center",
-    color: "#6B7280",
-    marginTop: 20,
-    fontSize: 13,
-    lineHeight: 18,
-    fontWeight: "500",
+    color: "rgba(255, 255, 255, 0.5)",
+    marginTop: 28,
+    fontSize: 12,
+    paddingHorizontal: 32,
   },
-  link: { 
-    color: "#2563EB", 
+  link: {
+    color: "#FF4081",
     fontWeight: "700",
+  },
+  patternFooter: {
+    alignItems: "center",
+    marginTop: 24,
+    paddingVertical: 16,
+    borderTopWidth: 1,
+    borderTopColor: "rgba(255, 255, 255, 0.1)",
+  },
+  patternText: {
+    fontSize: 16,
+    color: "rgba(255, 255, 255, 0.3)",
+    letterSpacing: 8,
+    fontWeight: "300",
   },
 });
