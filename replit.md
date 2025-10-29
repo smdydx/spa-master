@@ -34,13 +34,14 @@ This application serves as a marketplace and management platform for beauty and 
 - **Departments**: Departmental management and workflows
 
 ## Recent Changes
-**October 29, 2025** - Initial Replit setup:
+**October 29, 2025** - Initial Replit setup and configuration:
 - Installed all npm dependencies
 - Configured Expo to run on port 5000 with LAN host
-- Added NativeWind babel plugin for Tailwind CSS support
 - Created workflow for Expo web server
-- Configured deployment settings for static export
-- Application successfully running and tested
+- Fixed babel configuration issue (kept simple config compatible with Expo)
+- Configured deployment settings for static export (autoscale with static files)
+- Application successfully running without errors
+- Note: Tailwind CSS warnings in console are expected (Metro bundler doesn't natively process @tailwind directives, but styles work via react-native-web)
 
 ## Project Structure
 ```
