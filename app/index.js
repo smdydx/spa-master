@@ -7,7 +7,6 @@ import {
   Dimensions,
   ImageBackground,
   SafeAreaView,
-  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
@@ -24,7 +23,7 @@ const COLORS = {
   dark: "#1A1A2E",
   light: "#F8F9FA",
   white: "#FFFFFF",
-  overlay: "rgba(26, 26, 46, 0.7)",
+  overlay: "rgba(26, 26, 46, 0.85)",
 };
 
 const FloatingLeaf = ({ delay = 0, duration = 4000, style }) => {
@@ -148,30 +147,6 @@ const AppLogo = () => {
   );
 };
 
-const FeatureCard = ({ icon, title, subtitle, tint }) => {
-  const fadeAnim = useRef(new Animated.Value(0)).current;
-
-  useEffect(() => {
-    Animated.timing(fadeAnim, {
-      toValue: 1,
-      duration: 600,
-      useNativeDriver: true,
-    }).start();
-  }, []);
-
-  return (
-    <Animated.View style={[styles.featureCard, { opacity: fadeAnim }]}>
-      <View style={[styles.featureIcon, { backgroundColor: tint }]}>
-        {icon}
-      </View>
-      <View style={styles.featureContent}>
-        <Text style={styles.featureTitle}>{title}</Text>
-        <Text style={styles.featureSubtitle}>{subtitle}</Text>
-      </View>
-    </Animated.View>
-  );
-};
-
 const PillLink = ({ label, nav, router }) => (
   <TouchableOpacity
     style={styles.pill}
@@ -206,22 +181,22 @@ export default function WelcomeScreen() {
     <SafeAreaView style={styles.container}>
       <StatusBar backgroundColor="transparent" barStyle="light-content" translucent />
 
-      {/* Background with Gradient Overlay */}
-      <View style={styles.backgroundContainer}>
+      {/* Background with Japanese Girl Image */}
+      <ImageBackground
+        source={{ uri: 'https://images.unsplash.com/photo-1554568218-0f1715e72254?q=80&w=1000' }}
+        style={styles.backgroundImage}
+        resizeMode="cover"
+      >
         <LinearGradient
-          colors={["#1A1A2E", "#16213E", "#0F3460"]}
+          colors={["rgba(26, 26, 46, 0.9)", "rgba(26, 26, 46, 0.85)", "rgba(26, 26, 46, 0.9)"]}
           style={StyleSheet.absoluteFillObject}
         />
         <SakuraPattern />
-      </View>
+      </ImageBackground>
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Hero Section with Sidebar Layout */}
+      <View style={styles.content}>
+        {/* Hero Section */}
         <View style={styles.heroSection}>
-          {/* Left Content */}
           <Animated.View
             style={[
               styles.leftContent,
@@ -235,49 +210,13 @@ export default function WelcomeScreen() {
             <Text style={styles.brandName}>OMBARO</Text>
             <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
 
-            <View style={styles.japaneseDecor}>
-              <Text style={styles.japaneseText}>美と健康</Text>
-            </View>
-
             <Text style={styles.heading}>
               Welcome to Your{'\n'}Beauty Journey
             </Text>
             <Text style={styles.subheading}>
-              Discover and book premium spa, salon, and wellness services near
-              you. Experience luxury at your fingertips.
+              Discover and book premium spa, salon, and wellness services near you.
             </Text>
-
-            {/* Features */}
-            <View style={styles.featuresContainer}>
-              <FeatureCard
-                icon={<MapPin size={22} color="#FFF" />}
-                title="Find Nearby"
-                subtitle="Premium salons & spas"
-                tint="rgba(14, 165, 233, 0.3)"
-              />
-              <FeatureCard
-                icon={<Clock size={22} color="#FFF" />}
-                title="Easy Booking"
-                subtitle="Book in seconds"
-                tint="rgba(139, 92, 246, 0.3)"
-              />
-              <FeatureCard
-                icon={<Star size={22} color="#FFF" />}
-                title="Premium Service"
-                subtitle="Verified professionals"
-                tint="rgba(16, 185, 129, 0.3)"
-              />
-            </View>
           </Animated.View>
-
-          {/* Right Decorative Element (Girl Silhouette Area) */}
-          <View style={styles.rightDecor}>
-            <View style={styles.decorCircle1} />
-            <View style={styles.decorCircle2} />
-            <Text style={styles.decorSakura}>🌸</Text>
-            <Text style={[styles.decorSakura, styles.decorSakura2]}>🌸</Text>
-            <Text style={[styles.decorSakura, styles.decorSakura3]}>🌸</Text>
-          </View>
         </View>
 
         {/* CTA Section */}
@@ -310,7 +249,7 @@ export default function WelcomeScreen() {
               end={{ x: 1, y: 1 }}
               style={styles.vendorBtn}
             >
-              <Building2 size={20} color="#FFC107" />
+              <Building2 size={18} color="#FFC107" />
               <Text style={styles.vendorBtnText}>Become a Partner</Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -323,24 +262,10 @@ export default function WelcomeScreen() {
             <PillLink label="Employee" nav="/Employee/auth/login" router={router} />
             <PillLink label="Vendor" nav="/Vendor/auth/login" router={router} />
             <PillLink label="Therapist" nav="/Therapist/auth/login" router={router} />
-          </View>
-          <View style={styles.pillsContainer}>
             <PillLink label="Admin" nav="/Admin/auth/login" router={router} />
-            <PillLink label="Departments" nav="/Department/auth/login" router={router} />
           </View>
         </View>
-
-        {/* Terms */}
-        <Text style={styles.terms}>
-          By continuing, you agree to our{" "}
-          <Text style={styles.link}>Terms & Privacy Policy</Text>
-        </Text>
-
-        {/* Japanese Pattern Footer */}
-        <View style={styles.patternFooter}>
-          <Text style={styles.patternText}>桜 • 美 • 和 • 心</Text>
-        </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -350,8 +275,10 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#1A1A2E",
   },
-  backgroundContainer: {
+  backgroundImage: {
     ...StyleSheet.absoluteFillObject,
+    width: '100%',
+    height: '100%',
   },
   sakuraContainer: {
     ...StyleSheet.absoluteFillObject,
@@ -361,27 +288,27 @@ const styles = StyleSheet.create({
     fontSize: 24,
     opacity: 0.6,
   },
-  scrollContent: {
-    paddingBottom: 40,
+  content: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 40,
+    paddingBottom: 20,
+    justifyContent: 'space-between',
   },
   heroSection: {
-    flexDirection: width > 768 ? "row" : "column",
-    paddingHorizontal: 24,
-    paddingTop: 60,
-    minHeight: height * 0.7,
+    alignItems: "center",
+    paddingTop: 20,
   },
   leftContent: {
-    flex: 1,
-    alignItems: width > 768 ? "flex-start" : "center",
-    paddingRight: width > 768 ? 40 : 0,
+    alignItems: "center",
   },
   logoContainer: {
-    marginBottom: 16,
+    marginBottom: 12,
   },
   logoGradient: {
-    width: 80,
-    height: 80,
-    borderRadius: 20,
+    width: 70,
+    height: 70,
+    borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
     shadowColor: "#E91E63",
@@ -391,138 +318,46 @@ const styles = StyleSheet.create({
     elevation: 10,
   },
   logoText: {
-    fontSize: 40,
+    fontSize: 36,
     color: "#FFF",
   },
   brandName: {
-    fontSize: 36,
+    fontSize: 32,
     fontWeight: "900",
     color: "#FFF",
     letterSpacing: 4,
-    marginBottom: 8,
+    marginBottom: 6,
     textShadowColor: "rgba(233, 30, 99, 0.5)",
     textShadowOffset: { width: 0, height: 2 },
     textShadowRadius: 10,
   },
   tagline: {
-    fontSize: 16,
+    fontSize: 14,
     color: "#FF4081",
     fontWeight: "600",
-    marginBottom: 20,
-  },
-  japaneseDecor: {
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    backgroundColor: "rgba(255, 255, 255, 0.1)",
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.2)",
-    marginBottom: 24,
-  },
-  japaneseText: {
-    fontSize: 14,
-    color: "#FFC107",
-    fontWeight: "700",
-    letterSpacing: 2,
+    marginBottom: 16,
   },
   heading: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: "900",
     color: "#FFF",
-    lineHeight: 40,
-    marginBottom: 16,
-    textAlign: width > 768 ? "left" : "center",
+    lineHeight: 36,
+    marginBottom: 12,
+    textAlign: "center",
   },
   subheading: {
-    fontSize: 16,
+    fontSize: 14,
     color: "rgba(255, 255, 255, 0.8)",
-    lineHeight: 24,
-    marginBottom: 32,
-    textAlign: width > 768 ? "left" : "center",
-  },
-  featuresContainer: {
-    width: "100%",
-    gap: 12,
-    marginTop: 16,
-  },
-  featureCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "rgba(255, 255, 255, 0.05)",
-    borderRadius: 16,
-    padding: 16,
-    borderWidth: 1,
-    borderColor: "rgba(255, 255, 255, 0.1)",
-    gap: 14,
-  },
-  featureIcon: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  featureContent: {
-    flex: 1,
-  },
-  featureTitle: {
-    fontSize: 16,
-    fontWeight: "800",
-    color: "#FFF",
-    marginBottom: 4,
-  },
-  featureSubtitle: {
-    fontSize: 13,
-    color: "rgba(255, 255, 255, 0.6)",
-    fontWeight: "500",
-  },
-  rightDecor: {
-    width: width > 768 ? width * 0.4 : width,
-    height: width > 768 ? "100%" : 200,
-    position: "relative",
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  decorCircle1: {
-    width: 200,
-    height: 200,
-    borderRadius: 100,
-    backgroundColor: "rgba(233, 30, 99, 0.1)",
-    position: "absolute",
-    top: 50,
-  },
-  decorCircle2: {
-    width: 150,
-    height: 150,
-    borderRadius: 75,
-    backgroundColor: "rgba(255, 193, 7, 0.1)",
-    position: "absolute",
-    bottom: 50,
-    right: 20,
-  },
-  decorSakura: {
-    fontSize: 48,
-    position: "absolute",
-    top: 100,
-    right: 40,
-  },
-  decorSakura2: {
-    top: 180,
-    left: 30,
-    fontSize: 36,
-  },
-  decorSakura3: {
-    bottom: 80,
-    right: 60,
-    fontSize: 40,
+    lineHeight: 20,
+    textAlign: "center",
+    paddingHorizontal: 20,
   },
   ctaSection: {
-    paddingHorizontal: 24,
-    marginTop: 32,
-    gap: 14,
+    gap: 12,
+    marginVertical: 10,
   },
   primaryBtn: {
-    paddingVertical: 18,
+    paddingVertical: 16,
     borderRadius: 16,
     alignItems: "center",
     shadowColor: "#E91E63",
@@ -533,12 +368,12 @@ const styles = StyleSheet.create({
   },
   primaryBtnText: {
     color: "#FFF",
-    fontSize: 18,
+    fontSize: 17,
     fontWeight: "900",
     letterSpacing: 1,
   },
   secondaryBtn: {
-    paddingVertical: 18,
+    paddingVertical: 16,
     borderRadius: 16,
     borderWidth: 2,
     borderColor: "rgba(255, 255, 255, 0.3)",
@@ -547,48 +382,46 @@ const styles = StyleSheet.create({
   },
   secondaryBtnText: {
     color: "#FFF",
-    fontSize: 17,
+    fontSize: 16,
     fontWeight: "800",
   },
   vendorBtn: {
-    paddingVertical: 16,
+    paddingVertical: 14,
     paddingHorizontal: 20,
     borderRadius: 16,
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "center",
-    gap: 10,
+    gap: 8,
     borderWidth: 1,
     borderColor: "rgba(255, 193, 7, 0.3)",
   },
   vendorBtnText: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "800",
     color: "#FFC107",
   },
   quickAccessSection: {
     alignItems: "center",
-    marginTop: 32,
-    paddingHorizontal: 24,
+    paddingBottom: 10,
   },
   quickAccessLabel: {
-    fontSize: 12,
+    fontSize: 11,
     fontWeight: "700",
     color: "rgba(255, 255, 255, 0.5)",
     letterSpacing: 2,
     textTransform: "uppercase",
-    marginBottom: 12,
+    marginBottom: 10,
   },
   pillsContainer: {
     flexDirection: "row",
     gap: 8,
-    marginTop: 8,
     flexWrap: "wrap",
     justifyContent: "center",
   },
   pill: {
-    paddingHorizontal: 18,
-    paddingVertical: 10,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
     borderRadius: 20,
     backgroundColor: "rgba(255, 255, 255, 0.1)",
     borderWidth: 1,
@@ -597,30 +430,6 @@ const styles = StyleSheet.create({
   pillText: {
     color: "#FFF",
     fontWeight: "700",
-    fontSize: 12,
-  },
-  terms: {
-    textAlign: "center",
-    color: "rgba(255, 255, 255, 0.5)",
-    marginTop: 28,
-    fontSize: 12,
-    paddingHorizontal: 32,
-  },
-  link: {
-    color: "#FF4081",
-    fontWeight: "700",
-  },
-  patternFooter: {
-    alignItems: "center",
-    marginTop: 24,
-    paddingVertical: 16,
-    borderTopWidth: 1,
-    borderTopColor: "rgba(255, 255, 255, 0.1)",
-  },
-  patternText: {
-    fontSize: 16,
-    color: "rgba(255, 255, 255, 0.3)",
-    letterSpacing: 8,
-    fontWeight: "300",
+    fontSize: 11,
   },
 });
