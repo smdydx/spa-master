@@ -44,36 +44,32 @@ export default function EmployeeLogin() {
         />
       </View>
 
-      <ScrollView
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-      >
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <ArrowLeft size={20} color="#2C2C2C" strokeWidth={2.5} />
-          </TouchableOpacity>
-        </View>
+      {/* Header */}
+      <View style={styles.header}>
+        <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
+          <ArrowLeft size={20} color="#2C2C2C" strokeWidth={2.5} />
+        </TouchableOpacity>
+      </View>
 
-        {/* Top Section - Logo & Title */}
-        <View style={styles.topSection}>
-          <View style={styles.logoContainer}>
-            <LinearGradient
-              colors={["#C8B6A6", "#D4A59A", "#F3EDE6"]}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.logoGradient}
-            >
-              <UserCircle2 size={32} color="#FFFFFF" strokeWidth={2} />
-            </LinearGradient>
-          </View>
-          <Text style={styles.brandName}>EMPLOYEE PORTAL</Text>
-          <Text style={styles.heading}>Welcome Back!</Text>
-          <Text style={styles.subheading}>Sign in to access your dashboard</Text>
+      {/* Top Section - Logo & Title */}
+      <View style={styles.topSection}>
+        <View style={styles.logoContainer}>
+          <LinearGradient
+            colors={["#C8B6A6", "#D4A59A", "#F3EDE6"]}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.logoGradient}
+          >
+            <UserCircle2 size={28} color="#FFFFFF" strokeWidth={2} />
+          </LinearGradient>
         </View>
+        <Text style={styles.brandName}>EMPLOYEE PORTAL</Text>
+        <Text style={styles.heading}>Welcome Back!</Text>
+        <Text style={styles.subheading}>Sign in to access your dashboard</Text>
+      </View>
 
-        {/* Bottom Section - Login Form */}
-        <View style={styles.bottomSection}>
+      {/* Bottom Section - Login Form */}
+      <View style={styles.bottomSection}>
           <LinearGradient
             colors={['#1e1e1e', '#2a2520', '#1a1a1a']}
             style={styles.bottomSectionGradient}
@@ -149,7 +145,7 @@ export default function EmployeeLogin() {
             </View>
           </View>
         </View>
-      </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
@@ -159,23 +155,17 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#1A1A2E",
     width: '100%',
-    overflow: 'hidden',
   },
   backgroundContainer: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
-    overflow: 'hidden',
-  },
-  scrollContent: {
-    flexGrow: 1,
-    paddingBottom: 40,
   },
 
   // Header
   header: {
-    paddingHorizontal: 20,
-    paddingTop: 16,
-    paddingBottom: 12,
+    paddingHorizontal: Math.min(width * 0.05, 20),
+    paddingTop: height * 0.015,
+    paddingBottom: height * 0.01,
     zIndex: 10,
   },
   backBtn: {
@@ -202,19 +192,19 @@ const styles = StyleSheet.create({
 
   // Top Section
   topSection: {
-    paddingHorizontal: 24,
-    paddingTop: 20,
-    paddingBottom: 32,
+    paddingHorizontal: Math.min(width * 0.06, 24),
+    paddingTop: height * 0.015,
+    paddingBottom: height * 0.02,
     alignItems: 'center',
     zIndex: 1,
   },
   logoContainer: {
-    marginBottom: 16,
+    marginBottom: height * 0.012,
   },
   logoGradient: {
-    width: 72,
-    height: 72,
-    borderRadius: 18,
+    width: Math.min(width * 0.15, 60),
+    height: Math.min(width * 0.15, 60),
+    borderRadius: 15,
     alignItems: "center",
     justifyContent: "center",
     ...Platform.select({
@@ -230,44 +220,43 @@ const styles = StyleSheet.create({
     }),
   },
   brandName: {
-    fontSize: 16,
+    fontSize: Math.min(width * 0.038, 14),
     fontWeight: "900",
     color: "#2C2C2C",
-    letterSpacing: 2.5,
-    marginBottom: 12,
+    letterSpacing: 2,
+    marginBottom: height * 0.008,
     textShadowColor: "rgba(200, 182, 166, 0.3)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 4,
   },
   heading: {
-    fontSize: 26,
+    fontSize: Math.min(width * 0.058, 22),
     fontWeight: "900",
     color: "#1A1A1A",
-    marginBottom: 8,
+    marginBottom: height * 0.006,
     textAlign: "center",
     textShadowColor: "rgba(200, 182, 166, 0.2)",
     textShadowOffset: { width: 0, height: 1 },
     textShadowRadius: 3,
   },
   subheading: {
-    fontSize: 13,
+    fontSize: Math.min(width * 0.032, 12),
     color: "rgba(44, 44, 44, 0.75)",
     textAlign: "center",
-    paddingHorizontal: 20,
+    paddingHorizontal: width * 0.05,
   },
 
   // Bottom Section - Form
   bottomSection: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 32,
-    paddingBottom: 24,
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    marginTop: -20,
+    paddingHorizontal: Math.min(width * 0.06, 24),
+    paddingTop: height * 0.025,
+    paddingBottom: height * 0.02,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    marginTop: -15,
     zIndex: 2,
     overflow: 'hidden',
-    minHeight: height * 0.5,
   },
   bottomSectionGradient: {
     ...StyleSheet.absoluteFillObject,
@@ -281,13 +270,13 @@ const styles = StyleSheet.create({
 
   // Input Groups
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: height * 0.018,
   },
   label: {
-    fontSize: 13,
+    fontSize: Math.min(width * 0.032, 12),
     fontWeight: '800',
     color: 'rgba(255, 255, 255, 0.7)',
-    marginBottom: 10,
+    marginBottom: height * 0.01,
     letterSpacing: 1,
     textTransform: 'uppercase',
   },
@@ -297,13 +286,13 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
     borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.2)',
-    borderRadius: 14,
+    borderRadius: 12,
     paddingHorizontal: 6,
-    paddingVertical: 6,
+    paddingVertical: 4,
   },
   iconBox: {
-    width: 44,
-    height: 44,
+    width: Math.min(width * 0.1, 40),
+    height: Math.min(width * 0.1, 40),
     borderRadius: 10,
     backgroundColor: 'rgba(200, 182, 166, 0.15)',
     alignItems: 'center',
@@ -312,18 +301,19 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    fontSize: 15,
+    fontSize: Math.min(width * 0.038, 14),
     color: '#FFF',
     paddingRight: 12,
+    paddingVertical: height * 0.01,
   },
 
   // Login Button
   loginBtnWrap: {
-    marginTop: 12,
+    marginTop: height * 0.012,
   },
   loginBtn: {
-    paddingVertical: 16,
-    borderRadius: 14,
+    paddingVertical: height * 0.018,
+    borderRadius: 12,
     alignItems: "center",
     ...Platform.select({
       ios: {
@@ -346,43 +336,43 @@ const styles = StyleSheet.create({
 
   // Demo Box
   demoBox: {
-    marginTop: 28,
+    marginTop: height * 0.02,
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
-    borderRadius: 16,
+    borderRadius: 14,
     borderWidth: 1.5,
     borderColor: 'rgba(200, 182, 166, 0.3)',
-    padding: 18,
+    padding: Math.min(width * 0.04, 16),
   },
   demoBadge: {
     alignSelf: 'flex-start',
     backgroundColor: 'rgba(200, 182, 166, 0.25)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    paddingHorizontal: Math.min(width * 0.03, 10),
+    paddingVertical: height * 0.006,
     borderRadius: 8,
-    marginBottom: 14,
+    marginBottom: height * 0.012,
     borderWidth: 1,
     borderColor: 'rgba(200, 182, 166, 0.4)',
   },
   demoBadgeText: {
     color: '#C8B6A6',
-    fontSize: 11,
+    fontSize: Math.min(width * 0.028, 10),
     fontWeight: '900',
-    letterSpacing: 1.2,
+    letterSpacing: 1,
   },
   demoRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 8,
+    marginBottom: height * 0.008,
   },
   demoLabel: {
-    fontSize: 13,
+    fontSize: Math.min(width * 0.032, 12),
     fontWeight: '800',
     color: '#D4A59A',
-    width: 90,
+    width: Math.min(width * 0.22, 85),
     letterSpacing: 0.5,
   },
   demoValue: {
-    fontSize: 14,
+    fontSize: Math.min(width * 0.035, 13),
     color: 'rgba(255, 255, 255, 0.85)',
     fontWeight: '600',
   },
