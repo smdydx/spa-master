@@ -41,6 +41,7 @@ export const OmbaroTheme = {
   colors: {
     beige: '#E8DDD3',
     beigeLight: '#FEF9F3',
+    white: '#FFFFFF',
     darkBg: '#2C2C2C',
     darkCard: '#3A3A3A',
     roseGold: '#D4A59A',

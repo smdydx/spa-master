@@ -15,18 +15,12 @@ import {
   View,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { OmbaroTheme } from '../../constants/theme';
 
 const { width } = Dimensions.get('window');
-
-const COLORS = {
-  bg: "#FEF9F3",
-  cardBg: "#FFFFFF",
-  text: "#1A1A1A",
-  textMuted: "#6B7280",
-  border: "#F3E8DC",
-  grad1: "#a855f7",
-  grad2: "#ec4899",
-};
+const isSmallDevice = width < 375;
+const isMediumDevice = width >= 375 && width < 768;
+const isLargeDevice = width >= 768;
 
 export default function HomeScreen() {
   const [searchText, setSearchText] = useState('');
@@ -61,13 +55,12 @@ export default function HomeScreen() {
   ];
 
   return (
-    <SafeAreaView style={styles.safe}>
+    <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-
-        <StatusBar backgroundColor="#a855f7" barStyle="dark-content" hidden={false} animated={true} />
-        {/* Header */}
+        <StatusBar backgroundColor={OmbaroTheme.colors.roseGold} barStyle="light-content" />
+        
         <LinearGradient
-          colors={['#a855f7', '#ec4899']}
+          colors={[OmbaroTheme.colors.roseGold, OmbaroTheme.colors.roseGoldDark]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.headerGrad}
@@ -75,7 +68,7 @@ export default function HomeScreen() {
           <View style={styles.headerRow}>
             <View style={styles.locRow}>
               <View style={styles.locIconBox}>
-                <MapPin size={20} color="#fff" />
+                <MapPin size={20} color="#fff" strokeWidth={2.5} />
               </View>
               <View>
                 <Text style={styles.locLabel}>Current Location</Text>
@@ -84,11 +77,15 @@ export default function HomeScreen() {
             </View>
 
             <View style={styles.headerBtns}>
-              <TouchableOpacity style={styles.headerBtn}>
-                <Bell size={20} color="#fff" />
+              <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7}>
+                <Bell size={20} color="#fff" strokeWidth={2.5} />
               </TouchableOpacity>
-              <TouchableOpacity style={styles.headerBtn}>
-                <LogOut size={20} color="#fff" />
+              <TouchableOpacity 
+                style={styles.headerBtn} 
+                activeOpacity={0.7}
+                onPress={() => router.replace('/')}
+              >
+                <LogOut size={20} color="#fff" strokeWidth={2.5} />
               </TouchableOpacity>
             </View>
           </View>
@@ -98,27 +95,25 @@ export default function HomeScreen() {
             <Text style={styles.greetingSub}>Ready for your next beauty session?</Text>
           </View>
 
-          {/* Search Bar */}
           <View style={styles.searchBar}>
-            <Search size={20} color="#9ca3af" />
+            <Search size={20} color={OmbaroTheme.colors.textGray} strokeWidth={2.5} />
             <TextInput
               style={styles.searchInput}
               placeholder="Search salons, services..."
-              placeholderTextColor="#9ca3af"
+              placeholderTextColor={OmbaroTheme.colors.textGray}
               value={searchText}
               onChangeText={setSearchText}
             />
-            <TouchableOpacity style={styles.filterBtn}>
-              <Filter size={18} color="#fff" />
+            <TouchableOpacity style={styles.filterBtn} activeOpacity={0.8}>
+              <Filter size={18} color="#fff" strokeWidth={2.5} />
             </TouchableOpacity>
           </View>
         </LinearGradient>
 
-        {/* Popular Services */}
         <View style={styles.section}>
           <View style={styles.sectionHeader}>
             <Text style={styles.sectionTitle}>Popular Services</Text>
-            <TouchableOpacity onPress={() => router.push("/booking")}>
+            <TouchableOpacity onPress={() => router.push("/booking")} activeOpacity={0.7}>
               <Text style={styles.viewAll}>See all</Text>
             </TouchableOpacity>
           </View>
@@ -129,11 +124,10 @@ export default function HomeScreen() {
                 key={s.id}
                 onPress={() => router.push('/booking')}
                 activeOpacity={0.9}
-                style={styles.serviceCardNew}
+                style={styles.serviceCard}
               >
-                {/* gradient header */}
                 <LinearGradient
-                  colors={["#a78bfa", "#ec4899"]}
+                  colors={[OmbaroTheme.colors.roseGold, OmbaroTheme.colors.roseGoldDark]}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 1 }}
                   style={styles.serviceTopGrad}
@@ -143,9 +137,8 @@ export default function HomeScreen() {
                   </View>
                 </LinearGradient>
 
-                {/* body */}
                 <View style={styles.serviceBody}>
-                  <Text numberOfLines={1} style={styles.serviceNameNew}>
+                  <Text numberOfLines={1} style={styles.serviceName}>
                     {s.name}
                   </Text>
 
@@ -161,12 +154,10 @@ export default function HomeScreen() {
           </View>
         </View>
 
-
-        {/* Nearby Spas */}
         <View style={styles.sectionPadBottom}>
           <View style={styles.nearbyHeader}>
             <Text style={styles.sectionTitle}>Near You</Text>
-            <TouchableOpacity onPress={() => router.push('/(tabs)/map')}>
+            <TouchableOpacity onPress={() => router.push('/(tabs)/map')} activeOpacity={0.7}>
               <Text style={styles.viewAll}>View All</Text>
             </TouchableOpacity>
           </View>
@@ -178,14 +169,18 @@ export default function HomeScreen() {
               onPress={() => router.push(`/salon-details/${spa.id}`)}
               activeOpacity={0.9}
             >
-              <Image source={{ uri: spa.image }} style={styles.spaImage} resizeMode="cover" />
+              <Image 
+                source={{ uri: spa.image }} 
+                style={styles.spaImage} 
+                resizeMode="cover" 
+              />
               <View style={styles.spaBody}>
                 <View style={styles.spaTopRow}>
                   <Text style={styles.spaName} numberOfLines={1}>
                     {spa.name}
                   </Text>
                   <View style={styles.ratingRow}>
-                    <Star size={16} color="#fbbf24" fill="#fbbf24" />
+                    <Star size={16} color={OmbaroTheme.colors.roseGold} fill={OmbaroTheme.colors.roseGold} strokeWidth={0} />
                     <Text style={styles.ratingText}>{spa.rating}</Text>
                   </View>
                 </View>
@@ -197,7 +192,7 @@ export default function HomeScreen() {
                 <View style={styles.spaBottomRow}>
                   <Text style={styles.priceRange}>{spa.price}</Text>
                   <View style={styles.distanceRow}>
-                    <MapPin size={14} color="#9ca3af" />
+                    <MapPin size={14} color={OmbaroTheme.colors.textGray} strokeWidth={2.5} />
                     <Text style={styles.distanceText}>{spa.distance}</Text>
                   </View>
                 </View>
@@ -206,7 +201,6 @@ export default function HomeScreen() {
           ))}
         </View>
 
-        {/* Quick Actions */}
         <View style={styles.quickActions}>
           <View style={styles.quickRow}>
             <TouchableOpacity
@@ -215,8 +209,10 @@ export default function HomeScreen() {
               activeOpacity={0.9}
             >
               <View style={styles.qaInner}>
-                <Calendar size={24} color="#a855f7" />
-                <Text style={[styles.qaText, { color: '#6d28d9' }]}>My Bookings</Text>
+                <View style={styles.qaIconBox}>
+                  <Calendar size={24} color={OmbaroTheme.colors.roseGold} strokeWidth={2.5} />
+                </View>
+                <Text style={styles.qaText}>My Bookings</Text>
               </View>
             </TouchableOpacity>
 
@@ -226,8 +222,10 @@ export default function HomeScreen() {
               activeOpacity={0.9}
             >
               <View style={styles.qaInner}>
-                <MapPin size={24} color="#ec4899" />
-                <Text style={[styles.qaText, { color: '#db2777' }]}>Spa Near You</Text>
+                <View style={styles.qaIconBox}>
+                  <MapPin size={24} color={OmbaroTheme.colors.roseGoldDark} strokeWidth={2.5} />
+                </View>
+                <Text style={styles.qaText}>Spa Near You</Text>
               </View>
             </TouchableOpacity>
           </View>
@@ -240,195 +238,317 @@ export default function HomeScreen() {
 
 const CARD_SHADOW =
   Platform.OS === 'android'
-    ? { elevation: 1 }
-    : { shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } };
+    ? { elevation: 2 }
+    : { 
+        shadowColor: OmbaroTheme.colors.darkBg, 
+        shadowOpacity: 0.08, 
+        shadowRadius: 12, 
+        shadowOffset: { width: 0, height: 4 } 
+      };
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FEF9F3' },
-  scroll: { flex: 1 },
+  safe: { 
+    flex: 1, 
+    backgroundColor: OmbaroTheme.colors.beigeLight 
+  },
+  scroll: { 
+    flex: 1 
+  },
 
-  // Header
-  headerGrad: { paddingHorizontal: 24, paddingTop: 16, paddingBottom: 24 },
-  headerRow: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 },
-  locRow: { flexDirection: 'row', alignItems: 'center' },
+  headerGrad: { 
+    paddingHorizontal: isSmallDevice ? 16 : isMediumDevice ? 20 : 32, 
+    paddingTop: isSmallDevice ? 12 : 16, 
+    paddingBottom: isSmallDevice ? 20 : 24,
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
+  },
+  headerRow: { 
+    flexDirection: 'row', 
+    justifyContent: 'space-between', 
+    alignItems: 'center', 
+    marginBottom: isSmallDevice ? 12 : 16 
+  },
+  locRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center',
+    flex: 1,
+    marginRight: OmbaroTheme.spacing.md,
+  },
   locIconBox: {
-    width: 48,
-    height: 48,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 16,
+    width: isSmallDevice ? 44 : 48,
+    height: isSmallDevice ? 44 : 48,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    borderRadius: OmbaroTheme.borderRadius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: OmbaroTheme.spacing.sm,
   },
-  locLabel: { fontSize: 12, color: 'rgba(255,255,255,0.8)' },
-  locCity: { fontSize: 16, fontWeight: '700', color: '#fff' },
-  headerBtns: { flexDirection: 'row' },
+  locLabel: { 
+    fontSize: isSmallDevice ? 11 : OmbaroTheme.fontSize.xs, 
+    color: 'rgba(255,255,255,0.85)',
+    fontWeight: OmbaroTheme.fontWeight.medium,
+  },
+  locCity: { 
+    fontSize: isSmallDevice ? 14 : OmbaroTheme.fontSize.md, 
+    fontWeight: OmbaroTheme.fontWeight.bold, 
+    color: '#fff' 
+  },
+  headerBtns: { 
+    flexDirection: 'row',
+    gap: OmbaroTheme.spacing.sm,
+  },
   headerBtn: {
-    width: 48,
-    height: 48,
-    backgroundColor: 'rgba(255,255,255,0.2)',
-    borderRadius: 16,
+    width: isSmallDevice ? 44 : 48,
+    height: isSmallDevice ? 44 : 48,
+    backgroundColor: 'rgba(255,255,255,0.25)',
+    borderRadius: OmbaroTheme.borderRadius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 12,
   },
-  greetingWrap: { marginBottom: 16 },
-  greetingTitle: { fontSize: 22, fontWeight: '800', color: '#fff', marginBottom: 6 },
-  greetingSub: { fontSize: 16, color: 'rgba(255,255,255,0.9)' },
+  greetingWrap: { 
+    marginBottom: isSmallDevice ? 14 : 16 
+  },
+  greetingTitle: { 
+    fontSize: isSmallDevice ? OmbaroTheme.fontSize.xl : OmbaroTheme.fontSize.xxl, 
+    fontWeight: OmbaroTheme.fontWeight.bold, 
+    color: '#fff', 
+    marginBottom: OmbaroTheme.spacing.xs 
+  },
+  greetingSub: { 
+    fontSize: isSmallDevice ? OmbaroTheme.fontSize.sm : OmbaroTheme.fontSize.md, 
+    color: 'rgba(255,255,255,0.95)',
+    fontWeight: OmbaroTheme.fontWeight.medium,
+  },
 
-  // Search
   searchBar: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#fff',
-    borderRadius: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
+    borderRadius: OmbaroTheme.borderRadius.lg,
+    paddingHorizontal: OmbaroTheme.spacing.md,
+    paddingVertical: isSmallDevice ? 10 : 12,
+    ...CARD_SHADOW,
   },
-  searchInput: { flex: 1, marginLeft: 8, fontSize: 16, color: '#374151' },
+  searchInput: { 
+    flex: 1, 
+    marginLeft: OmbaroTheme.spacing.sm, 
+    fontSize: isSmallDevice ? OmbaroTheme.fontSize.sm : OmbaroTheme.fontSize.md, 
+    color: OmbaroTheme.colors.textDark,
+    fontWeight: OmbaroTheme.fontWeight.medium,
+  },
   filterBtn: {
     width: 40,
     height: 40,
-    backgroundColor: '#8b5cf6',
-    borderRadius: 12,
+    backgroundColor: OmbaroTheme.colors.roseGold,
+    borderRadius: OmbaroTheme.borderRadius.md,
     alignItems: 'center',
     justifyContent: 'center',
-    marginLeft: 8,
+    marginLeft: OmbaroTheme.spacing.sm,
   },
 
-  // Sections
-  section: { paddingHorizontal: 24, paddingVertical: 24 },
-  sectionPadBottom: { paddingHorizontal: 24, paddingBottom: 24 },
-  sectionTitle: { fontSize: 18, fontWeight: '800', color: '#111827', marginBottom: 12 },
-
-  // Services grid (2 per row)
-  serviceGrid: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
+  section: { 
+    paddingHorizontal: isSmallDevice ? 16 : isMediumDevice ? 20 : 32, 
+    paddingVertical: isSmallDevice ? 20 : 24 
   },
-  serviceCard: {
-    width: (width - 24 * 2 - 12) / 2, // two columns with ~12px gap
-    backgroundColor: '#fff',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#f3f4f6',
-    marginBottom: 12,
-    ...CARD_SHADOW,
+  sectionPadBottom: { 
+    paddingHorizontal: isSmallDevice ? 16 : isMediumDevice ? 20 : 32, 
+    paddingBottom: isSmallDevice ? 20 : 24 
   },
-  serviceInner: { padding: 16, alignItems: 'center' },
-  serviceName: { fontSize: 15, fontWeight: '700', color: '#111827', textAlign: 'center' },
-  servicePrice: { marginTop: 4, fontSize: 13, color: '#7c3aed', fontWeight: '600' },
-
-  // Nearby spa cards
-  nearbyHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
-  viewAll: { color: '#7c3aed', fontWeight: '700' },
-  spaCard: {
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#F3E8DC',
-    marginBottom: 12,
-    overflow: 'hidden',
-    ...CARD_SHADOW,
-  },
-  spaImage: { width: '100%', height: 190 },
-  spaBody: { padding: 16 },
-  spaTopRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 },
-  spaName: { fontSize: 16, fontWeight: '700', color: '#111827', flexShrink: 1, paddingRight: 8 },
-  ratingRow: { flexDirection: 'row', alignItems: 'center' },
-  ratingText: { fontSize: 13, color: '#374151', fontWeight: '600', marginLeft: 4 },
-  spaServices: { fontSize: 13, color: '#4b5563', marginBottom: 8 },
-  spaBottomRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  priceRange: { fontSize: 13, color: '#7c3aed', fontWeight: '700' },
-  distanceRow: { flexDirection: 'row', alignItems: 'center' },
-  distanceText: { marginLeft: 4, fontSize: 12, color: '#6b7280' },
-
-  // Quick actions
-  quickActions: { paddingHorizontal: 24, paddingBottom: 40 },
-  quickRow: { flexDirection: 'row' },
-  quickCard: {
-    flex: 1,
-    padding: 16,
-    borderRadius: 16,
-    borderWidth: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  qaLeft: { backgroundColor: '#faf5ff', borderColor: '#ede9fe', marginRight: 8 }, // purple-50/100
-  qaRight: { backgroundColor: '#fdf2f8', borderColor: '#fce7f3', marginLeft: 8 }, // pink-50/100
-  qaInner: { alignItems: 'center' },
-  qaText: { marginTop: 8, fontSize: 13, fontWeight: '700' },
-
-
-
-
-
-
-  // add to your styles object
   sectionHeader: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginBottom: 12,
+    marginBottom: OmbaroTheme.spacing.md,
   },
-  viewAll: { color: '#7c3aed', fontWeight: '700' },
+  sectionTitle: { 
+    fontSize: isSmallDevice ? OmbaroTheme.fontSize.lg : OmbaroTheme.fontSize.xl, 
+    fontWeight: OmbaroTheme.fontWeight.bold, 
+    color: OmbaroTheme.colors.textDark,
+  },
+  viewAll: { 
+    color: OmbaroTheme.colors.roseGold, 
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    fontSize: isSmallDevice ? OmbaroTheme.fontSize.sm : OmbaroTheme.fontSize.md,
+  },
 
-  serviceCardNew: {
-    width: (width - 24 * 2 - 12) / 2,
-    borderRadius: 18,
+  serviceGrid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    gap: isSmallDevice ? 10 : 12,
+  },
+  serviceCard: {
+    width: isLargeDevice ? (width - 64 - 24) / 3 : (width - (isSmallDevice ? 32 : 40) - 12) / 2,
+    borderRadius: OmbaroTheme.borderRadius.lg,
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    marginVertical: 5,
-    borderColor: '#F3E8DC',
+    borderColor: OmbaroTheme.colors.border,
     overflow: 'hidden',
     ...CARD_SHADOW,
   },
 
   serviceTopGrad: {
-    height: 82,
+    height: isSmallDevice ? 70 : 82,
     alignItems: 'center',
     justifyContent: 'center',
   },
 
   emojiBubble: {
-    width: 48,
-    height: 48,
-    borderRadius: 12,
-    backgroundColor: 'rgba(255,255,255,0.9)',
+    width: isSmallDevice ? 44 : 48,
+    height: isSmallDevice ? 44 : 48,
+    borderRadius: OmbaroTheme.borderRadius.md,
+    backgroundColor: 'rgba(255,255,255,0.95)',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  serviceEmoji: { fontSize: 26 },
-  serviceBody: { padding: 12 },
-  serviceNameNew: {
-    fontSize: 15,
-    fontWeight: '800',
-    color: '#111827',
+  serviceEmoji: { 
+    fontSize: isSmallDevice ? 22 : 26 
+  },
+  serviceBody: { 
+    padding: isSmallDevice ? 10 : 12 
+  },
+  serviceName: {
+    fontSize: isSmallDevice ? OmbaroTheme.fontSize.sm : OmbaroTheme.fontSize.md,
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: OmbaroTheme.colors.textDark,
   },
   serviceMetaRow: {
-    marginTop: 8,
+    marginTop: OmbaroTheme.spacing.sm,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
   },
   pricePill: {
-    paddingHorizontal: 10,
-    paddingVertical: 6,
+    paddingHorizontal: isSmallDevice ? 8 : 10,
+    paddingVertical: isSmallDevice ? 4 : 6,
     borderRadius: 999,
-    backgroundColor: '#f5f3ff',
+    backgroundColor: OmbaroTheme.colors.beige,
     borderWidth: 1,
-    borderColor: '#ede9fe',
+    borderColor: OmbaroTheme.colors.border,
   },
   pricePillText: {
-    fontSize: 12,
-    fontWeight: '700',
-    color: '#6d28d9',
+    fontSize: isSmallDevice ? 10 : OmbaroTheme.fontSize.xs,
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: OmbaroTheme.colors.roseGoldDark,
   },
   quickCta: {
-    fontSize: 12,
-    fontWeight: '800',
-    color: '#0ea5e9',
+    fontSize: isSmallDevice ? 11 : OmbaroTheme.fontSize.xs,
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: OmbaroTheme.colors.roseGold,
   },
 
+  nearbyHeader: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    marginBottom: OmbaroTheme.spacing.md,
+  },
+  spaCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: OmbaroTheme.borderRadius.lg,
+    borderWidth: 1,
+    borderColor: OmbaroTheme.colors.border,
+    marginBottom: OmbaroTheme.spacing.md,
+    overflow: 'hidden',
+    ...CARD_SHADOW,
+  },
+  spaImage: { 
+    width: '100%', 
+    height: isSmallDevice ? 160 : isMediumDevice ? 190 : 220,
+  },
+  spaBody: { 
+    padding: isSmallDevice ? 12 : OmbaroTheme.spacing.md 
+  },
+  spaTopRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between', 
+    marginBottom: OmbaroTheme.spacing.xs 
+  },
+  spaName: { 
+    fontSize: isSmallDevice ? OmbaroTheme.fontSize.md : OmbaroTheme.fontSize.lg, 
+    fontWeight: OmbaroTheme.fontWeight.bold, 
+    color: OmbaroTheme.colors.textDark, 
+    flexShrink: 1, 
+    paddingRight: OmbaroTheme.spacing.sm 
+  },
+  ratingRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center',
+    gap: 4,
+  },
+  ratingText: { 
+    fontSize: isSmallDevice ? 12 : OmbaroTheme.fontSize.sm, 
+    color: OmbaroTheme.colors.textDark, 
+    fontWeight: OmbaroTheme.fontWeight.semibold,
+  },
+  spaServices: { 
+    fontSize: isSmallDevice ? 12 : OmbaroTheme.fontSize.sm, 
+    color: OmbaroTheme.colors.textGray, 
+    marginBottom: OmbaroTheme.spacing.sm,
+    fontWeight: OmbaroTheme.fontWeight.medium,
+  },
+  spaBottomRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center', 
+    justifyContent: 'space-between' 
+  },
+  priceRange: { 
+    fontSize: isSmallDevice ? 12 : OmbaroTheme.fontSize.sm, 
+    color: OmbaroTheme.colors.roseGold, 
+    fontWeight: OmbaroTheme.fontWeight.bold 
+  },
+  distanceRow: { 
+    flexDirection: 'row', 
+    alignItems: 'center',
+    gap: 4,
+  },
+  distanceText: { 
+    fontSize: isSmallDevice ? 11 : OmbaroTheme.fontSize.xs, 
+    color: OmbaroTheme.colors.textGray,
+    fontWeight: OmbaroTheme.fontWeight.medium,
+  },
+
+  quickActions: { 
+    paddingHorizontal: isSmallDevice ? 16 : isMediumDevice ? 20 : 32, 
+    paddingBottom: isSmallDevice ? 24 : 32 
+  },
+  quickRow: { 
+    flexDirection: 'row',
+    gap: OmbaroTheme.spacing.md,
+  },
+  quickCard: {
+    flex: 1,
+    padding: isSmallDevice ? 16 : 20,
+    borderRadius: OmbaroTheme.borderRadius.lg,
+    borderWidth: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...CARD_SHADOW,
+  },
+  qaLeft: { 
+    backgroundColor: OmbaroTheme.colors.beige, 
+    borderColor: OmbaroTheme.colors.border,
+  },
+  qaRight: { 
+    backgroundColor: OmbaroTheme.colors.beige, 
+    borderColor: OmbaroTheme.colors.border,
+  },
+  qaInner: { 
+    alignItems: 'center' 
+  },
+  qaIconBox: {
+    width: 56,
+    height: 56,
+    borderRadius: OmbaroTheme.borderRadius.md,
+    backgroundColor: 'rgba(212, 165, 154, 0.15)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: OmbaroTheme.spacing.sm,
+  },
+  qaText: { 
+    fontSize: isSmallDevice ? 12 : OmbaroTheme.fontSize.sm, 
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: OmbaroTheme.colors.textDark,
+  },
 });
