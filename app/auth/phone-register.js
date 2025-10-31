@@ -16,17 +16,17 @@ import {
 } from "react-native";
 
 const COLORS = {
-  bg: "#FFF7FC",
-  text: "#0F172A",
-  sub: "#475569",
-  border: "#E5E7EB",
+  bg: "#FEF9F3", // light cream
+  text: "#1A1A1A",
+  sub: "#6B7280",
+  border: "#F3E8DC",
   fieldBg: "#FFFFFF",
-  hint: "#7C3AED",
-  btn: "#79A8C6",
+  hint: "#a855f7",
+  btn: "#a855f7",
   btnText: "#FFF",
-  iconPhoneA: "#9333EA",
-  iconPhoneB: "#F43F5E",
-  shield: "#10B981",
+  iconPhoneA: "#a855f7",
+  iconPhoneB: "#ec4899",
+  shield: "#a855f7",
 };
 
 const IconField = ({
@@ -74,21 +74,41 @@ export default function PhoneVerificationScreen({ navigation }) {
         style={{ flex: 1 }}
       >
         <ScrollView
-          contentContainerStyle={{ padding: 20, paddingBottom: 40 ,marginTop:25}}
+          contentContainerStyle={{ paddingBottom: 40 }}
           showsVerticalScrollIndicator={false}
         >
-          {/* Header */}
-          <View style={styles.headerRow}>
-            <TouchableOpacity
-              onPress={() => navigation?.goBack?.()}
-              style={styles.backBtn}
-              activeOpacity={0.8}
-            >
-              <ArrowLeft size={22} color="#111827" />
-            </TouchableOpacity>
-            <Text style={styles.headerTitle}>Phone Verification</Text>
-            <View style={{ width: 44 }} />
-          </View>
+          {/* Header with gradient */}
+          <LinearGradient
+            colors={['#a855f7', '#ec4899']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={styles.headerGrad}
+          >
+            <View style={styles.headerRow}>
+              <TouchableOpacity
+                onPress={() => navigation?.goBack?.()}
+                style={styles.backBtn}
+                activeOpacity={0.8}
+              >
+                <ArrowLeft size={22} color="#fff" />
+              </TouchableOpacity>
+              <Text style={styles.headerTitle}>Phone Verification</Text>
+              <View style={{ width: 44 }} />
+            </View>
+
+            {/* Location info similar to home */}
+            <View style={styles.locRow}>
+              <View style={styles.locIconBox}>
+                <Shield size={20} color="#fff" />
+              </View>
+              <View>
+                <Text style={styles.locLabel}>Secure Verification</Text>
+                <Text style={styles.locCity}>Your privacy is protected</Text>
+              </View>
+            </View>
+          </LinearGradient>
+
+          <View style={{ padding: 20 }}>
 
           {/* Phone badge */}
           <View style={{ alignItems: "center", marginTop: 16 }}>
@@ -135,13 +155,16 @@ export default function PhoneVerificationScreen({ navigation }) {
           <TouchableOpacity
             onPress={onSendOtp}
             activeOpacity={isValid ? 0.9 : 1}
-            style={[
-              styles.primaryBtn,
-              { opacity: isValid ? 1 : 0.6 },
-            ]}
             disabled={!isValid}
           >
-            <Text style={styles.primaryBtnText}>Send OTP</Text>
+            <LinearGradient
+              colors={isValid ? ['#a855f7', '#ec4899'] : ['#E5E7EB', '#E5E7EB']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.primaryBtn}
+            >
+              <Text style={styles.primaryBtnText}>Send OTP</Text>
+            </LinearGradient>
           </TouchableOpacity>
 
           {/* Privacy card */}
@@ -158,6 +181,7 @@ export default function PhoneVerificationScreen({ navigation }) {
               </Text>
             </View>
           </View>
+          </View>
         </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -165,25 +189,51 @@ export default function PhoneVerificationScreen({ navigation }) {
 }
 
 const styles = StyleSheet.create({
+  headerGrad: {
+    paddingHorizontal: 24,
+    paddingTop: 16,
+    paddingBottom: 24,
+  },
   headerRow: {
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    marginBottom: 16,
   },
   backBtn: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    backgroundColor: "#FFFFFF",
+    width: 48,
+    height: 48,
+    borderRadius: 16,
+    backgroundColor: "rgba(255,255,255,0.2)",
     alignItems: "center",
     justifyContent: "center",
-    borderWidth: 1,
-    borderColor: "#F1F5F9",
   },
   headerTitle: {
     fontSize: 20,
     fontWeight: "800",
-    color: COLORS.text,
+    color: "#fff",
+  },
+  locRow: {
+    flexDirection: "row",
+    alignItems: "center",
+  },
+  locIconBox: {
+    width: 48,
+    height: 48,
+    backgroundColor: "rgba(255,255,255,0.2)",
+    borderRadius: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginRight: 12,
+  },
+  locLabel: {
+    fontSize: 12,
+    color: "rgba(255,255,255,0.8)",
+  },
+  locCity: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#fff",
   },
 
   phoneBadge: {
@@ -238,16 +288,16 @@ const styles = StyleSheet.create({
 
   primaryBtn: {
     marginTop: 22,
-    backgroundColor: COLORS.btn,
     paddingVertical: 16,
     borderRadius: 18,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#93C5FD",
-    shadowOpacity: 0.2,
+    shadowColor: "#a855f7",
+    shadowOpacity: 0.3,
     shadowRadius: 14,
-    shadowOffset: { width: 0, height: 10 },
-    elevation: 3,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 4,
+    overflow: 'hidden',
   },
   primaryBtnText: {
     color: COLORS.btnText,
@@ -257,11 +307,11 @@ const styles = StyleSheet.create({
 
   privacyCard: {
     marginTop: 26,
-    backgroundColor: "#FFFFFF",
+    backgroundColor: "#faf5ff",
     borderRadius: 20,
     padding: 16,
     borderWidth: 1,
-    borderColor: "#F1F5F9",
+    borderColor: "#ede9fe",
     flexDirection: "row",
     gap: 12,
   },
