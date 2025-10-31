@@ -176,7 +176,7 @@ export default function PaymentScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#f9fafb' }, // gray-50
+  safe: { flex: 1, backgroundColor: '#FEF9F3' }, // cream-50
   scroll: { flex: 1 },
 
   // Header

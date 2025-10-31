@@ -229,7 +229,7 @@ const CARD_SHADOW =
     : { shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } };
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#f9fafb' }, // gray-50
+  safe: { flex: 1, backgroundColor: '#FEF9F3' }, // cream color
   scroll: { flex: 1 },
 
   // Header

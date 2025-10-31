@@ -123,7 +123,7 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#f9fafb' }, // gray-50
+  safe: { flex: 1, backgroundColor: '#FEF9F3' }, // gray-50
   scroll: { flex: 1 },
   container: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 24 },
   heading: { fontSize: 22, fontWeight: '800', color: '#111827', marginBottom: 16 },

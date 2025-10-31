@@ -18,6 +18,16 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
+const COLORS = {
+  bg: "#FEF9F3",
+  cardBg: "#FFFFFF",
+  text: "#1A1A1A",
+  textMuted: "#6B7280",
+  border: "#F3E8DC",
+  grad1: "#a855f7",
+  grad2: "#ec4899",
+};
+
 export default function HomeScreen() {
   const [searchText, setSearchText] = useState('');
   const router = useRouter();
@@ -234,7 +244,7 @@ const CARD_SHADOW =
     : { shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } };
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#f9fafb' }, // gray-50
+  safe: { flex: 1, backgroundColor: '#FEF9F3' },
   scroll: { flex: 1 },
 
   // Header
@@ -314,10 +324,10 @@ const styles = StyleSheet.create({
   nearbyHeader: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 },
   viewAll: { color: '#7c3aed', fontWeight: '700' },
   spaCard: {
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#f3f4f6',
+    borderColor: '#F3E8DC',
     marginBottom: 12,
     overflow: 'hidden',
     ...CARD_SHADOW,
@@ -365,12 +375,12 @@ const styles = StyleSheet.create({
   viewAll: { color: '#7c3aed', fontWeight: '700' },
 
   serviceCardNew: {
-    width: (width - 24 * 2 - 12) / 2, // same responsive 2-col grid
+    width: (width - 24 * 2 - 12) / 2,
     borderRadius: 18,
-    backgroundColor: '#fff',
+    backgroundColor: '#FFFFFF',
     borderWidth: 1,
     marginVertical: 5,
-    borderColor: '#eef2f7',
+    borderColor: '#F3E8DC',
     overflow: 'hidden',
     ...CARD_SHADOW,
   },

@@ -1,10 +1,21 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Calendar, Clock, MapPin, User } from 'lucide-react-native';
 import { useState } from 'react';
-import { Dimensions, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
+
+const COLORS = {
+  bg: "#FEF9F3",
+  cardBg: "#FFFFFF",
+  text: "#1A1A1A",
+  textMuted: "#6B7280",
+  border: "#F3E8DC",
+  grad1: "#a855f7",
+  grad2: "#ec4899",
+};
 
 const STATUS_STYLES = {
   confirmed: { bg: '#dcfce7', text: '#166534' }, // green-100 / green-800
@@ -280,7 +291,7 @@ const CARD_BORDER = Platform.OS === 'android' ? {} : { shadowColor: '#000', shad
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#f9fafb', // gray-50
+    backgroundColor: '#FEF9F3', // Using the cream background color
   },
   topWrap: {
     paddingHorizontal: 24,
@@ -290,14 +301,14 @@ const styles = StyleSheet.create({
   screenTitle: {
     fontSize: 22,
     fontWeight: '800',
-    color: '#111827', // gray-900
+    color: COLORS.text, // Using the text color from COLORS
     marginBottom: 16,
   },
 
   // Tabs
   tabsWrap: {
     flexDirection: 'row',
-    backgroundColor: '#f3f4f6', // gray-100
+    backgroundColor: COLORS.border, // Using the border color for tab background
     borderRadius: 16,
     padding: 4,
     marginBottom: 12,
@@ -313,8 +324,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   tabText: { fontWeight: '700' },
-  tabTextActive: { color: '#111827' },
-  tabTextInactive: { color: '#6b7280' }, // gray-500
+  tabTextActive: { color: COLORS.text }, // Using the text color
+  tabTextInactive: { color: COLORS.textMuted }, // Using the muted text color
 
   // List
   scroll: { flex: 1 },
@@ -322,10 +333,10 @@ const styles = StyleSheet.create({
 
   // Card
   card: {
-    backgroundColor: '#ffffff',
+    backgroundColor: COLORS.cardBg, // Using card background color
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#f3f4f6', // gray-100
+    borderColor: COLORS.border, // Using the border color
     marginBottom: 12,
     ...CARD_BORDER,
     ...(Platform.OS === 'android' ? { elevation: 1 } : null),
@@ -349,13 +360,13 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#111827',
+    color: COLORS.text, // Using the text color
     paddingRight: 8,
     flexShrink: 1,
   },
   serviceText: {
     fontSize: 13,
-    color: '#4b5563', // gray-600
+    color: COLORS.textMuted, // Using the muted text color
     marginBottom: 6,
   },
   iconRow: {
@@ -365,7 +376,7 @@ const styles = StyleSheet.create({
   },
   iconRowText: {
     fontSize: 12,
-    color: '#6b7280', // gray-500
+    color: COLORS.textMuted, // Using the muted text color
     marginLeft: 6,
     flexShrink: 1,
   },
@@ -375,7 +386,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   addressRow: { flexDirection: 'row', alignItems: 'center', maxWidth: width * 0.55 },
-  priceText: { fontSize: 16, fontWeight: '800', color: '#7c3aed' }, // purple-600
+  priceText: { fontSize: 16, fontWeight: '800', color: COLORS.grad1 }, // Using grad1 for price color
 
   // Status pill
   statusPill: {
@@ -398,10 +409,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  ctaPrimaryLight: { backgroundColor: '#ede9fe', marginRight: 8 }, // violet-100
-  ctaPrimaryLightText: { color: '#6d28d9', fontWeight: '700' },   // violet-700
-  ctaGray: { backgroundColor: '#f3f4f6' },                         // gray-100
-  ctaGrayText: { color: '#374151', fontWeight: '700' },            // gray-700
+  ctaPrimaryLight: { backgroundColor: COLORS.grad1, marginRight: 8 }, // Using grad1 for primary CTA
+  ctaPrimaryLightText: { color: '#ffffff', fontWeight: '700' },   // White text for primary CTA
+  ctaGray: { backgroundColor: COLORS.border },                         // Using border color for secondary CTA
+  ctaGrayText: { color: COLORS.text, fontWeight: '700' },            // Using text color for secondary CTA
 
   rateBtn: {
     marginTop: 12,
@@ -423,17 +434,17 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 16,
     fontWeight: '700',
-    color: '#6b7280',
+    color: COLORS.textMuted, // Using muted text color
   },
   emptySubtitle: {
     marginTop: 6,
     fontSize: 13,
-    color: '#9ca3af',
+    color: COLORS.textMuted, // Using muted text color
     textAlign: 'center',
   },
   bookNowBtn: {
     marginTop: 14,
-    backgroundColor: '#7c3aed',
+    backgroundColor: COLORS.grad1, // Using grad1 for book now button
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
@@ -442,7 +453,7 @@ const styles = StyleSheet.create({
 
 
 
-  
+
 
 
 
@@ -463,7 +474,7 @@ drawerBackdrop: {
 },
 drawer: {
   maxHeight: "82%",
-  backgroundColor: "#fff",
+  backgroundColor: COLORS.cardBg, // Using card background color
   borderTopLeftRadius: 24,
   borderTopRightRadius: 24,
   paddingHorizontal: 16,
@@ -481,12 +492,12 @@ drawerHeader: {
   justifyContent: "space-between",
   paddingVertical: 8,
 },
-drawerTitle: { fontSize: 20, fontWeight: "800", color: "#111827" },
+drawerTitle: { fontSize: 20, fontWeight: "800", color: COLORS.text }, // Using text color
 closeBtn: {
   width: 36,
   height: 36,
   borderRadius: 18,
-  backgroundColor: "#F3F4F6",
+  backgroundColor: COLORS.border, // Using border color
   alignItems: "center",
   justifyContent: "center",
 },
@@ -494,24 +505,24 @@ closeBtn: {
 // Top row
 detailTopRow: { flexDirection: "row", alignItems: "center", marginTop: 8 },
 detailImage: { width: 88, height: 88, borderRadius: 14, backgroundColor: "#e5e7eb" },
-detailTitle: { fontSize: 20, fontWeight: "800", color: "#0f172a" },
-detailSub: { marginTop: 4, fontSize: 14, color: "#6b7280" },
+detailTitle: { fontSize: 20, fontWeight: "800", color: COLORS.text }, // Using text color
+detailSub: { marginTop: 4, fontSize: 14, color: COLORS.textMuted }, // Using muted text color
 badge: {
   paddingHorizontal: 10,
   paddingVertical: 6,
   borderRadius: 999,
   backgroundColor: "#e0e7ff",
 },
-badgeText: { fontSize: 12, fontWeight: "800", color: "#4338ca" },
-detailPrice: { marginLeft: 12, fontSize: 16, fontWeight: "800", color: "#7c3aed" },
+badgeText: { fontSize: 12, fontWeight: "800", color: COLORS.grad1 }, // Using grad1 for badge text
+detailPrice: { marginLeft: 12, fontSize: 16, fontWeight: "800", color: COLORS.grad1 }, // Using grad1 for price color
 
 // KV box
 kvBox: {
   marginTop: 16,
-  backgroundColor: "#F9FAFB",
+  backgroundColor: COLORS.bg, // Using background color
   borderRadius: 16,
   borderWidth: 1,
-  borderColor: "#F1F5F9",
+  borderColor: COLORS.border, // Using border color
   padding: 16,
 },
 kvRow: {
@@ -520,21 +531,21 @@ kvRow: {
   justifyContent: "space-between",
   paddingVertical: 8,
 },
-kvKey: { fontSize: 16, color: "#6b7280" },
-kvVal: { fontSize: 18, color: "#0f172a", fontWeight: "800" },
+kvKey: { fontSize: 16, color: COLORS.textMuted }, // Using muted text color
+kvVal: { fontSize: 18, color: COLORS.text, fontWeight: "800" }, // Using text color
 
 // Therapist
 therapistCard: {
   marginTop: 16,
   padding: 14,
   borderRadius: 16,
-  backgroundColor: "#F6F1FF",
+  backgroundColor: COLORS.bg, // Using background color
   borderWidth: 1,
-  borderColor: "#EDE9FE",
+  borderColor: COLORS.border, // Using border color
 },
-therapistTitle: { fontSize: 16, fontWeight: "800", color: "#111827", marginBottom: 8 },
+therapistTitle: { fontSize: 16, fontWeight: "800", color: COLORS.text, marginBottom: 8 }, // Using text color
 therapistRow: { flexDirection: "row", alignItems: "center" },
 therapistAvatar: { width: 42, height: 42, borderRadius: 21, marginRight: 10 },
-therapistName: { fontSize: 15, fontWeight: "700", color: "#111827" },
+therapistName: { fontSize: 15, fontWeight: "700", color: COLORS.text }, // Using text color
 
 });

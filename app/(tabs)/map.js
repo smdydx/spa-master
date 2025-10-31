@@ -257,7 +257,7 @@ const CARD_SHADOW =
     : { shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } };
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#f9fafb' }, // gray-50
+  safe: { flex: 1, backgroundColor: '#FEF9F3' }, // cream-50
   headerWrap: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 8 },
   headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
   title: { fontSize: 22, fontWeight: '800', color: '#111827' },
