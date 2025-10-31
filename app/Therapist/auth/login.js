@@ -1,212 +1,138 @@
-import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
-import { ArrowLeft, Lock, Mail } from "lucide-react-native";
-import { useState } from "react";
-import {
-  SafeAreaView,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableOpacity,
-  View,
-} from "react-native";
-
-const COLORS = {
-  bg: "#FFF7FC",
-  text: "#111827",
-  sub: "#6B7280",
-  border: "#E5E7EB",
-  primary: "#2563EB",
-  accent1: "#9333EA",
-  accent2: "#F43F5E",
-  demoBg: "#EFF6FF",
-  demoBorder: "#DBEAFE",
-};
+import React, { useState } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
+import { useRouter } from 'expo-router';
+import { ArrowLeft, Mail, Lock } from 'lucide-react-native';
+import { AuthLayout, GradientHeader, FormCard, InputField, PrimaryButton } from '../../../components/auth';
+import { useAuth } from '../../../context/AuthContext';
+import { OmbaroTheme } from '../../../constants/theme';
 
 export default function TherapistLogin() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [error, setError] = useState('');
+  
   const router = useRouter();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const { login } = useAuth();
+
+  const handleLogin = () => {
+    setError('');
+    const result = login(email, password, 'therapist');
+    
+    if (result.success) {
+      router.replace('/Therapist');
+    } else {
+      setError(result.error);
+    }
+  };
+
+  const isValid = email.length >= 10 && password.length > 0;
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <ScrollView
-        contentContainerStyle={styles.container}
-        showsVerticalScrollIndicator={false}
+    <AuthLayout>
+      <TouchableOpacity
+        onPress={() => router.back()}
+        style={styles.backButton}
+        activeOpacity={0.7}
       >
-        {/* Header */}
-        <View style={styles.header}>
-          <TouchableOpacity style={styles.backBtn} onPress={() => router.back()}>
-            <ArrowLeft size={22} color={COLORS.text} />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Therapist Portal</Text>
-          <View style={{ width: 40 }} />
-        </View>
+        <ArrowLeft size={24} color={OmbaroTheme.colors.textDark} />
+      </TouchableOpacity>
 
-        {/* Icon */}
-        <View style={styles.iconWrap}>
-          <LinearGradient colors={[COLORS.accent1, COLORS.accent2]} style={styles.iconGradient}>
-            <Text style={{ fontSize: 32, color: "#FFF" }}>✧</Text>
-          </LinearGradient>
-        </View>
+      <GradientHeader
+        title="Therapist Portal"
+        subtitle="Manage your assignments and schedule"
+      />
 
-        {/* Title */}
-        <Text style={styles.title}>Therapist Portal</Text>
-        <Text style={styles.subtitle}>
-          Login to manage your assignments and schedule
-        </Text>
+      <FormCard>
+        <InputField
+          label="Email or Phone"
+          placeholder="Enter your email or phone"
+          value={email}
+          onChangeText={setEmail}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          icon={<Mail size={20} color={OmbaroTheme.colors.textGray} />}
+        />
 
-        {/* Email */}
-        <Text style={styles.label}>Email Address</Text>
-        <View style={styles.inputWrap}>
-          <Mail size={20} color="#9CA3AF" style={{ marginRight: 8 }} />
-          <TextInput
-            placeholder="Enter your email"
-            placeholderTextColor="#9CA3AF"
-            keyboardType="email-address"
-            autoCapitalize="none"
-            value={email}
-            onChangeText={setEmail}
-            style={styles.input}
-          />
-        </View>
+        <InputField
+          label="Password"
+          placeholder="Enter your password"
+          value={password}
+          onChangeText={setPassword}
+          secureTextEntry
+          error={error}
+          icon={<Lock size={20} color={OmbaroTheme.colors.textGray} />}
+        />
 
-        {/* Password */}
-        <Text style={styles.label}>Password</Text>
-        <View style={styles.inputWrap}>
-          <Lock size={20} color="#9CA3AF" style={{ marginRight: 8 }} />
-          <TextInput
-            placeholder="Enter your password"
-            placeholderTextColor="#9CA3AF"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
-            style={styles.input}
-          />
-        </View>
+        <PrimaryButton
+          title="Login as Therapist"
+          onPress={handleLogin}
+          disabled={!isValid}
+        />
 
-        {/* Login Button */}
-        <TouchableOpacity onPress={()=>router.push("/Therapist")} style={styles.primaryBtn} activeOpacity={0.9}>
-          <Text style={styles.primaryBtnText}>Login as Therapist</Text>
-        </TouchableOpacity>
-
-        {/* Register Link */}
-        <Text style={styles.registerText}>
-          Don’t have an account?{" "}
-          <Text style={styles.registerLink}>
-            Contact your vendor to get registered
-          </Text>
-        </Text>
-
-        {/* Demo Credentials */}
-        <View style={styles.demoBox}>
-          <Text style={styles.demoTitle}>Demo Credentials</Text>
-          <Text style={styles.demoLine}>
-            <Text style={{ fontWeight: "700" }}>Email: </Text>
-            priya.sharma@example.com
-          </Text>
-          <Text style={styles.demoLine}>
-            <Text style={{ fontWeight: "700" }}>Password: </Text>
-            therapist123
-          </Text>
-          <Text style={styles.demoNote}>
-            * Note: Therapist accounts are created by vendors
+        <View style={styles.infoCard}>
+          <Text style={styles.infoText}>
+            Don't have an account? Contact your vendor to get registered.
           </Text>
         </View>
-      </ScrollView>
-    </SafeAreaView>
+
+        <View style={styles.demoCard}>
+          <Text style={styles.demoTitle}>✧ Demo Credentials</Text>
+          <Text style={styles.demoText}>
+            <Text style={styles.demoBold}>Email/Phone:</Text> Any 10+ characters
+          </Text>
+          <Text style={styles.demoText}>
+            <Text style={styles.demoBold}>Password:</Text> 1234
+          </Text>
+        </View>
+      </FormCard>
+    </AuthLayout>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { paddingHorizontal: 20, paddingBottom: 40 },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 16,
-    marginTop: 40,
+  backButton: {
+    width: 48,
+    height: 48,
+    borderRadius: OmbaroTheme.borderRadius.md,
+    backgroundColor: OmbaroTheme.colors.beige,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: OmbaroTheme.spacing.md,
   },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: "#FFF",
-    alignItems: "center",
-    justifyContent: "center",
+  infoCard: {
+    backgroundColor: OmbaroTheme.colors.darkCard,
+    borderRadius: OmbaroTheme.borderRadius.md,
+    padding: OmbaroTheme.spacing.md,
+    marginTop: OmbaroTheme.spacing.md,
     borderWidth: 1,
-    borderColor: "#F1F5F9",
+    borderColor: OmbaroTheme.colors.border,
   },
-  headerTitle: { fontSize: 18, fontWeight: "700", color: COLORS.text },
-
-  iconWrap: { alignItems: "center", marginTop: 16 },
-  iconGradient: {
-    width: 90,
-    height: 90,
-    borderRadius: 24,
-    alignItems: "center",
-    justifyContent: "center",
+  infoText: {
+    fontSize: OmbaroTheme.fontSize.sm,
+    color: OmbaroTheme.colors.textLight,
+    textAlign: 'center',
   },
-
-  title: {
-    marginTop: 18,
-    fontSize: 22,
-    fontWeight: "800",
-    textAlign: "center",
-    color: COLORS.text,
-  },
-  subtitle: {
-    fontSize: 14,
-    color: COLORS.sub,
-    textAlign: "center",
-    marginTop: 6,
-    marginBottom: 20,
-  },
-
-  label: { fontSize: 14, fontWeight: "700", color: COLORS.text, marginTop: 16 },
-  inputWrap: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: "#FFF",
+  demoCard: {
+    backgroundColor: OmbaroTheme.colors.darkCard,
+    borderRadius: OmbaroTheme.borderRadius.md,
+    padding: OmbaroTheme.spacing.md,
+    marginTop: OmbaroTheme.spacing.md,
     borderWidth: 1,
-    borderColor: COLORS.border,
-    borderRadius: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 8,
-    marginTop: 6,
+    borderColor: OmbaroTheme.colors.roseGold,
   },
-  input: { flex: 1, fontSize: 15, color: COLORS.text },
-
-  primaryBtn: {
-    marginTop: 24,
-    backgroundColor: COLORS.primary,
-    paddingVertical: 16,
-    borderRadius: 18,
-    alignItems: "center",
+  demoTitle: {
+    fontSize: OmbaroTheme.fontSize.md,
+    fontWeight: OmbaroTheme.fontWeight.semibold,
+    color: OmbaroTheme.colors.textLight,
+    marginBottom: OmbaroTheme.spacing.sm,
   },
-  primaryBtnText: { color: "#FFF", fontSize: 16, fontWeight: "700" },
-
-  registerText: {
-    marginTop: 18,
-    textAlign: "center",
-    fontSize: 14,
-    color: COLORS.sub,
+  demoText: {
+    fontSize: OmbaroTheme.fontSize.sm,
+    color: OmbaroTheme.colors.textLight,
+    marginVertical: 2,
   },
-  registerLink: {
-    color: "#9333EA",
-    fontWeight: "700",
+  demoBold: {
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: OmbaroTheme.colors.roseGold,
   },
-
-  demoBox: {
-    marginTop: 24,
-    backgroundColor: COLORS.demoBg,
-    borderRadius: 18,
-    borderWidth: 1,
-    borderColor: COLORS.demoBorder,
-    padding: 16,
-  },
-  demoTitle: { fontWeight: "800", fontSize: 16, marginBottom: 6, color: COLORS.text },
-  demoLine: { fontSize: 14, color: COLORS.text, marginTop: 2 },
-  demoNote: { fontSize: 13, color: "#2563EB", marginTop: 8, fontStyle: "italic" },
 });

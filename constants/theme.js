@@ -37,6 +37,55 @@ export const Colors = {
   },
 };
 
+export const OmbaroTheme = {
+  colors: {
+    beige: '#E8DDD3',
+    beigeLight: '#FEF9F3',
+    darkBg: '#2C2C2C',
+    darkCard: '#3A3A3A',
+    roseGold: '#D4A59A',
+    roseGoldLight: '#E8C4B8',
+    roseGoldDark: '#C8956E',
+    accent: '#C8B6A6',
+    textDark: '#2C2C2C',
+    textLight: '#FFFFFF',
+    textGray: '#666666',
+    border: '#4A4A4A',
+    success: '#4CAF50',
+    error: '#F44336',
+  },
+  spacing: {
+    xs: 4,
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+    xxl: 48,
+  },
+  borderRadius: {
+    sm: 8,
+    md: 16,
+    lg: 24,
+    xl: 32,
+    full: 9999,
+  },
+  fontSize: {
+    xs: 12,
+    sm: 14,
+    md: 16,
+    lg: 18,
+    xl: 24,
+    xxl: 32,
+    xxxl: 40,
+  },
+  fontWeight: {
+    regular: '400',
+    medium: '500',
+    semibold: '600',
+    bold: '700',
+  },
+};
+
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */
