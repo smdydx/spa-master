@@ -324,7 +324,7 @@ const styles = StyleSheet.create({
     color: OmbaroTheme.colors.textDark,
     backgroundColor: 'transparent',
     border: 'none',
-    outline: 'none',
+    outlineStyle: 'none',
   },
   hintContainer: {
     flexDirection: 'row',
