@@ -172,7 +172,7 @@ export default function OtpVerificationScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: OmbaroTheme.colors.beigeLight,
+    backgroundColor: '#FFFFFF',
   },
   keyboardView: {
     flex: 1,
@@ -236,6 +236,7 @@ const styles = StyleSheet.create({
   formSection: {
     flex: 1,
     justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
   },
   hiddenInput: {
     position: 'absolute',
@@ -253,15 +254,15 @@ const styles = StyleSheet.create({
     flex: 1,
     aspectRatio: 1,
     maxWidth: scale(60),
-    backgroundColor: OmbaroTheme.colors.beige,
+    backgroundColor: '#f8fafc',
     borderRadius: scale(10),
     borderWidth: 2,
-    borderColor: OmbaroTheme.colors.border,
+    borderColor: '#cbd5e1',
     alignItems: 'center',
     justifyContent: 'center',
   },
   otpCellActive: {
-    borderColor: OmbaroTheme.colors.roseGold,
+    borderColor: '#1e3a8a',
   },
   otpCellError: {
     borderColor: OmbaroTheme.colors.error,
@@ -290,7 +291,7 @@ const styles = StyleSheet.create({
     fontWeight: OmbaroTheme.fontWeight.semibold,
   },
   button: {
-    backgroundColor: OmbaroTheme.colors.roseGold,
+    backgroundColor: '#1e3a8a',
     borderRadius: scale(10),
     paddingVertical: verticalScale(12),
     alignItems: 'center',
@@ -303,17 +304,17 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: scale(14),
     fontWeight: OmbaroTheme.fontWeight.bold,
-    color: OmbaroTheme.colors.textDark,
+    color: '#FFFFFF',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   hintCard: {
-    backgroundColor: OmbaroTheme.colors.beige,
+    backgroundColor: '#eff6ff',
     borderRadius: scale(10),
     padding: scale(10),
     marginTop: verticalScale(12),
     borderWidth: 1,
-    borderColor: OmbaroTheme.colors.roseGold,
+    borderColor: '#1e3a8a',
   },
   hintText: {
     fontSize: scale(11),
@@ -322,6 +323,6 @@ const styles = StyleSheet.create({
   },
   hintCode: {
     fontWeight: OmbaroTheme.fontWeight.bold,
-    color: OmbaroTheme.colors.roseGold,
+    color: '#1e3a8a',
   },
 });
