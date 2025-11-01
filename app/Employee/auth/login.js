@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   View,
@@ -8,13 +9,11 @@ import {
   KeyboardAvoidingView,
   Platform,
   Dimensions,
-  Image
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Mail, Lock } from 'lucide-react-native';
-import { OmbaroTheme } from '../../../constants/theme';
 
 const { width, height } = Dimensions.get('window');
 
@@ -33,9 +32,8 @@ export default function EmployeeLogin() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
       >
-        {/* Split Screen Layout */}
         <View style={styles.splitContainer}>
-          {/* Top Section - Brand & Visual */}
+          {/* Top Section */}
           <LinearGradient
             colors={['#C8B6A6', '#D4A59A', '#F3EDE6']}
             style={styles.topSection}
@@ -45,7 +43,7 @@ export default function EmployeeLogin() {
               style={styles.backButton}
               activeOpacity={0.7}
             >
-              <ArrowLeft size={20} color="#2C2C2C" strokeWidth={2.5} />
+              <ArrowLeft size={Math.min(width * 0.05, 20)} color="#2C2C2C" strokeWidth={2.5} />
             </TouchableOpacity>
 
             <View style={styles.brandSection}>
@@ -59,7 +57,7 @@ export default function EmployeeLogin() {
             </View>
           </LinearGradient>
 
-          {/* Bottom Section - Form */}
+          {/* Bottom Section */}
           <View style={styles.bottomSection}>
             <LinearGradient
               colors={['#1A1A1A', '#2C2520', '#1F1F1F']}
@@ -73,7 +71,7 @@ export default function EmployeeLogin() {
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Email Address</Text>
                 <View style={styles.inputWrapper}>
-                  <Mail size={18} color="#C8B6A6" strokeWidth={2} />
+                  <Mail size={Math.min(width * 0.045, 18)} color="#C8B6A6" strokeWidth={2} />
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your email"
@@ -90,7 +88,7 @@ export default function EmployeeLogin() {
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Password</Text>
                 <View style={styles.inputWrapper}>
-                  <Lock size={18} color="#C8B6A6" strokeWidth={2} />
+                  <Lock size={Math.min(width * 0.045, 18)} color="#C8B6A6" strokeWidth={2} />
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your password"
@@ -108,10 +106,7 @@ export default function EmployeeLogin() {
               </TouchableOpacity>
 
               {/* Login Button */}
-              <TouchableOpacity
-                onPress={handleLogin}
-                activeOpacity={0.9}
-              >
+              <TouchableOpacity onPress={handleLogin} activeOpacity={0.9}>
                 <LinearGradient
                   colors={['#C8B6A6', '#D4A59A']}
                   start={{ x: 0, y: 0 }}
@@ -141,102 +136,96 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   topSection: {
-    flex: 1.5, // Adjusted flex for better proportion
-    paddingHorizontal: 24,
-    paddingTop: 20,
-    paddingBottom: 40,
-    justifyContent: 'center', // Center content vertically
-    alignItems: 'center', // Center content horizontally
+    flex: 1.8,
+    paddingHorizontal: Math.min(width * 0.06, 24),
+    paddingTop: height * 0.02,
+    paddingBottom: height * 0.04,
+    justifyContent: 'space-between',
   },
   backButton: {
-    position: 'absolute',
-    top: 30,
-    left: 24,
-    width: 40,
-    height: 40,
+    width: Math.min(width * 0.1, 40),
+    height: Math.min(width * 0.1, 40),
     borderRadius: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     alignItems: 'center',
     justifyContent: 'center',
-    zIndex: 1, // Ensure back button is above gradient
   },
   brandSection: {
     alignItems: 'center',
+    flex: 1,
     justifyContent: 'center',
-    width: '100%', // Take full width
   },
   iconContainer: {
-    width: 72, // Slightly larger icon container
-    height: 72,
-    borderRadius: 18, // Slightly larger border radius
+    width: Math.min(width * 0.14, 56),
+    height: Math.min(width * 0.14, 56),
+    borderRadius: 16,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 20, // Increased margin
+    marginBottom: height * 0.015,
   },
   iconCircle: {
-    width: 40, // Size of the inner circle
-    height: 40, // Size of the inner circle
-    borderRadius: 20, // Half of width/height for a perfect circle
-    backgroundColor: '#FFFFFF', // White circle
+    width: Math.min(width * 0.08, 32),
+    height: Math.min(width * 0.08, 32),
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
   },
   brandName: {
-    fontSize: width * 0.08, // Responsive font size
+    fontSize: Math.min(width * 0.065, 26),
     fontWeight: '900',
     color: '#2C2C2C',
     letterSpacing: 3,
-    marginBottom: 10, // Reduced margin
+    marginBottom: height * 0.006,
   },
   brandTagline: {
-    fontSize: width * 0.035, // Responsive font size
+    fontSize: Math.min(width * 0.03, 12),
     fontWeight: '700',
     color: '#8B6F47',
     letterSpacing: 1,
-    marginBottom: 20, // Increased margin
+    marginBottom: height * 0.02,
   },
   welcomeText: {
-    fontSize: width * 0.06, // Responsive font size for welcome text
+    fontSize: Math.min(width * 0.065, 26),
     fontWeight: '900',
     color: '#1A1A1A',
-    marginBottom: 10, // Reduced margin
+    marginBottom: height * 0.008,
     textAlign: 'center',
   },
   subText: {
-    fontSize: width * 0.04, // Responsive font size for sub text
-    color: 'rgba(44, 44, 44, 0.8)', // Slightly darker for better readability
+    fontSize: Math.min(width * 0.032, 13),
+    color: 'rgba(44, 44, 44, 0.8)',
     textAlign: 'center',
-    paddingHorizontal: 20, // Add padding to prevent text from touching edges
+    paddingHorizontal: 20,
   },
   bottomSection: {
-    flex: 2, // Increased flex for the form section
+    flex: 3,
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     marginTop: -24,
     overflow: 'hidden',
-    justifyContent: 'center', // Center form content
   },
   formContainer: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 40, // Increased padding top
-    paddingBottom: 32, // Increased padding bottom
-    justifyContent: 'center', // Center form elements
+    paddingHorizontal: Math.min(width * 0.06, 24),
+    paddingTop: height * 0.035,
+    paddingBottom: height * 0.025,
+    justifyContent: 'center',
   },
   formTitle: {
-    fontSize: width * 0.07, // Responsive font size
+    fontSize: Math.min(width * 0.065, 26),
     fontWeight: '900',
     color: '#FFFFFF',
-    marginBottom: 32,
+    marginBottom: height * 0.035,
     textAlign: 'center',
   },
   inputGroup: {
-    marginBottom: 24, // Increased margin between input groups
+    marginBottom: height * 0.02,
   },
   label: {
-    fontSize: width * 0.035, // Responsive font size
+    fontSize: Math.min(width * 0.035, 14),
     fontWeight: '700',
     color: '#C8B6A6',
-    marginBottom: 10, // Increased margin
+    marginBottom: height * 0.008,
     letterSpacing: 0.5,
   },
   inputWrapper: {
@@ -246,27 +235,27 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1.5,
     borderColor: 'rgba(200, 182, 166, 0.3)',
-    paddingHorizontal: 16,
-    height: 56,
+    paddingHorizontal: width * 0.04,
+    height: Math.min(height * 0.065, 54),
   },
   input: {
     flex: 1,
     marginLeft: 12,
-    fontSize: width * 0.04, // Responsive font size
+    fontSize: Math.min(width * 0.04, 16),
     color: '#FFFFFF',
     fontWeight: '600',
   },
   forgotButton: {
     alignSelf: 'flex-end',
-    marginBottom: 32, // Increased margin
+    marginBottom: height * 0.025,
   },
   forgotText: {
-    fontSize: width * 0.035, // Responsive font size
+    fontSize: Math.min(width * 0.035, 14),
     fontWeight: '700',
     color: '#D4A59A',
   },
   loginButton: {
-    height: 56,
+    height: Math.min(height * 0.065, 54),
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
@@ -277,7 +266,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   loginButtonText: {
-    fontSize: width * 0.045, // Responsive font size
+    fontSize: Math.min(width * 0.042, 17),
     fontWeight: '900',
     color: '#FFFFFF',
     letterSpacing: 2,

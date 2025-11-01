@@ -1,20 +1,19 @@
 
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
   KeyboardAvoidingView,
   Platform,
-  Dimensions
+  Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Mail, Lock } from 'lucide-react-native';
-import { OmbaroTheme } from '../../../constants/theme';
 
 const { width, height } = Dimensions.get('window');
 
@@ -44,7 +43,7 @@ export default function AdminLogin() {
               style={styles.backButton}
               activeOpacity={0.7}
             >
-              <ArrowLeft size={20} color="#2C2C2C" strokeWidth={2.5} />
+              <ArrowLeft size={Math.min(width * 0.05, 20)} color="#2C2C2C" strokeWidth={2.5} />
             </TouchableOpacity>
 
             <View style={styles.brandSection}>
@@ -66,12 +65,12 @@ export default function AdminLogin() {
             />
 
             <View style={styles.formContainer}>
-              <Text style={styles.formTitle}>Admin Login</Text>
+              <Text style={styles.formTitle}>Login to Continue</Text>
 
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Email Address</Text>
                 <View style={styles.inputWrapper}>
-                  <Mail size={18} color="#C8B6A6" strokeWidth={2} />
+                  <Mail size={Math.min(width * 0.045, 18)} color="#C8B6A6" strokeWidth={2} />
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your email"
@@ -87,7 +86,7 @@ export default function AdminLogin() {
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Password</Text>
                 <View style={styles.inputWrapper}>
-                  <Lock size={18} color="#C8B6A6" strokeWidth={2} />
+                  <Lock size={Math.min(width * 0.045, 18)} color="#C8B6A6" strokeWidth={2} />
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your password"
@@ -133,10 +132,10 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   topSection: {
-    flex: 2,
-    paddingHorizontal: Math.min(width * 0.05, 24),
-    paddingTop: height * 0.025,
-    paddingBottom: height * 0.05,
+    flex: 1.8,
+    paddingHorizontal: Math.min(width * 0.06, 24),
+    paddingTop: height * 0.02,
+    paddingBottom: height * 0.04,
     justifyContent: 'space-between',
   },
   backButton: {
@@ -153,44 +152,46 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iconContainer: {
-    width: Math.min(width * 0.12, 48),
-    height: Math.min(width * 0.12, 48),
-    borderRadius: 14,
+    width: Math.min(width * 0.14, 56),
+    height: Math.min(width * 0.14, 56),
+    borderRadius: 16,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: height * 0.012,
-  },
-  iconCircle: {
-    width: Math.min(width * 0.06, 24),
-    height: Math.min(width * 0.06, 24),
-    borderRadius: 12,
-    backgroundColor: 'rgba(200, 182, 166, 0.8)',
-  },
-  brandName: {
-    fontSize: Math.min(width * 0.055, 22),
-    fontWeight: '900',
-    color: '#2C2C2C',
-    letterSpacing: 2.5,
-    marginBottom: height * 0.005,
-  },
-  brandTagline: {
-    fontSize: Math.min(width * 0.025, 10),
-    fontWeight: '700',
-    color: '#8B6F47',
-    letterSpacing: 0.5,
     marginBottom: height * 0.015,
   },
+  iconCircle: {
+    width: Math.min(width * 0.08, 32),
+    height: Math.min(width * 0.08, 32),
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+  },
+  brandName: {
+    fontSize: Math.min(width * 0.065, 26),
+    fontWeight: '900',
+    color: '#2C2C2C',
+    letterSpacing: 3,
+    marginBottom: height * 0.006,
+  },
+  brandTagline: {
+    fontSize: Math.min(width * 0.03, 12),
+    fontWeight: '700',
+    color: '#8B6F47',
+    letterSpacing: 1,
+    marginBottom: height * 0.02,
+  },
   welcomeText: {
-    fontSize: Math.min(width * 0.06, 24),
+    fontSize: Math.min(width * 0.065, 26),
     fontWeight: '900',
     color: '#1A1A1A',
     marginBottom: height * 0.008,
+    textAlign: 'center',
   },
   subText: {
-    fontSize: Math.min(width * 0.025, 10),
-    color: 'rgba(44, 44, 44, 0.75)',
+    fontSize: Math.min(width * 0.032, 13),
+    color: 'rgba(44, 44, 44, 0.8)',
     textAlign: 'center',
+    paddingHorizontal: 20,
   },
   bottomSection: {
     flex: 3,
@@ -201,25 +202,26 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
-    paddingHorizontal: Math.min(width * 0.05, 24),
-    paddingTop: height * 0.04,
-    paddingBottom: height * 0.03,
+    paddingHorizontal: Math.min(width * 0.06, 24),
+    paddingTop: height * 0.035,
+    paddingBottom: height * 0.025,
+    justifyContent: 'center',
   },
   formTitle: {
-    fontSize: Math.min(width * 0.06, 24),
+    fontSize: Math.min(width * 0.065, 26),
     fontWeight: '900',
     color: '#FFFFFF',
-    marginBottom: height * 0.04,
+    marginBottom: height * 0.035,
     textAlign: 'center',
   },
   inputGroup: {
-    marginBottom: height * 0.025,
+    marginBottom: height * 0.02,
   },
   label: {
-    fontSize: Math.min(width * 0.032, 13),
+    fontSize: Math.min(width * 0.035, 14),
     fontWeight: '700',
     color: '#C8B6A6',
-    marginBottom: height * 0.01,
+    marginBottom: height * 0.008,
     letterSpacing: 0.5,
   },
   inputWrapper: {
@@ -230,26 +232,26 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: 'rgba(200, 182, 166, 0.3)',
     paddingHorizontal: width * 0.04,
-    height: Math.min(height * 0.07, 56),
+    height: Math.min(height * 0.065, 54),
   },
   input: {
     flex: 1,
     marginLeft: 12,
-    fontSize: Math.min(width * 0.038, 15),
+    fontSize: Math.min(width * 0.04, 16),
     color: '#FFFFFF',
     fontWeight: '600',
   },
   forgotButton: {
     alignSelf: 'flex-end',
-    marginBottom: height * 0.03,
+    marginBottom: height * 0.025,
   },
   forgotText: {
-    fontSize: Math.min(width * 0.032, 13),
+    fontSize: Math.min(width * 0.035, 14),
     fontWeight: '700',
     color: '#D4A59A',
   },
   loginButton: {
-    height: Math.min(height * 0.07, 56),
+    height: Math.min(height * 0.065, 54),
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
@@ -260,7 +262,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   loginButtonText: {
-    fontSize: Math.min(width * 0.04, 16),
+    fontSize: Math.min(width * 0.042, 17),
     fontWeight: '900',
     color: '#FFFFFF',
     letterSpacing: 2,
