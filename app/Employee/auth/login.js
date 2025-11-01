@@ -35,7 +35,7 @@ export default function EmployeeLogin() {
         <View style={styles.splitContainer}>
           {/* Top Section */}
           <LinearGradient
-            colors={['#C8B6A6', '#D4A59A', '#F3EDE6']}
+            colors={['#1e3a8a', '#1e40af', '#2563eb']}
             style={styles.topSection}
           >
             <TouchableOpacity
@@ -43,7 +43,7 @@ export default function EmployeeLogin() {
               style={styles.backButton}
               activeOpacity={0.7}
             >
-              <ArrowLeft size={Math.min(width * 0.05, 20)} color="#2C2C2C" strokeWidth={2.5} />
+              <ArrowLeft size={Math.min(width * 0.05, 20)} color="#FFFFFF" strokeWidth={2.5} />
             </TouchableOpacity>
 
             <View style={styles.brandSection}>
@@ -59,10 +59,7 @@ export default function EmployeeLogin() {
 
           {/* Bottom Section */}
           <View style={styles.bottomSection}>
-            <LinearGradient
-              colors={['#1A1A1A', '#2C2520', '#1F1F1F']}
-              style={StyleSheet.absoluteFillObject}
-            />
+            <View style={[StyleSheet.absoluteFillObject, { backgroundColor: '#FFFFFF' }]} />
 
             <View style={styles.formContainer}>
               <Text style={styles.formTitle}>Login to Continue</Text>
@@ -71,11 +68,11 @@ export default function EmployeeLogin() {
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Email Address</Text>
                 <View style={styles.inputWrapper}>
-                  <Mail size={Math.min(width * 0.045, 18)} color="#C8B6A6" strokeWidth={2} />
+                  <Mail size={Math.min(width * 0.045, 18)} color="#1e3a8a" strokeWidth={2} />
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your email"
-                    placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                    placeholderTextColor="rgba(30, 58, 138, 0.4)"
                     value={email}
                     onChangeText={setEmail}
                     keyboardType="email-address"
@@ -88,11 +85,11 @@ export default function EmployeeLogin() {
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Password</Text>
                 <View style={styles.inputWrapper}>
-                  <Lock size={Math.min(width * 0.045, 18)} color="#C8B6A6" strokeWidth={2} />
+                  <Lock size={Math.min(width * 0.045, 18)} color="#1e3a8a" strokeWidth={2} />
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your password"
-                    placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                    placeholderTextColor="rgba(30, 58, 138, 0.4)"
                     value={password}
                     onChangeText={setPassword}
                     secureTextEntry
@@ -108,7 +105,7 @@ export default function EmployeeLogin() {
               {/* Login Button */}
               <TouchableOpacity onPress={handleLogin} activeOpacity={0.9}>
                 <LinearGradient
-                  colors={['#C8B6A6', '#D4A59A']}
+                  colors={['#1e3a8a', '#2563eb']}
                   start={{ x: 0, y: 0 }}
                   end={{ x: 1, y: 0 }}
                   style={styles.loginButton}
@@ -173,27 +170,27 @@ const styles = StyleSheet.create({
   brandName: {
     fontSize: Math.min(width * 0.065, 26),
     fontWeight: '900',
-    color: '#2C2C2C',
+    color: '#FFFFFF',
     letterSpacing: 3,
     marginBottom: height * 0.006,
   },
   brandTagline: {
     fontSize: Math.min(width * 0.03, 12),
     fontWeight: '700',
-    color: '#8B6F47',
+    color: '#93c5fd',
     letterSpacing: 1,
     marginBottom: height * 0.02,
   },
   welcomeText: {
     fontSize: Math.min(width * 0.065, 26),
     fontWeight: '900',
-    color: '#1A1A1A',
+    color: '#FFFFFF',
     marginBottom: height * 0.008,
     textAlign: 'center',
   },
   subText: {
     fontSize: Math.min(width * 0.032, 13),
-    color: 'rgba(44, 44, 44, 0.8)',
+    color: 'rgba(255, 255, 255, 0.8)',
     textAlign: 'center',
     paddingHorizontal: 20,
   },
@@ -214,7 +211,7 @@ const styles = StyleSheet.create({
   formTitle: {
     fontSize: Math.min(width * 0.065, 26),
     fontWeight: '900',
-    color: '#FFFFFF',
+    color: '#1e3a8a',
     marginBottom: height * 0.035,
     textAlign: 'center',
   },
@@ -224,17 +221,17 @@ const styles = StyleSheet.create({
   label: {
     fontSize: Math.min(width * 0.035, 14),
     fontWeight: '700',
-    color: '#C8B6A6',
+    color: '#1e3a8a',
     marginBottom: height * 0.008,
     letterSpacing: 0.5,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    backgroundColor: '#f8fafc',
     borderRadius: 14,
     borderWidth: 1.5,
-    borderColor: 'rgba(200, 182, 166, 0.3)',
+    borderColor: '#cbd5e1',
     paddingHorizontal: width * 0.04,
     height: Math.min(height * 0.065, 54),
   },
@@ -242,7 +239,7 @@ const styles = StyleSheet.create({
     flex: 1,
     marginLeft: 12,
     fontSize: Math.min(width * 0.04, 16),
-    color: '#FFFFFF',
+    color: '#1e293b',
     fontWeight: '600',
   },
   forgotButton: {
@@ -252,14 +249,14 @@ const styles = StyleSheet.create({
   forgotText: {
     fontSize: Math.min(width * 0.035, 14),
     fontWeight: '700',
-    color: '#D4A59A',
+    color: '#2563eb',
   },
   loginButton: {
     height: Math.min(height * 0.065, 54),
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: '#C8B6A6',
+    shadowColor: '#1e3a8a',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
