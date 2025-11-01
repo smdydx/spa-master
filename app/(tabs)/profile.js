@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { useRouter } from 'expo-router';
 import {
@@ -12,6 +13,10 @@ import {
   Settings,
   Star,
   User,
+  Bell,
+  Shield,
+  Wallet,
+  MapPin,
 } from 'lucide-react-native';
 import {
   Image,
@@ -26,12 +31,12 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 
 const CARD_SHADOW =
   Platform.OS === 'android'
-    ? { elevation: 1 }
+    ? { elevation: 2 }
     : {
         shadowColor: '#000',
-        shadowOpacity: 0.06,
-        shadowRadius: 8,
-        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 },
       };
 
 export default function ProfileScreen() {
@@ -40,25 +45,33 @@ export default function ProfileScreen() {
   const profileStats = [
     { label: 'Bookings', value: '12', icon: Calendar },
     { label: 'Reviews', value: '8', icon: Star },
-    { label: 'Saved', value: '₹2,400', icon: CreditCard },
+    { label: 'Saved', value: '₹2,400', icon: Wallet },
   ];
 
   const menuItems = [
-    { title: 'Edit Profile', icon: User, onPress: () => console.log('Edit Profile') },
-    { title: 'Favorites', icon: Heart, onPress: () => console.log('Favorites') },
-    { title: 'Gift Cards', icon: Gift, onPress: () => console.log('Gift Cards') },
-    { title: 'Settings', icon: Settings, onPress: () => console.log('Settings') },
-    { title: 'Help & Support', icon: HelpCircle, onPress: () => console.log('Help') },
-    { title: 'Terms & Conditions', icon: FileText, onPress: () => router.push('/terms-conditions') },
+    { title: 'Edit Profile', icon: User, route: '/profile/edit-profile' },
+    { title: 'My Addresses', icon: MapPin, route: '/profile/addresses' },
+    { title: 'Favorites', icon: Heart, route: '/profile/favorites' },
+    { title: 'Payment Methods', icon: CreditCard, route: '/profile/payment-methods' },
+    { title: 'Gift Cards', icon: Gift, route: '/profile/gift-cards' },
+    { title: 'Notifications', icon: Bell, route: '/profile/notifications' },
+    { title: 'Privacy & Security', icon: Shield, route: '/profile/privacy' },
+    { title: 'Settings', icon: Settings, route: '/profile/settings' },
+    { title: 'Help & Support', icon: HelpCircle, route: '/profile/help' },
+    { title: 'Terms & Conditions', icon: FileText, route: '/terms-conditions' },
   ];
 
-  const MenuItem = ({ title, icon: Icon, onPress }) => (
-    <TouchableOpacity style={[styles.menuItem, CARD_SHADOW]} onPress={onPress} activeOpacity={0.9}>
+  const MenuItem = ({ title, icon: Icon, route }) => (
+    <TouchableOpacity 
+      style={[styles.menuItem, CARD_SHADOW]} 
+      onPress={() => router.push(route)} 
+      activeOpacity={0.7}
+    >
       <View style={styles.menuIconWrap}>
-        <Icon size={20} color="#6b7280" />
+        <Icon size={20} color="#1e3a8a" />
       </View>
       <Text style={styles.menuText}>{title}</Text>
-      <ChevronRight size={20} color="#d1d5db" />
+      <ChevronRight size={20} color="#cbd5e1" />
     </TouchableOpacity>
   );
 
@@ -88,7 +101,7 @@ export default function ProfileScreen() {
               {profileStats.map((stat, idx) => (
                 <View key={idx} style={styles.statCol}>
                   <View style={styles.statIconBox}>
-                    <stat.icon size={18} color="#a855f7" />
+                    <stat.icon size={18} color="#1e3a8a" />
                   </View>
                   <Text style={styles.statValue}>{stat.value}</Text>
                   <Text style={styles.statLabel}>{stat.label}</Text>
@@ -100,7 +113,7 @@ export default function ProfileScreen() {
           {/* Menu Items */}
           <View style={{ marginBottom: 24 }}>
             {menuItems.map((item, idx) => (
-              <MenuItem key={idx} title={item.title} icon={item.icon} onPress={item.onPress} />
+              <MenuItem key={idx} title={item.title} icon={item.icon} route={item.route} />
             ))}
           </View>
 
@@ -108,7 +121,7 @@ export default function ProfileScreen() {
           <TouchableOpacity
             style={[styles.logoutItem, CARD_SHADOW]}
             onPress={() => router.replace('/')}
-            activeOpacity={0.9}
+            activeOpacity={0.7}
           >
             <View style={styles.logoutIconWrap}>
               <LogOut size={20} color="#dc2626" />
@@ -123,40 +136,38 @@ export default function ProfileScreen() {
 }
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FFFFFF' }, // white
+  safe: { flex: 1, backgroundColor: '#f8fafc' },
   scroll: { flex: 1 },
-  container: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 24 },
-  heading: { fontSize: 22, fontWeight: '800', color: '#111827', marginBottom: 16 },
+  container: { paddingHorizontal: 20, paddingTop: 16, paddingBottom: 32 },
+  heading: { fontSize: 28, fontWeight: '800', color: '#0f172a', marginBottom: 20 },
 
-  // Card
   card: {
     backgroundColor: '#ffffff',
-    borderRadius: 16,
+    borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#f3f4f6', // gray-100
+    borderColor: '#e2e8f0',
     marginBottom: 24,
   },
-  cardPad: { padding: 16 },
+  cardPad: { padding: 20 },
 
-  profileRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 12 },
-  avatar: { width: 64, height: 64, borderRadius: 32, marginRight: 12, backgroundColor: '#e5e7eb' },
-  name: { fontSize: 18, fontWeight: '800', color: '#111827' },
-  phone: { color: '#4b5563', marginTop: 2 },
-  badge: { color: '#7c3aed', fontSize: 12, marginTop: 4 },
+  profileRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 16 },
+  avatar: { width: 72, height: 72, borderRadius: 36, marginRight: 16, backgroundColor: '#e5e7eb' },
+  name: { fontSize: 20, fontWeight: '800', color: '#0f172a', marginBottom: 4 },
+  phone: { color: '#64748b', fontSize: 14, marginBottom: 4 },
+  badge: { color: '#1e3a8a', fontSize: 13, fontWeight: '600' },
 
   statsRow: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    paddingTop: 12,
+    paddingTop: 16,
     borderTopWidth: 1,
-    borderTopColor: '#f3f4f6',
+    borderTopColor: '#e2e8f0',
   },
   statCol: { alignItems: 'center' },
-  statIconBox: { width: 32, height: 32, alignItems: 'center', justifyContent: 'center', marginBottom: 4 },
-  statValue: { fontSize: 16, fontWeight: '800', color: '#111827' },
-  statLabel: { fontSize: 12, color: '#4b5563' },
+  statIconBox: { width: 40, height: 40, alignItems: 'center', justifyContent: 'center', marginBottom: 6 },
+  statValue: { fontSize: 18, fontWeight: '800', color: '#0f172a' },
+  statLabel: { fontSize: 12, color: '#64748b', marginTop: 2 },
 
-  // Menu
   menuItem: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -164,39 +175,38 @@ const styles = StyleSheet.create({
     padding: 16,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#f3f4f6',
+    borderColor: '#e2e8f0',
     marginBottom: 12,
   },
   menuIconWrap: {
-    width: 40,
-    height: 40,
-    backgroundColor: '#f3f4f6',
+    width: 44,
+    height: 44,
+    backgroundColor: '#eff6ff',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 14,
   },
-  menuText: { flex: 1, fontSize: 15, fontWeight: '600', color: '#111827' },
+  menuText: { flex: 1, fontSize: 15, fontWeight: '600', color: '#0f172a' },
 
-  // Logout
   logoutItem: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#fff1f2', // red-50
+    backgroundColor: '#fef2f2',
     padding: 16,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: '#fee2e2', // red-100
+    borderColor: '#fecaca',
     marginBottom: 40,
   },
   logoutIconWrap: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     backgroundColor: '#fee2e2',
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: 12,
+    marginRight: 14,
   },
   logoutText: { flex: 1, fontSize: 15, fontWeight: '600', color: '#dc2626' },
 });
