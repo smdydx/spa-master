@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   View,
@@ -48,7 +47,7 @@ export default function EmployeeLogin() {
 
             <View style={styles.brandSection}>
               <View style={styles.iconContainer}>
-                <View style={styles.iconCircle} />
+                <Text style={styles.iconText}>🤖</Text>
               </View>
               <Text style={styles.brandName}>OMBARO</Text>
               <Text style={styles.brandTagline}>Employee Portal</Text>
@@ -164,6 +163,10 @@ const styles = StyleSheet.create({
     height: Math.min(width * 0.08, 32),
     borderRadius: 16,
     backgroundColor: '#FFFFFF',
+  },
+  iconText: {
+    fontSize: Math.min(width * 0.08, 32),
+    color: '#FFFFFF',
   },
   brandName: {
     fontSize: Math.min(width * 0.065, 26),

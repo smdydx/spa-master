@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import {
   View,
@@ -47,7 +46,7 @@ export default function TherapistLogin() {
 
             <View style={styles.brandSection}>
               <View style={styles.iconContainer}>
-                <View style={styles.iconCircle} />
+                <Text style={styles.iconText}>🤖</Text>
               </View>
               <Text style={styles.brandName}>OMBARO</Text>
               <Text style={styles.brandTagline}>Therapist Portal</Text>
@@ -259,5 +258,8 @@ const styles = StyleSheet.create({
     fontWeight: '900',
     color: '#FFFFFF',
     letterSpacing: 2,
+  },
+  iconText: {
+    fontSize: Math.min(width * 0.08, 32),
   },
 });
