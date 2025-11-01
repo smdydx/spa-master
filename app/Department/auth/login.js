@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { 
   View, 
@@ -7,20 +8,20 @@ import {
   StyleSheet, 
   KeyboardAvoidingView,
   Platform,
-  useWindowDimensions
+  Dimensions
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
+import { ArrowLeft, Mail, Lock } from 'lucide-react-native';
 import { OmbaroTheme } from '../../../constants/theme';
+
+const { width, height } = Dimensions.get('window');
 
 export default function DepartmentLogin() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const router = useRouter();
-  const { width, height } = useWindowDimensions();
-
-  const isSmallDevice = height < 700;
-  const scale = Math.min(width / 390, 1.2);
 
   const handleLogin = () => {
     router.replace('/Department');
@@ -32,89 +33,86 @@ export default function DepartmentLogin() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         style={styles.keyboardView}
       >
-        <View style={styles.content}>
-          {/* Header */}
-          <View style={[styles.header, { marginBottom: height * (isSmallDevice ? 0.02 : 0.03) }]}>
-            <View style={[styles.iconContainer, { 
-              width: 56 * scale, 
-              height: 56 * scale,
-              marginBottom: height * 0.015
-            }]}>
-              <Text style={{ fontSize: 28 * scale }}>🏢</Text>
-            </View>
-            <Text style={[styles.brand, { fontSize: 28 * scale }]}>OMBARO</Text>
-            <Text style={[styles.tagline, { fontSize: 12 * scale }]}>Department Portal</Text>
-          </View>
-
-          {/* Form Card */}
-          <View style={[styles.formCard, { 
-            padding: 24 * scale,
-            marginBottom: height * (isSmallDevice ? 0.015 : 0.02)
-          }]}>
-            <Text style={[styles.formTitle, { 
-              fontSize: 20 * scale,
-              marginBottom: height * 0.02
-            }]}>Department Access</Text>
-
-            {/* Email Input */}
-            <View style={[styles.inputContainer, { marginBottom: height * 0.015 }]}>
-              <Text style={[styles.label, { fontSize: 13 * scale }]}>Email</Text>
-              <View style={[styles.inputWrapper, { height: 48 * scale }]}>
-                <Text style={{ fontSize: 16 * scale, marginRight: 8 }}>📧</Text>
-                <TextInput
-                  style={[styles.input, { fontSize: 15 * scale }]}
-                  placeholder="Enter your email"
-                  placeholderTextColor={OmbaroTheme.colors.textGray}
-                  value={email}
-                  onChangeText={setEmail}
-                  keyboardType="email-address"
-                  autoCapitalize="none"
-                />
-              </View>
-            </View>
-
-            {/* Password Input */}
-            <View style={[styles.inputContainer, { marginBottom: height * 0.015 }]}>
-              <Text style={[styles.label, { fontSize: 13 * scale }]}>Password</Text>
-              <View style={[styles.inputWrapper, { height: 48 * scale }]}>
-                <Text style={{ fontSize: 16 * scale, marginRight: 8 }}>🔒</Text>
-                <TextInput
-                  style={[styles.input, { fontSize: 15 * scale }]}
-                  placeholder="Enter your password"
-                  placeholderTextColor={OmbaroTheme.colors.textGray}
-                  value={password}
-                  onChangeText={setPassword}
-                  secureTextEntry
-                />
-              </View>
-            </View>
-
-            {/* Forgot Password */}
-            <TouchableOpacity style={styles.forgotContainer}>
-              <Text style={[styles.forgotText, { fontSize: 13 * scale }]}>Forgot Password?</Text>
-            </TouchableOpacity>
-
-            {/* Login Button */}
-            <TouchableOpacity
-              style={[styles.loginButton, { 
-                height: 52 * scale,
-                marginTop: height * 0.015
-              }]}
-              onPress={handleLogin}
-              activeOpacity={0.8}
-            >
-              <Text style={[styles.loginButtonText, { fontSize: 15 * scale }]}>LOGIN</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Back Button */}
-          <TouchableOpacity
-            style={[styles.backButton, { height: 48 * scale }]}
-            onPress={() => router.back()}
-            activeOpacity={0.8}
+        <View style={styles.splitContainer}>
+          <LinearGradient
+            colors={['#C8B6A6', '#D4A59A', '#F3EDE6']}
+            style={styles.topSection}
           >
-            <Text style={[styles.backButtonText, { fontSize: 14 * scale }]}>← Back to Home</Text>
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.backButton}
+              activeOpacity={0.7}
+            >
+              <ArrowLeft size={20} color="#2C2C2C" strokeWidth={2.5} />
+            </TouchableOpacity>
+
+            <View style={styles.brandSection}>
+              <View style={styles.iconContainer}>
+                <Text style={styles.iconText}>🏢</Text>
+              </View>
+              <Text style={styles.brandName}>OMBARO</Text>
+              <Text style={styles.brandTagline}>Department Portal</Text>
+              <Text style={styles.welcomeText}>Department Access</Text>
+              <Text style={styles.subText}>Manage your department operations</Text>
+            </View>
+          </LinearGradient>
+
+          <View style={styles.bottomSection}>
+            <LinearGradient
+              colors={['#1A1A1A', '#2C2520', '#1F1F1F']}
+              style={StyleSheet.absoluteFillObject}
+            />
+
+            <View style={styles.formContainer}>
+              <Text style={styles.formTitle}>Login to Continue</Text>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Email Address</Text>
+                <View style={styles.inputWrapper}>
+                  <Mail size={18} color="#C8B6A6" strokeWidth={2} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter your email"
+                    placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                    value={email}
+                    onChangeText={setEmail}
+                    keyboardType="email-address"
+                    autoCapitalize="none"
+                  />
+                </View>
+              </View>
+
+              <View style={styles.inputGroup}>
+                <Text style={styles.label}>Password</Text>
+                <View style={styles.inputWrapper}>
+                  <Lock size={18} color="#C8B6A6" strokeWidth={2} />
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Enter your password"
+                    placeholderTextColor="rgba(255, 255, 255, 0.4)"
+                    value={password}
+                    onChangeText={setPassword}
+                    secureTextEntry
+                  />
+                </View>
+              </View>
+
+              <TouchableOpacity style={styles.forgotButton}>
+                <Text style={styles.forgotText}>Forgot Password?</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity onPress={handleLogin} activeOpacity={0.9}>
+                <LinearGradient
+                  colors={['#C8B6A6', '#D4A59A']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 0 }}
+                  style={styles.loginButton}
+                >
+                  <Text style={styles.loginButtonText}>LOGIN</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
       </KeyboardAvoidingView>
     </SafeAreaView>
@@ -124,104 +122,142 @@ export default function DepartmentLogin() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: OmbaroTheme.colors.beigeLight,
+    backgroundColor: '#1A1A1A',
   },
   keyboardView: {
     flex: 1,
   },
-  content: {
+  splitContainer: {
+    flex: 1,
+  },
+  topSection: {
+    flex: 2,
+    paddingHorizontal: 24,
+    paddingTop: 20,
+    paddingBottom: 40,
+    justifyContent: 'space-between',
+  },
+  backButton: {
+    width: 40,
+    height: 40,
+    borderRadius: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  brandSection: {
+    alignItems: 'center',
     flex: 1,
     justifyContent: 'center',
-    paddingHorizontal: 24,
-  },
-  header: {
-    alignItems: 'center',
   },
   iconContainer: {
+    width: 64,
+    height: 64,
     borderRadius: 16,
-    backgroundColor: OmbaroTheme.colors.roseGold,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     alignItems: 'center',
     justifyContent: 'center',
+    marginBottom: 16,
   },
-  brand: {
-    fontWeight: '800',
-    color: OmbaroTheme.colors.textDark,
-    letterSpacing: 2,
-    marginBottom: 4,
+  iconText: {
+    fontSize: 32,
   },
-  tagline: {
-    color: OmbaroTheme.colors.roseGoldDark,
-    fontWeight: '600',
+  brandName: {
+    fontSize: 32,
+    fontWeight: '900',
+    color: '#2C2C2C',
+    letterSpacing: 3,
+    marginBottom: 8,
   },
-  formCard: {
-    backgroundColor: OmbaroTheme.colors.white,
-    borderRadius: 20,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.1,
-    shadowRadius: 12,
-    elevation: 5,
+  brandTagline: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#8B6F47',
+    letterSpacing: 1,
+    marginBottom: 24,
   },
-  formTitle: {
-    fontWeight: '800',
-    color: OmbaroTheme.colors.textDark,
+  welcomeText: {
+    fontSize: 28,
+    fontWeight: '900',
+    color: '#1A1A1A',
+    marginBottom: 8,
+  },
+  subText: {
+    fontSize: 14,
+    color: 'rgba(44, 44, 44, 0.7)',
     textAlign: 'center',
   },
-  inputContainer: {
-    width: '100%',
+  bottomSection: {
+    flex: 3,
+    borderTopLeftRadius: 32,
+    borderTopRightRadius: 32,
+    marginTop: -24,
+    overflow: 'hidden',
+  },
+  formContainer: {
+    flex: 1,
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 24,
+  },
+  formTitle: {
+    fontSize: 24,
+    fontWeight: '900',
+    color: '#FFFFFF',
+    marginBottom: 32,
+    textAlign: 'center',
+  },
+  inputGroup: {
+    marginBottom: 20,
   },
   label: {
-    fontWeight: '600',
-    color: OmbaroTheme.colors.textDark,
-    marginBottom: 6,
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#C8B6A6',
+    marginBottom: 8,
+    letterSpacing: 0.5,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#F9FAFB',
-    borderWidth: 1,
-    borderColor: OmbaroTheme.colors.border,
-    borderRadius: 12,
-    paddingHorizontal: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+    borderRadius: 14,
+    borderWidth: 1.5,
+    borderColor: 'rgba(200, 182, 166, 0.3)',
+    paddingHorizontal: 16,
+    height: 56,
   },
   input: {
     flex: 1,
-    color: OmbaroTheme.colors.textDark,
-  },
-  forgotContainer: {
-    alignSelf: 'flex-end',
-    marginTop: 8,
-  },
-  forgotText: {
-    color: OmbaroTheme.colors.roseGoldDark,
+    marginLeft: 12,
+    fontSize: 15,
+    color: '#FFFFFF',
     fontWeight: '600',
   },
+  forgotButton: {
+    alignSelf: 'flex-end',
+    marginBottom: 24,
+  },
+  forgotText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#D4A59A',
+  },
   loginButton: {
-    backgroundColor: OmbaroTheme.colors.roseGold,
+    height: 56,
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
-    shadowColor: OmbaroTheme.colors.roseGold,
+    shadowColor: '#C8B6A6',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
     elevation: 5,
   },
   loginButtonText: {
-    color: OmbaroTheme.colors.white,
+    fontSize: 16,
     fontWeight: '900',
-    letterSpacing: 1.5,
-  },
-  backButton: {
-    borderWidth: 1.5,
-    borderColor: OmbaroTheme.colors.border,
-    borderRadius: 14,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: 'transparent',
-  },
-  backButtonText: {
-    color: OmbaroTheme.colors.textDark,
-    fontWeight: '700',
+    color: '#FFFFFF',
+    letterSpacing: 2,
   },
 });
