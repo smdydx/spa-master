@@ -1,4 +1,3 @@
-
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, TouchableOpacity, TextInput, Pressable, StyleSheet, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
@@ -20,7 +19,7 @@ export default function OtpVerificationScreen() {
   const [seconds, setSeconds] = useState(RESEND_SECONDS);
   const [verifying, setVerifying] = useState(false);
   const [error, setError] = useState('');
-  
+
   const inputRef = useRef(null);
   const router = useRouter();
   const { phoneNumber, verifyOTP } = useAuth();
@@ -46,12 +45,12 @@ export default function OtpVerificationScreen() {
 
   const handleVerify = async () => {
     if (code.length !== OTP_LENGTH || verifying) return;
-    
+
     setVerifying(true);
     setError('');
-    
+
     const result = verifyOTP(code);
-    
+
     if (result.success) {
       router.replace('/(tabs)');
     } else {
@@ -138,7 +137,7 @@ export default function OtpVerificationScreen() {
                 <Text
                   style={[
                     styles.resendLink,
-                    { color: seconds > 0 ? OmbaroTheme.colors.textGray : OmbaroTheme.colors.roseGold }
+                    { color: seconds > 0 ? '#9CA3AF' : '#1e3a8a' }
                   ]}
                   onPress={handleResend}
                 >
