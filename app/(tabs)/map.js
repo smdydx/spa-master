@@ -11,9 +11,17 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
-import { Star, X } from 'lucide-react-native';
+import { Star, X, MapPin } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+
+// Conditionally import MapView only on native platforms
+let MapView, Marker, PROVIDER_GOOGLE;
+if (Platform.OS !== 'web') {
+  const maps = require('react-native-maps');
+  MapView = maps.default;
+  Marker = maps.Marker;
+  PROVIDER_GOOGLE = maps.PROVIDER_GOOGLE;
+}
 
 const { width, height } = Dimensions.get('window');
 
@@ -82,26 +90,34 @@ export default function MapViewScreen() {
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.mapContainer}>
-        <MapView
-          provider={PROVIDER_GOOGLE}
-          style={styles.map}
-          region={region}
-          onRegionChangeComplete={setRegion}
-          showsUserLocation
-          showsMyLocationButton
-        >
-          {nearbySpas.map((spa) => (
-            <Marker
-              key={spa.id}
-              coordinate={spa.coordinate}
-              onPress={() => setSelectedSpa(spa)}
-            >
-              <View style={[styles.marker, { backgroundColor: spa.isOpen ? '#22c55e' : '#9ca3af' }]}>
-                <Text style={styles.markerText}>₹</Text>
-              </View>
-            </Marker>
-          ))}
-        </MapView>
+        {Platform.OS !== 'web' ? (
+          <MapView
+            provider={PROVIDER_GOOGLE}
+            style={styles.map}
+            region={region}
+            onRegionChangeComplete={setRegion}
+            showsUserLocation
+            showsMyLocationButton
+          >
+            {nearbySpas.map((spa) => (
+              <Marker
+                key={spa.id}
+                coordinate={spa.coordinate}
+                onPress={() => setSelectedSpa(spa)}
+              >
+                <View style={[styles.marker, { backgroundColor: spa.isOpen ? '#22c55e' : '#9ca3af' }]}>
+                  <Text style={styles.markerText}>₹</Text>
+                </View>
+              </Marker>
+            ))}
+          </MapView>
+        ) : (
+          <View style={styles.webMapPlaceholder}>
+            <MapPin size={64} color="#1e3a8a" strokeWidth={1.5} />
+            <Text style={styles.webMapText}>Map view is available on mobile devices</Text>
+            <Text style={styles.webMapSubtext}>Browse nearby salons below</Text>
+          </View>
+        )}
 
         {selectedSpa && (
           <View style={styles.selectedCard}>
@@ -198,6 +214,26 @@ const styles = StyleSheet.create({
   map: {
     width: '100%',
     height: '100%',
+  },
+  webMapPlaceholder: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: '#eff6ff',
+    padding: 20,
+  },
+  webMapText: {
+    fontSize: 18,
+    fontWeight: '700',
+    color: '#1e3a8a',
+    marginTop: 16,
+    textAlign: 'center',
+  },
+  webMapSubtext: {
+    fontSize: 14,
+    color: '#6b7280',
+    marginTop: 8,
+    textAlign: 'center',
   },
   marker: {
     width: 40,
