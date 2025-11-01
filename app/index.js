@@ -92,7 +92,7 @@ export default function WelcomeScreen() {
             progressiveRenderingEnabled={true}
           />
           <LinearGradient
-            colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0)']}
+            colors={['rgba(30, 58, 138, 0.5)', 'rgba(30, 58, 138, 0.4)', 'rgba(30, 58, 138, 0.55)']}
             style={styles.topSectionOverlay}
           />
           <View style={styles.topContent}>
@@ -268,12 +268,12 @@ const styles = StyleSheet.create({
     ...StyleSheet.absoluteFillObject,
     width: '100%',
     height: '100%',
-    opacity: 0,
+    opacity: 0.6,
   },
   topSectionOverlay: {
     ...StyleSheet.absoluteFillObject,
     width: '100%',
-    opacity: 0,
+    opacity: 1,
   },
   bottomSection: {
     flex: 3,
