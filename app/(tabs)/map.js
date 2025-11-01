@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   View,
@@ -10,381 +11,369 @@ import {
   Platform,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { LinearGradient } from 'expo-linear-gradient';
-import { MapPin, Star, Filter } from 'lucide-react-native';
+import MapView, { Marker, PROVIDER_GOOGLE } from 'react-native-maps';
+import { Star, X } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
-const { width } = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export default function MapViewScreen() {
   const [selectedSpa, setSelectedSpa] = useState(null);
   const router = useRouter();
+
+  const [region, setRegion] = useState({
+    latitude: 12.9716,
+    longitude: 77.5946,
+    latitudeDelta: 0.05,
+    longitudeDelta: 0.05,
+  });
 
   const nearbySpas = [
     {
       id: 1,
       name: 'Bliss Spa & Salon',
       rating: 4.8,
-      distance: '0.5 km away',
+      distance: '0.5 km',
       address: 'Koramangala 5th Block, Bangalore',
       image: 'https://images.pexels.com/photos/3757952/pexels-photo-3757952.jpeg',
       services: ['Hair Styling', 'Facial', 'Manicure'],
       priceRange: '₹500-2000',
       isOpen: true,
-      coordinates: { x: 45, y: 35 },
+      coordinate: { latitude: 12.9352, longitude: 77.6245 },
     },
     {
       id: 2,
       name: 'Zen Wellness Center',
       rating: 4.9,
-      distance: '1.2 km away',
+      distance: '1.2 km',
       address: 'Indiranagar 100 Feet Road, Bangalore',
       image: 'https://images.pexels.com/photos/3968056/pexels-photo-3968056.jpeg',
-      services: ['Full Body Massage', 'Aromatherapy', 'Body Wrap'],
+      services: ['Full Body Massage', 'Aromatherapy'],
       priceRange: '₹800-3000',
       isOpen: true,
-      coordinates: { x: 65, y: 25 },
+      coordinate: { latitude: 12.9716, longitude: 77.6412 },
     },
     {
       id: 3,
       name: 'Glamour Studio',
       rating: 4.7,
-      distance: '2.1 km away',
+      distance: '2.1 km',
       address: 'MG Road, Bangalore',
       image: 'https://images.pexels.com/photos/3993449/pexels-photo-3993449.jpeg',
-      services: ['Nail Art', 'Pedicure', 'Eyebrow Threading'],
+      services: ['Nail Art', 'Pedicure', 'Eyebrow'],
       priceRange: '₹300-1500',
       isOpen: false,
-      coordinates: { x: 25, y: 60 },
+      coordinate: { latitude: 12.9716, longitude: 77.5946 },
     },
     {
       id: 4,
       name: 'Serenity Day Spa',
       rating: 4.6,
-      distance: '3.8 km away',
+      distance: '3.8 km',
       address: 'Brigade Road, Bangalore',
       image: 'https://images.pexels.com/photos/3985360/pexels-photo-3985360.jpeg',
-      services: ['Deep Tissue Massage', 'Hot Stone Therapy'],
+      services: ['Deep Tissue', 'Hot Stone'],
       priceRange: '₹1000-4000',
       isOpen: true,
-      coordinates: { x: 75, y: 70 },
-    },
-    {
-      id: 5,
-      name: 'Beauty Lounge',
-      rating: 4.5,
-      distance: '4.2 km away',
-      address: 'HSR Layout, Bangalore',
-      image: 'https://images.pexels.com/photos/3993678/pexels-photo-3993678.jpeg',
-      services: ['Bridal Makeup', 'Hair Color', 'Spa'],
-      priceRange: '₹600-2500',
-      isOpen: true,
-      coordinates: { x: 35, y: 80 },
+      coordinate: { latitude: 12.9698, longitude: 77.6025 },
     },
   ];
 
-  const MapMarker = ({ spa, onPress }) => {
-    const markerStyle = {
-      position: 'absolute',
-      left: `${spa.coordinates.x}%`,
-      top: `${spa.coordinates.y}%`,
-      alignItems: 'center',
-    };
-    return (
-      <TouchableOpacity style={markerStyle} onPress={() => onPress(spa)} activeOpacity={0.9}>
-        <View
-          style={[
-            styles.markerDot,
-            { backgroundColor: spa.isOpen ? '#22c55e' : '#9ca3af' }, // green-500 / gray-400
-          ]}
-        >
-          <MapPin size={20} color="#fff" />
-        </View>
-        {spa.isOpen ? <View style={styles.markerPing} /> : null}
-      </TouchableOpacity>
-    );
-  };
-
   return (
-    <SafeAreaView style={styles.safe}>
-      <View style={styles.headerWrap}>
-        <View style={styles.headerRow}>
-          <Text style={styles.title}>Spa Near You</Text>
-          <TouchableOpacity style={styles.filterBtn} activeOpacity={0.9}>
-            <Filter size={20} color="#374151" />
-          </TouchableOpacity>
-        </View>
-      </View>
-
-      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-        {/* Map View */}
-        <View style={styles.mapOuter}>
-          <View style={styles.mapCard}>
-            {/* Map background gradients */}
-            <LinearGradient
-              colors={['#bfdbfe', '#e9d5ff']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={StyleSheet.absoluteFill}
-            />
-            <LinearGradient
-              colors={['#93c5fd', '#bbf7d0', '#bfdbfe']}
-              start={{ x: 0.2, y: 0.1 }}
-              end={{ x: 0.9, y: 1 }}
-              style={[StyleSheet.absoluteFill, { opacity: 0.5 }]}
-            />
-
-            {/* Your Location */}
-            <View style={styles.myLocDot}>
-              <View style={styles.myLocInner} />
-            </View>
-
-            {/* "You are here" label */}
-            <View style={styles.hereLabel}>
-              <Text style={styles.hereLabelText}>You are here</Text>
-            </View>
-
-            {/* Spa Markers */}
-            {nearbySpas.map(spa => (
-              <MapMarker key={spa.id} spa={spa} onPress={setSelectedSpa} />
-            ))}
-          </View>
-
-          <View style={styles.mapFooter}>
-            <Text style={styles.mapFooterText}>Showing {nearbySpas.length} providers within 5km</Text>
-          </View>
-        </View>
-
-        {/* Selected Spa Details */}
-        {selectedSpa && (
-          <View style={styles.selOuter}>
-            <TouchableOpacity
-              style={styles.selCard}
-              onPress={() => router.push(`/salon-details/${selectedSpa.id}`)}
-              activeOpacity={0.9}
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <View style={styles.mapContainer}>
+        <MapView
+          provider={PROVIDER_GOOGLE}
+          style={styles.map}
+          region={region}
+          onRegionChangeComplete={setRegion}
+          showsUserLocation
+          showsMyLocationButton
+        >
+          {nearbySpas.map((spa) => (
+            <Marker
+              key={spa.id}
+              coordinate={spa.coordinate}
+              onPress={() => setSelectedSpa(spa)}
             >
-              <View style={styles.selRow}>
-                <Image source={{ uri: selectedSpa.image }} style={styles.selImg} resizeMode="cover" />
-                <View style={styles.selRight}>
-                  <View style={styles.selTopRow}>
-                    <Text style={styles.selName}>{selectedSpa.name}</Text>
-                    <View style={styles.ratingRow}>
-                      <Star size={14} color="#fbbf24" fill="#fbbf24" />
-                      <Text style={styles.ratingText}>{selectedSpa.rating}</Text>
-                    </View>
-                  </View>
-
-                  <Text style={styles.selAddr}>{selectedSpa.address}</Text>
-
-                  <View style={styles.selBottomRow}>
-                    <Text style={styles.priceText}>{selectedSpa.priceRange}</Text>
-                    <Text style={styles.distText}>{selectedSpa.distance}</Text>
-                  </View>
-                </View>
+              <View style={[styles.marker, { backgroundColor: spa.isOpen ? '#22c55e' : '#9ca3af' }]}>
+                <Text style={styles.markerText}>₹</Text>
               </View>
+            </Marker>
+          ))}
+        </MapView>
 
-              <View style={styles.ctaRow}>
-                <TouchableOpacity style={[styles.ctaBtn, styles.ctaLight]} activeOpacity={0.9}>
-                  <Text style={styles.ctaLightText}>Get Directions</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={[styles.ctaBtn, styles.ctaPrimary]}
-                  onPress={() => router.push('/booking')}
-                  activeOpacity={0.9}
-                >
-                  <Text style={styles.ctaPrimaryText}>Book Now</Text>
-                </TouchableOpacity>
-              </View>
+        {selectedSpa && (
+          <View style={styles.selectedCard}>
+            <TouchableOpacity
+              style={styles.closeBtn}
+              onPress={() => setSelectedSpa(null)}
+              activeOpacity={0.7}
+            >
+              <X size={20} color="#6b7280" strokeWidth={2.5} />
             </TouchableOpacity>
+
+            <View style={styles.cardContent}>
+              <Image source={{ uri: selectedSpa.image }} style={styles.cardImage} />
+              <View style={styles.cardInfo}>
+                <Text style={styles.cardName}>{selectedSpa.name}</Text>
+                <View style={styles.ratingRow}>
+                  <Star size={14} color="#fbbf24" fill="#fbbf24" strokeWidth={0} />
+                  <Text style={styles.ratingText}>{selectedSpa.rating}</Text>
+                  <View style={[styles.statusDot, { backgroundColor: selectedSpa.isOpen ? '#22c55e' : '#ef4444' }]} />
+                  <Text style={styles.statusText}>{selectedSpa.isOpen ? 'Open' : 'Closed'}</Text>
+                </View>
+                <Text style={styles.cardAddress} numberOfLines={1}>{selectedSpa.address}</Text>
+                <Text style={styles.cardPrice}>{selectedSpa.priceRange} • {selectedSpa.distance}</Text>
+              </View>
+            </View>
+
+            <View style={styles.cardActions}>
+              <TouchableOpacity
+                style={[styles.actionBtn, styles.directionBtn]}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.directionBtnText}>Get Directions</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.actionBtn, styles.bookBtn]}
+                activeOpacity={0.8}
+                onPress={() => router.push(`/salon-details/${selectedSpa.id}`)}
+              >
+                <Text style={styles.bookBtnText}>View Details</Text>
+              </TouchableOpacity>
+            </View>
           </View>
         )}
+      </View>
 
-        {/* Spa List */}
-        <View style={styles.listOuter}>
-          <Text style={styles.sectionTitle}>All Nearby Spas</Text>
-
-          {nearbySpas.map(spa => (
+      <View style={styles.listContainer}>
+        <Text style={styles.listTitle}>Nearby Salons ({nearbySpas.length})</Text>
+        <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.horizontalList}>
+          {nearbySpas.map((spa) => (
             <TouchableOpacity
               key={spa.id}
               style={styles.listCard}
+              activeOpacity={0.9}
               onPress={() => {
                 setSelectedSpa(spa);
-                router.push(`/salon-details/${spa.id}`);
+                setRegion({
+                  ...spa.coordinate,
+                  latitudeDelta: 0.02,
+                  longitudeDelta: 0.02,
+                });
               }}
-              activeOpacity={0.9}
             >
-              <View style={styles.listInner}>
-                <Image source={{ uri: spa.image }} style={styles.listImg} resizeMode="cover" />
-                <View style={styles.listRight}>
-                  <View style={styles.listTopRow}>
-                    <Text style={styles.listName}>{spa.name}</Text>
-                    <View style={styles.ratingRow}>
-                      <Star size={14} color="#fbbf24" fill="#fbbf24" />
-                      <Text style={styles.ratingText}>{spa.rating}</Text>
-                    </View>
-                  </View>
-
-                  <Text style={styles.listServices} numberOfLines={1}>
-                    {spa.services.slice(0, 2).join(', ')}
-                    {spa.services.length > 2 ? `... +${spa.services.length - 2} more` : ''}
-                  </Text>
-
-                  <View style={styles.listBottomRow}>
-                    <Text style={styles.priceText}>{spa.priceRange}</Text>
-                    <View style={styles.openRow}>
-                      <View
-                        style={[
-                          styles.dot,
-                          { backgroundColor: spa.isOpen ? '#22c55e' : '#ef4444' }, // green / red
-                        ]}
-                      />
-                      <Text style={styles.distText}>{spa.distance}</Text>
-                    </View>
-                  </View>
+              <Image source={{ uri: spa.image }} style={styles.listImage} />
+              <View style={styles.listContent}>
+                <Text style={styles.listName} numberOfLines={1}>{spa.name}</Text>
+                <View style={styles.listRating}>
+                  <Star size={12} color="#fbbf24" fill="#fbbf24" strokeWidth={0} />
+                  <Text style={styles.listRatingText}>{spa.rating}</Text>
                 </View>
+                <Text style={styles.listDistance}>{spa.distance} away</Text>
               </View>
             </TouchableOpacity>
           ))}
-        </View>
-      </ScrollView>
+        </ScrollView>
+      </View>
     </SafeAreaView>
   );
 }
 
 const CARD_SHADOW =
   Platform.OS === 'android'
-    ? { elevation: 1 }
-    : { shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } };
+    ? { elevation: 4 }
+    : { shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 12, shadowOffset: { width: 0, height: 4 } };
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FEF9F3' }, // cream-50
-  headerWrap: { paddingHorizontal: 24, paddingTop: 12, paddingBottom: 8 },
-  headerRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  title: { fontSize: 22, fontWeight: '800', color: '#111827' },
-  filterBtn: {
-    width: 40,
-    height: 40,
-    backgroundColor: '#ffffff',
-    borderRadius: 12,
-    alignItems: 'center',
-    justifyContent: 'center',
+  container: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
   },
-
-  scroll: { flex: 1 },
-
-  // Map block
-  mapOuter: { marginHorizontal: 24, marginBottom: 24 },
-  mapCard: {
-    height: 320,
-    borderRadius: 16,
-    overflow: 'hidden',
+  mapContainer: {
+    flex: 1,
     position: 'relative',
-    ...CARD_SHADOW,
-    backgroundColor: '#e5e7eb',
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
   },
-  myLocDot: {
-    position: 'absolute',
-    left: '50%',
-    top: '45%',
-    marginLeft: -15,
-    marginTop: -15,
-    width: 30,
-    height: 30,
-    backgroundColor: '#3b82f6',
-    borderRadius: 15,
-    alignItems: 'center',
-    justifyContent: 'center',
+  map: {
+    width: '100%',
+    height: '100%',
   },
-  myLocInner: { width: 12, height: 12, backgroundColor: '#fff', borderRadius: 6 },
-  hereLabel: {
-    position: 'absolute',
-    left: '42%',
-    top: '52%',
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 10,
-    paddingVertical: 6,
-    borderRadius: 999,
-  },
-  hereLabelText: { fontSize: 12, fontWeight: '600', color: '#374151' },
-  markerDot: {
+  marker: {
     width: 40,
     height: 40,
     borderRadius: 20,
     alignItems: 'center',
     justifyContent: 'center',
+    borderWidth: 3,
+    borderColor: '#FFFFFF',
     ...CARD_SHADOW,
   },
-  markerPing: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    backgroundColor: '#34d399',
-    marginTop: -4,
+  markerText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '800',
   },
-  mapFooter: {
-    backgroundColor: '#ffffff',
-    paddingHorizontal: 16,
-    paddingVertical: 12,
-    borderBottomLeftRadius: 16,
-    borderBottomRightRadius: 16,
-  },
-  mapFooterText: { fontSize: 13, color: '#4b5563', textAlign: 'center' },
-
-  // Selected card
-  selOuter: { marginHorizontal: 24, marginBottom: 24 },
-  selCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#f3f4f6',
+  selectedCard: {
+    position: 'absolute',
+    bottom: 20,
+    left: 16,
+    right: 16,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 20,
     padding: 16,
     ...CARD_SHADOW,
   },
-  selRow: { flexDirection: 'row' },
-  selImg: { width: 80, height: 80, borderRadius: 12, marginRight: 12, backgroundColor: '#e5e7eb' },
-  selRight: { flex: 1 },
-  selTopRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 4 },
-  selName: { fontSize: 16, fontWeight: '700', color: '#111827' },
-  ratingRow: { flexDirection: 'row', alignItems: 'center' },
-  ratingText: { fontSize: 12, color: '#374151', fontWeight: '600', marginLeft: 4 },
-  selAddr: { fontSize: 13, color: '#4b5563', marginBottom: 6 },
-  selBottomRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  priceText: { fontSize: 13, color: '#7c3aed', fontWeight: '700' },
-  distText: { fontSize: 12, color: '#6b7280' },
-
-  ctaRow: { flexDirection: 'row', marginTop: 12 },
-  ctaBtn: {
+  closeBtn: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    width: 32,
+    height: 32,
+    borderRadius: 16,
+    backgroundColor: '#f3f4f6',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 10,
+  },
+  cardContent: {
+    flexDirection: 'row',
+    marginBottom: 12,
+  },
+  cardImage: {
+    width: 80,
+    height: 80,
+    borderRadius: 12,
+    marginRight: 12,
+    backgroundColor: '#e5e7eb',
+  },
+  cardInfo: {
+    flex: 1,
+  },
+  cardName: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 4,
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  ratingText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#374151',
+    marginLeft: 4,
+    marginRight: 8,
+  },
+  statusDot: {
+    width: 6,
+    height: 6,
+    borderRadius: 3,
+    marginRight: 4,
+  },
+  statusText: {
+    fontSize: 12,
+    fontWeight: '500',
+    color: '#6b7280',
+  },
+  cardAddress: {
+    fontSize: 12,
+    color: '#6b7280',
+    marginBottom: 4,
+  },
+  cardPrice: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#1e3a8a',
+  },
+  cardActions: {
+    flexDirection: 'row',
+    gap: 8,
+  },
+  actionBtn: {
     flex: 1,
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',
-    justifyContent: 'center',
   },
-  ctaLight: { backgroundColor: '#ede9fe', marginRight: 8 }, // violet-100
-  ctaLightText: { color: '#6d28d9', fontWeight: '700' },   // violet-700
-  ctaPrimary: { backgroundColor: '#7c3aed' },              // purple-600
-  ctaPrimaryText: { color: '#fff', fontWeight: '700' },
-
-  // List
-  listOuter: { paddingHorizontal: 24, paddingBottom: 40 },
-  sectionTitle: { fontSize: 18, fontWeight: '800', color: '#111827', marginBottom: 12 },
-  listCard: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#f3f4f6',
-    marginBottom: 12,
+  directionBtn: {
+    backgroundColor: '#eff6ff',
+  },
+  directionBtnText: {
+    color: '#1e3a8a',
+    fontWeight: '700',
+    fontSize: 14,
+  },
+  bookBtn: {
+    backgroundColor: '#1e3a8a',
+  },
+  bookBtnText: {
+    color: '#FFFFFF',
+    fontWeight: '700',
+    fontSize: 14,
+  },
+  listContainer: {
+    position: 'absolute',
+    top: 16,
+    left: 0,
+    right: 0,
+    backgroundColor: 'transparent',
+  },
+  listTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#111827',
+    marginLeft: 16,
+    marginBottom: 8,
+    backgroundColor: '#FFFFFF',
+    alignSelf: 'flex-start',
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    borderRadius: 20,
     ...CARD_SHADOW,
   },
-  listInner: { padding: 16, flexDirection: 'row' },
-  listImg: { width: 64, height: 64, borderRadius: 12, marginRight: 12, backgroundColor: '#e5e7eb' },
-  listRight: { flex: 1 },
-  listTopRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', marginBottom: 6 },
-  listName: { fontSize: 16, fontWeight: '700', color: '#111827' },
-  listServices: { fontSize: 13, color: '#4b5563', marginBottom: 6 },
-  listBottomRow: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' },
-  openRow: { flexDirection: 'row', alignItems: 'center' },
-  dot: { width: 8, height: 8, borderRadius: 4, marginRight: 8 },
+  horizontalList: {
+    paddingLeft: 16,
+  },
+  listCard: {
+    width: 140,
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    marginRight: 12,
+    overflow: 'hidden',
+    ...CARD_SHADOW,
+  },
+  listImage: {
+    width: '100%',
+    height: 100,
+    backgroundColor: '#e5e7eb',
+  },
+  listContent: {
+    padding: 12,
+  },
+  listName: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 4,
+  },
+  listRating: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 4,
+  },
+  listRatingText: {
+    fontSize: 12,
+    fontWeight: '600',
+    color: '#374151',
+    marginLeft: 4,
+  },
+  listDistance: {
+    fontSize: 11,
+    color: '#6b7280',
+    fontWeight: '500',
+  },
 });
