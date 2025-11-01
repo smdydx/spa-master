@@ -2,19 +2,20 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { Calendar, Clock, MapPin, User } from 'lucide-react-native';
 import { useState } from 'react';
-import { Dimensions, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
+import { Dimensions, Image, Platform, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 const { width } = Dimensions.get('window');
 
 const COLORS = {
-  bg: "#FEF9F3",
+  bg: "#f0f9ff",
   cardBg: "#FFFFFF",
-  text: "#1A1A1A",
-  textMuted: "#6B7280",
-  border: "#F3E8DC",
-  grad1: "#a855f7",
-  grad2: "#ec4899",
+  text: "#1e3a8a",
+  textMuted: "#64748b",
+  border: "#e0f2fe",
+  navyBlue: "#1e3a8a",
+  lightBlue: "#3b82f6",
+  accent: "#60a5fa",
 };
 
 const STATUS_STYLES = {
@@ -163,31 +164,41 @@ export default function BookingsScreen() {
   );
 
   return (
-    <SafeAreaView style={styles.safeArea}>
-      <View style={styles.topWrap}>
-        <Text style={styles.screenTitle}>My Bookings</Text>
+    <View style={styles.safeArea}>
+      <LinearGradient
+        colors={['#1e3a8a', '#3b82f6']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={styles.header}
+      >
+        <SafeAreaView>
+          <View style={styles.headerContent}>
+            <Text style={styles.screenTitle}>My Bookings</Text>
+            <Text style={styles.subtitle}>Track your beauty sessions</Text>
+          </View>
 
-        {/* Tabs */}
-        <View style={styles.tabsWrap}>
-          <TouchableOpacity
-            style={[styles.tabBtn, activeTab === 'upcoming' && styles.tabBtnActive]}
-            onPress={() => setActiveTab('upcoming')}
-          >
-            <Text style={[styles.tabText, activeTab === 'upcoming' ? styles.tabTextActive : styles.tabTextInactive]}>
-              Upcoming
-            </Text>
-          </TouchableOpacity>
+          {/* Tabs */}
+          <View style={styles.tabsWrap}>
+            <TouchableOpacity
+              style={[styles.tabBtn, activeTab === 'upcoming' && styles.tabBtnActive]}
+              onPress={() => setActiveTab('upcoming')}
+            >
+              <Text style={[styles.tabText, activeTab === 'upcoming' ? styles.tabTextActive : styles.tabTextInactive]}>
+                Upcoming
+              </Text>
+            </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.tabBtn, activeTab === 'past' && styles.tabBtnActive]}
-            onPress={() => setActiveTab('past')}
-          >
-            <Text style={[styles.tabText, activeTab === 'past' ? styles.tabTextActive : styles.tabTextInactive]}>
-              Past
-            </Text>
-          </TouchableOpacity>
-        </View>
-      </View>
+            <TouchableOpacity
+              style={[styles.tabBtn, activeTab === 'past' && styles.tabBtnActive]}
+              onPress={() => setActiveTab('past')}
+            >
+              <Text style={[styles.tabText, activeTab === 'past' ? styles.tabTextActive : styles.tabTextInactive]}>
+                Past
+              </Text>
+            </TouchableOpacity>
+          </View>
+        </SafeAreaView>
+      </LinearGradient>
 
       <ScrollView
         style={styles.scroll}
@@ -280,9 +291,7 @@ export default function BookingsScreen() {
           </View>
         </View>
       )}
-
-
-    </SafeAreaView>
+    </View>
   );
 }
 
@@ -291,27 +300,35 @@ const CARD_BORDER = Platform.OS === 'android' ? {} : { shadowColor: '#000', shad
 const styles = StyleSheet.create({
   safeArea: {
     flex: 1,
-    backgroundColor: '#FEF9F3', // Using the cream background color
+    backgroundColor: '#f0f9ff',
   },
-  topWrap: {
-    paddingHorizontal: 24,
-    paddingTop: 12,
-    paddingBottom: 8,
+  header: {
+    paddingHorizontal: 20,
+    paddingBottom: 20,
+  },
+  headerContent: {
+    marginTop: 8,
+    marginBottom: 16,
   },
   screenTitle: {
-    fontSize: 22,
+    fontSize: 28,
     fontWeight: '800',
-    color: COLORS.text, // Using the text color from COLORS
-    marginBottom: 16,
+    color: '#ffffff',
+    marginBottom: 4,
+  },
+  subtitle: {
+    fontSize: 14,
+    color: '#ffffff',
+    opacity: 0.9,
   },
 
   // Tabs
   tabsWrap: {
     flexDirection: 'row',
-    backgroundColor: COLORS.border, // Using the border color for tab background
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
     borderRadius: 16,
     padding: 4,
-    marginBottom: 12,
+    marginTop: 8,
   },
   tabBtn: {
     flex: 1,
@@ -324,8 +341,8 @@ const styles = StyleSheet.create({
     backgroundColor: '#ffffff',
   },
   tabText: { fontWeight: '700' },
-  tabTextActive: { color: COLORS.text }, // Using the text color
-  tabTextInactive: { color: COLORS.textMuted }, // Using the muted text color
+  tabTextActive: { color: COLORS.navyBlue },
+  tabTextInactive: { color: '#ffffff' },
 
   // List
   scroll: { flex: 1 },
@@ -386,7 +403,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
   },
   addressRow: { flexDirection: 'row', alignItems: 'center', maxWidth: width * 0.55 },
-  priceText: { fontSize: 16, fontWeight: '800', color: COLORS.grad1 }, // Using grad1 for price color
+  priceText: { fontSize: 16, fontWeight: '800', color: COLORS.navyBlue },
 
   // Status pill
   statusPill: {
@@ -409,20 +426,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  ctaPrimaryLight: { backgroundColor: COLORS.grad1, marginRight: 8 }, // Using grad1 for primary CTA
-  ctaPrimaryLightText: { color: '#ffffff', fontWeight: '700' },   // White text for primary CTA
-  ctaGray: { backgroundColor: COLORS.border },                         // Using border color for secondary CTA
-  ctaGrayText: { color: COLORS.text, fontWeight: '700' },            // Using text color for secondary CTA
+  ctaPrimaryLight: { backgroundColor: COLORS.navyBlue, marginRight: 8 },
+  ctaPrimaryLightText: { color: '#ffffff', fontWeight: '700' },
+  ctaGray: { backgroundColor: COLORS.border },
+  ctaGrayText: { color: COLORS.navyBlue, fontWeight: '700' },
 
   rateBtn: {
     marginTop: 12,
-    backgroundColor: '#fef3c7', // amber-100
+    backgroundColor: '#dbeafe',
     paddingVertical: 12,
     borderRadius: 12,
     alignItems: 'center',
     justifyContent: 'center',
   },
-  rateBtnText: { color: '#b45309', fontWeight: '700' }, // amber-700
+  rateBtnText: { color: COLORS.navyBlue, fontWeight: '700' },
 
   // Empty states
   emptyWrap: {
@@ -434,17 +451,17 @@ const styles = StyleSheet.create({
     marginTop: 12,
     fontSize: 16,
     fontWeight: '700',
-    color: COLORS.textMuted, // Using muted text color
+    color: COLORS.text,
   },
   emptySubtitle: {
     marginTop: 6,
     fontSize: 13,
-    color: COLORS.textMuted, // Using muted text color
+    color: COLORS.textMuted,
     textAlign: 'center',
   },
   bookNowBtn: {
     marginTop: 14,
-    backgroundColor: COLORS.grad1, // Using grad1 for book now button
+    backgroundColor: COLORS.navyBlue,
     paddingHorizontal: 20,
     paddingVertical: 12,
     borderRadius: 12,
@@ -511,10 +528,10 @@ badge: {
   paddingHorizontal: 10,
   paddingVertical: 6,
   borderRadius: 999,
-  backgroundColor: "#e0e7ff",
+  backgroundColor: "#dbeafe",
 },
-badgeText: { fontSize: 12, fontWeight: "800", color: COLORS.grad1 }, // Using grad1 for badge text
-detailPrice: { marginLeft: 12, fontSize: 16, fontWeight: "800", color: COLORS.grad1 }, // Using grad1 for price color
+badgeText: { fontSize: 12, fontWeight: "800", color: COLORS.navyBlue },
+detailPrice: { marginLeft: 12, fontSize: 16, fontWeight: "800", color: COLORS.navyBlue },
 
 // KV box
 kvBox: {
