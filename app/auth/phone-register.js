@@ -1,10 +1,9 @@
 
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, Phone, Gift } from 'lucide-react-native';
+import { ArrowLeft, Phone, Gift, Lock, Sparkles } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { KeyboardAvoidingView, Platform } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { OmbaroTheme } from '../../constants/theme';
 
@@ -48,7 +47,7 @@ export default function PhoneRegisterScreen() {
 
           <View style={styles.brandSection}>
             <View style={styles.iconContainer}>
-              <Text style={styles.icon}>✨</Text>
+              <Sparkles size={scale(32)} color={OmbaroTheme.colors.white} strokeWidth={2} />
             </View>
             <Text style={styles.brand}>OMBARO</Text>
             <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
@@ -71,7 +70,7 @@ export default function PhoneRegisterScreen() {
               <Text style={styles.label}>Referral Code (Optional)</Text>
               <View style={styles.inputWrapper}>
                 <View style={styles.iconBox}>
-                  <Gift size={scale(16)} color={OmbaroTheme.colors.primary} />
+                  <Gift size={scale(18)} color={OmbaroTheme.colors.primary} />
                 </View>
                 <input
                   style={styles.input}
@@ -80,14 +79,17 @@ export default function PhoneRegisterScreen() {
                   onChange={(e) => setReferral(e.target.value.toUpperCase())}
                 />
               </View>
-              <Text style={styles.hint}>🎁 Get 10% off your first booking!</Text>
+              <View style={styles.hintContainer}>
+                <Gift size={scale(12)} color="#4F46E5" />
+                <Text style={styles.hint}>Get 10% off your first booking!</Text>
+              </View>
             </View>
 
             <View style={styles.inputGroup}>
               <Text style={styles.label}>Mobile Number *</Text>
               <View style={[styles.inputWrapper, error && styles.inputError]}>
                 <View style={styles.iconBox}>
-                  <Phone size={scale(16)} color={OmbaroTheme.colors.primary} />
+                  <Phone size={scale(18)} color={OmbaroTheme.colors.primary} />
                 </View>
                 <input
                   style={styles.input}
@@ -111,7 +113,7 @@ export default function PhoneRegisterScreen() {
             </TouchableOpacity>
 
             <View style={styles.privacyNote}>
-              <Text style={styles.privacyIcon}>🔒</Text>
+              <Lock size={scale(14)} color={OmbaroTheme.colors.textGray} />
               <Text style={styles.privacyText}>
                 Your privacy is protected
               </Text>
@@ -137,15 +139,16 @@ const styles = StyleSheet.create({
   navySection: {
     backgroundColor: OmbaroTheme.colors.primary,
     width: width >= 768 ? '50%' : '100%',
-    height: width >= 768 ? '100%' : verticalScale(280),
-    paddingHorizontal: scale(20),
-    paddingVertical: verticalScale(16),
+    height: width >= 768 ? '100%' : verticalScale(320),
+    paddingHorizontal: scale(24),
+    paddingTop: verticalScale(20),
+    paddingBottom: verticalScale(32),
     justifyContent: 'space-between',
   },
   backButton: {
-    width: scale(36),
-    height: scale(36),
-    borderRadius: scale(10),
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(12),
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     alignItems: 'center',
     justifyContent: 'center',
@@ -158,50 +161,52 @@ const styles = StyleSheet.create({
     paddingVertical: verticalScale(20),
   },
   iconContainer: {
-    width: scale(60),
-    height: scale(60),
-    borderRadius: scale(16),
+    width: scale(70),
+    height: scale(70),
+    borderRadius: scale(18),
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: verticalScale(12),
-  },
-  icon: {
-    fontSize: scale(28),
+    marginBottom: verticalScale(16),
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   brand: {
-    fontSize: scale(28),
+    fontSize: scale(32),
     fontWeight: OmbaroTheme.fontWeight.bold,
     color: OmbaroTheme.colors.white,
-    letterSpacing: 2,
-    marginBottom: verticalScale(6),
+    letterSpacing: 2.5,
+    marginBottom: verticalScale(8),
   },
   tagline: {
-    fontSize: scale(12),
-    color: 'rgba(255, 255, 255, 0.9)',
+    fontSize: scale(13),
+    color: 'rgba(255, 255, 255, 0.95)',
     fontWeight: OmbaroTheme.fontWeight.medium,
-    marginBottom: verticalScale(20),
+    marginBottom: verticalScale(24),
+    letterSpacing: 0.5,
   },
   welcomeBox: {
     backgroundColor: 'rgba(255, 255, 255, 0.1)',
-    borderRadius: scale(14),
-    padding: scale(16),
+    borderRadius: scale(16),
+    padding: scale(20),
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.2)',
-    maxWidth: scale(280),
+    maxWidth: scale(300),
+    width: '100%',
   },
   welcomeTitle: {
-    fontSize: scale(20),
+    fontSize: scale(22),
     fontWeight: OmbaroTheme.fontWeight.bold,
     color: OmbaroTheme.colors.white,
-    marginBottom: verticalScale(6),
+    marginBottom: verticalScale(8),
     textAlign: 'center',
   },
   welcomeSubtitle: {
-    fontSize: scale(12),
-    color: 'rgba(255, 255, 255, 0.85)',
-    lineHeight: scale(18),
+    fontSize: scale(13),
+    color: 'rgba(255, 255, 255, 0.9)',
+    lineHeight: scale(20),
     textAlign: 'center',
+    fontWeight: OmbaroTheme.fontWeight.medium,
   },
 
   // White Section
@@ -209,54 +214,58 @@ const styles = StyleSheet.create({
     backgroundColor: OmbaroTheme.colors.white,
     width: width >= 768 ? '50%' : '100%',
     flex: 1,
-    paddingHorizontal: scale(20),
-    paddingVertical: verticalScale(24),
+    paddingHorizontal: scale(24),
+    paddingVertical: verticalScale(32),
     justifyContent: 'center',
+    borderTopLeftRadius: width >= 768 ? 0 : scale(28),
+    borderTopRightRadius: width >= 768 ? 0 : scale(28),
+    marginTop: width >= 768 ? 0 : -scale(20),
   },
   formContainer: {
-    maxWidth: scale(380),
+    maxWidth: scale(400),
     width: '100%',
     alignSelf: 'center',
   },
   formTitle: {
-    fontSize: scale(24),
+    fontSize: scale(26),
     fontWeight: OmbaroTheme.fontWeight.bold,
     color: OmbaroTheme.colors.textDark,
-    marginBottom: verticalScale(6),
+    marginBottom: verticalScale(8),
   },
   formSubtitle: {
-    fontSize: scale(13),
+    fontSize: scale(14),
     color: OmbaroTheme.colors.textGray,
-    marginBottom: verticalScale(24),
+    marginBottom: verticalScale(28),
+    fontWeight: OmbaroTheme.fontWeight.medium,
   },
   
   // Form Elements
   inputGroup: {
-    marginBottom: verticalScale(16),
+    marginBottom: verticalScale(20),
   },
   label: {
-    fontSize: scale(12),
+    fontSize: scale(13),
     fontWeight: OmbaroTheme.fontWeight.semibold,
     color: OmbaroTheme.colors.textDark,
-    marginBottom: verticalScale(6),
+    marginBottom: verticalScale(8),
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: scale(10),
+    borderRadius: scale(12),
     borderWidth: 1.5,
     borderColor: '#E0E7FF',
-    paddingRight: scale(12),
-    height: verticalScale(48),
-    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.05)',
+    paddingRight: scale(14),
+    height: verticalScale(52),
+    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.06)',
   },
   iconBox: {
-    width: scale(40),
+    width: scale(48),
     height: '100%',
     backgroundColor: '#F0F4FF',
-    borderTopLeftRadius: scale(10),
-    borderBottomLeftRadius: scale(10),
+    borderTopLeftRadius: scale(12),
+    borderBottomLeftRadius: scale(12),
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -266,35 +275,40 @@ const styles = StyleSheet.create({
   },
   input: {
     flex: 1,
-    marginLeft: scale(12),
-    fontSize: scale(14),
+    marginLeft: scale(14),
+    fontSize: scale(15),
     fontWeight: OmbaroTheme.fontWeight.medium,
     color: OmbaroTheme.colors.textDark,
     backgroundColor: 'transparent',
     border: 'none',
     outlineWidth: 0,
   },
+  hintContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: verticalScale(6),
+    marginLeft: scale(4),
+    gap: scale(6),
+  },
   hint: {
-    fontSize: scale(10),
+    fontSize: scale(11),
     color: '#4F46E5',
-    marginTop: verticalScale(4),
-    marginLeft: scale(2),
     fontWeight: OmbaroTheme.fontWeight.medium,
   },
   errorText: {
-    fontSize: scale(10),
+    fontSize: scale(11),
     color: OmbaroTheme.colors.error,
-    marginTop: verticalScale(4),
-    marginLeft: scale(2),
+    marginTop: verticalScale(6),
+    marginLeft: scale(4),
     fontWeight: OmbaroTheme.fontWeight.medium,
   },
   button: {
     backgroundColor: OmbaroTheme.colors.primary,
-    borderRadius: scale(10),
-    paddingVertical: verticalScale(14),
+    borderRadius: scale(12),
+    paddingVertical: verticalScale(16),
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: verticalScale(8),
+    marginTop: verticalScale(12),
     boxShadow: '0 4px 12px rgba(30, 58, 138, 0.25)',
   },
   buttonDisabled: {
@@ -303,25 +317,22 @@ const styles = StyleSheet.create({
     boxShadow: 'none',
   },
   buttonText: {
-    fontSize: scale(14),
+    fontSize: scale(15),
     fontWeight: OmbaroTheme.fontWeight.bold,
     color: OmbaroTheme.colors.white,
     textTransform: 'uppercase',
-    letterSpacing: 0.5,
+    letterSpacing: 0.8,
   },
   privacyNote: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: verticalScale(16),
+    marginTop: verticalScale(20),
     paddingHorizontal: scale(12),
-  },
-  privacyIcon: {
-    fontSize: scale(14),
-    marginRight: scale(6),
+    gap: scale(8),
   },
   privacyText: {
-    fontSize: scale(11),
+    fontSize: scale(12),
     color: OmbaroTheme.colors.textGray,
     fontWeight: OmbaroTheme.fontWeight.medium,
   },
