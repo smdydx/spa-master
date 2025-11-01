@@ -156,13 +156,6 @@ export default function HomeScreen() {
               <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7}>
                 <Bell size={20} color="#fff" strokeWidth={2.5} />
               </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.headerBtn}
-                activeOpacity={0.7}
-                onPress={() => router.replace('/')}
-              >
-                <LogOut size={20} color="#fff" strokeWidth={2.5} />
-              </TouchableOpacity>
             </View>
           </View>
 
@@ -187,45 +180,49 @@ export default function HomeScreen() {
         </LinearGradient>
 
         {/* HERO CAROUSEL */}
-        <ScrollView
-          ref={heroScrollRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onMomentumScrollEnd={(e) => {
-            const index = Math.round(e.nativeEvent.contentOffset.x / (width - (isSmallDevice ? 32 : 40)));
-            setActiveHeroIndex(index);
-          }}
-          style={styles.heroScroll}
-        >
-          {heroSlides.map((slide) => (
-            <LinearGradient
-              key={slide.id}
-              colors={['rgba(30, 58, 138, 0.9)', 'rgba(59, 130, 246, 0.7)']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 1, y: 1 }}
-              style={styles.heroCard}
-            >
-              <Image source={{ uri: slide.image }} style={styles.heroBg} blurRadius={2} />
-              <View style={styles.heroOverlay} />
-              <View style={styles.heroContent}>
-                <Text style={styles.heroSubtitle}>{slide.subtitle}</Text>
-                <Text style={styles.heroTitle}>{slide.title}</Text>
-                <Text style={styles.heroDescription}>{slide.description}</Text>
-                <TouchableOpacity
-                  style={styles.heroButton}
-                  activeOpacity={0.8}
-                  onPress={() => router.push('/booking')}
+        <View style={styles.heroSection}>
+          <ScrollView
+            ref={heroScrollRef}
+            horizontal
+            pagingEnabled
+            showsHorizontalScrollIndicator={false}
+            onMomentumScrollEnd={(e) => {
+              const index = Math.round(e.nativeEvent.contentOffset.x / (width - (isSmallDevice ? 32 : 40)));
+              setActiveHeroIndex(index);
+            }}
+            style={styles.heroScroll}
+          >
+            {heroSlides.map((slide) => (
+              <View key={slide.id} style={styles.heroCardWrapper}>
+                <LinearGradient
+                  colors={['rgba(30, 58, 138, 0.95)', 'rgba(59, 130, 246, 0.85)']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.heroCard}
                 >
-                  <Text style={styles.heroButtonText}>Book Massage →</Text>
-                </TouchableOpacity>
-                <View style={styles.heroBadge}>
-                  <Text style={styles.heroBadgeText}>{slide.badge}</Text>
-                </View>
+                  <Image source={{ uri: slide.image }} style={styles.heroBg} blurRadius={3} />
+                  <View style={styles.heroOverlay} />
+                  <View style={styles.heroContent}>
+                    <View style={styles.heroBadge}>
+                      <Text style={styles.heroBadgeText}>{slide.badge}</Text>
+                    </View>
+                    <Text style={styles.heroSubtitle}>{slide.subtitle}</Text>
+                    <Text style={styles.heroTitle}>{slide.title}</Text>
+                    <Text style={styles.heroDescription}>{slide.description}</Text>
+                    <TouchableOpacity
+                      style={styles.heroButton}
+                      activeOpacity={0.8}
+                      onPress={() => router.push('/booking')}
+                    >
+                      <Text style={styles.heroButtonText}>Book Now</Text>
+                      <Text style={styles.heroButtonArrow}>→</Text>
+                    </TouchableOpacity>
+                  </View>
+                </LinearGradient>
               </View>
-            </LinearGradient>
-          ))}
-        </ScrollView>
+            ))}
+          </ScrollView>
+        </View>
 
         {/* Pagination dots */}
         <View style={styles.paginationDots}>
@@ -420,16 +417,24 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     ...CARD_SHADOW,
   },
+  heroSection: {
+    marginTop: 20,
+    marginBottom: 16,
+  },
   heroScroll: {
     marginBottom: 16,
   },
-  heroCard: {
+  heroCardWrapper: {
     width: width - (isSmallDevice ? 32 : 40),
-    height: isSmallDevice ? 280 : 320,
-    marginHorizontal: isSmallDevice ? 16 : 20,
+    paddingHorizontal: isSmallDevice ? 16 : 20,
+  },
+  heroCard: {
+    width: '100%',
+    height: isSmallDevice ? 300 : 340,
     borderRadius: 24,
     overflow: 'hidden',
     position: 'relative',
+    ...CARD_SHADOW,
   },
   heroBg: {
     position: 'absolute',
@@ -440,59 +445,71 @@ const styles = StyleSheet.create({
     position: 'absolute',
     width: '100%',
     height: '100%',
-    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+    backgroundColor: 'rgba(0, 0, 0, 0.35)',
   },
   heroContent: {
     flex: 1,
-    padding: isSmallDevice ? 20 : 24,
-    justifyContent: 'flex-end',
+    padding: isSmallDevice ? 24 : 28,
+    justifyContent: 'space-between',
   },
   heroSubtitle: {
     fontSize: isSmallDevice ? 13 : 14,
     color: '#FFFFFF',
     fontWeight: '600',
-    marginBottom: 4,
-    opacity: 0.9,
+    marginBottom: 6,
+    opacity: 0.95,
+    textTransform: 'uppercase',
+    letterSpacing: 1,
   },
   heroTitle: {
-    fontSize: isSmallDevice ? 26 : 32,
+    fontSize: isSmallDevice ? 28 : 34,
     fontWeight: '800',
     color: '#FFFFFF',
-    marginBottom: 8,
+    marginBottom: 10,
+    lineHeight: isSmallDevice ? 32 : 40,
   },
   heroDescription: {
-    fontSize: isSmallDevice ? 13 : 14,
+    fontSize: isSmallDevice ? 14 : 15,
     color: '#FFFFFF',
-    marginBottom: 20,
-    opacity: 0.9,
-    lineHeight: 20,
+    marginBottom: 24,
+    opacity: 0.95,
+    lineHeight: 22,
   },
   heroButton: {
     backgroundColor: '#FFFFFF',
-    paddingVertical: 14,
-    paddingHorizontal: 24,
-    borderRadius: 12,
+    paddingVertical: 16,
+    paddingHorizontal: 28,
+    borderRadius: 14,
     alignSelf: 'flex-start',
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 8,
+    ...CARD_SHADOW,
   },
   heroButtonText: {
     color: COLORS.primary,
     fontWeight: '700',
-    fontSize: 15,
+    fontSize: 16,
+  },
+  heroButtonArrow: {
+    color: COLORS.primary,
+    fontWeight: '700',
+    fontSize: 18,
   },
   heroBadge: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    backgroundColor: 'rgba(255, 255, 255, 0.25)',
-    paddingHorizontal: 12,
-    paddingVertical: 6,
-    borderRadius: 20,
-    backdropFilter: 'blur(10px)',
+    alignSelf: 'flex-start',
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 24,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
   },
   heroBadgeText: {
     color: '#FFFFFF',
-    fontSize: 12,
-    fontWeight: '600',
+    fontSize: isSmallDevice ? 11 : 12,
+    fontWeight: '700',
   },
   paginationDots: {
     flexDirection: 'row',

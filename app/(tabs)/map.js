@@ -95,11 +95,22 @@ export default function MapViewScreen() {
   ];
 
   const renderMapView = () => {
-    if (Platform.OS === 'web' || !MapView) {
+    // Show static map on web with interactive salon list
+    if (Platform.OS === 'web') {
       return (
         <View style={styles.webMapPlaceholder}>
           <MapPin size={64} color="#1e3a8a" strokeWidth={1.5} />
-          <Text style={styles.webMapText}>Map view is available on mobile devices</Text>
+          <Text style={styles.webMapText}>Interactive Map</Text>
+          <Text style={styles.webMapSubtext}>Browse nearby salons below and select to view details</Text>
+        </View>
+      );
+    }
+
+    if (!MapView) {
+      return (
+        <View style={styles.webMapPlaceholder}>
+          <MapPin size={64} color="#1e3a8a" strokeWidth={1.5} />
+          <Text style={styles.webMapText}>Map not available</Text>
           <Text style={styles.webMapSubtext}>Browse nearby salons below</Text>
         </View>
       );
