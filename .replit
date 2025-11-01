@@ -42,12 +42,12 @@ localPort = 38635
 externalPort = 3001
 
 [[ports]]
-localPort = 42677
-externalPort = 3003
-
-[[ports]]
 localPort = 43333
 externalPort = 3002
+
+[[ports]]
+localPort = 45015
+externalPort = 3003
 
 [deployment]
 deploymentTarget = "autoscale"

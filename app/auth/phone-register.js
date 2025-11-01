@@ -115,7 +115,7 @@ export default function PhoneRegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: OmbaroTheme.colors.beigeLight,
+    backgroundColor: OmbaroTheme.colors.white,
   },
   keyboardView: {
     flex: 1,
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
     width: scale(40),
     height: scale(40),
     borderRadius: scale(10),
-    backgroundColor: OmbaroTheme.colors.beige,
+    backgroundColor: '#f3f4f6',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: verticalScale(12),
@@ -142,7 +142,7 @@ const styles = StyleSheet.create({
     width: scale(50),
     height: scale(50),
     borderRadius: scale(12),
-    backgroundColor: OmbaroTheme.colors.roseGold,
+    backgroundColor: OmbaroTheme.colors.primary,
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: verticalScale(8),
@@ -159,7 +159,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontSize: scale(11),
-    color: OmbaroTheme.colors.roseGoldDark,
+    color: OmbaroTheme.colors.primaryDark,
     fontWeight: OmbaroTheme.fontWeight.medium,
     marginBottom: verticalScale(12),
   },
@@ -192,10 +192,10 @@ const styles = StyleSheet.create({
   inputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: OmbaroTheme.colors.beige,
+    backgroundColor: OmbaroTheme.colors.white,
     borderRadius: scale(10),
     borderWidth: 1,
-    borderColor: OmbaroTheme.colors.border,
+    borderColor: '#e5e7eb',
     paddingHorizontal: scale(12),
     height: verticalScale(44),
   },
@@ -207,13 +207,11 @@ const styles = StyleSheet.create({
     marginLeft: scale(8),
     fontSize: scale(13),
     color: OmbaroTheme.colors.textDark,
-    outline: 'none',
-    border: 'none',
     backgroundColor: 'transparent',
   },
   hint: {
     fontSize: scale(10),
-    color: OmbaroTheme.colors.roseGoldDark,
+    color: OmbaroTheme.colors.primaryDark,
     marginTop: verticalScale(4),
     marginLeft: scale(4),
   },
@@ -223,7 +221,7 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(4),
   },
   button: {
-    backgroundColor: OmbaroTheme.colors.roseGold,
+    backgroundColor: OmbaroTheme.colors.primary,
     borderRadius: scale(10),
     paddingVertical: verticalScale(12),
     alignItems: 'center',
@@ -237,17 +235,17 @@ const styles = StyleSheet.create({
   buttonText: {
     fontSize: scale(14),
     fontWeight: OmbaroTheme.fontWeight.bold,
-    color: OmbaroTheme.colors.textDark,
+    color: OmbaroTheme.colors.white,
     textTransform: 'uppercase',
     letterSpacing: 0.5,
   },
   infoCard: {
-    backgroundColor: OmbaroTheme.colors.beige,
+    backgroundColor: '#f8f9fa',
     borderRadius: scale(10),
     padding: scale(12),
     marginTop: verticalScale(12),
     borderWidth: 1,
-    borderColor: OmbaroTheme.colors.border,
+    borderColor: '#e5e7eb',
   },
   infoTitle: {
     fontSize: scale(12),

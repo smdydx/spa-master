@@ -17,20 +17,20 @@ import {
 const { width, height } = Dimensions.get('window');
 
 const COLORS = {
-  primary: "#C8B6A6",
-  secondary: "#F3EDE6",
-  accent: "#D4A59A",
+  primary: "#1e3a8a",
+  secondary: "#3b82f6",
+  accent: "#FFFFFF",
   dark: "#2C2C2C",
-  light: "#F8F6F3",
+  light: "#FFFFFF",
   white: "#FFFFFF",
-  overlay: "rgba(44, 44, 44, 0.45)",
+  overlay: "rgba(30, 58, 138, 0.15)",
 };
 
 const AppLogo = () => {
   return (
     <View style={styles.logoContainer}>
       <LinearGradient
-        colors={["#C8B6A6", "#D4A59A", "#F3EDE6"]}
+        colors={["#FFFFFF", "#f3f4f6", "#FFFFFF"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.logoGradient}
@@ -64,11 +64,11 @@ export default function WelcomeScreen() {
       {/* Background with optimized image loading */}
       <View style={styles.backgroundContainer}>
         <LinearGradient
-          colors={["#C8B6A6", "#D4A59A", "#F3EDE6"]}
+          colors={["#1e3a8a", "#3b82f6", "#1e40af"]}
           style={StyleSheet.absoluteFillObject}
         />
         <LinearGradient
-          colors={["rgba(44, 44, 44, 0.25)", "rgba(44, 44, 44, 0.20)", "rgba(44, 44, 44, 0.30)"]}
+          colors={["rgba(30, 58, 138, 0.05)", "rgba(59, 130, 246, 0.03)", "rgba(30, 64, 175, 0.05)"]}
           style={StyleSheet.absoluteFillObject}
         />
       </View>
@@ -92,7 +92,7 @@ export default function WelcomeScreen() {
             progressiveRenderingEnabled={true}
           />
           <LinearGradient
-            colors={['rgba(243, 237, 230, 0.92)', 'rgba(243, 237, 230, 0.88)', 'rgba(248, 246, 243, 0.90)']}
+            colors={['rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0)', 'rgba(255, 255, 255, 0)']}
             style={styles.topSectionOverlay}
           />
           <View style={styles.topContent}>
@@ -115,7 +115,7 @@ export default function WelcomeScreen() {
           <View style={styles.featuresSection}>
             <View style={styles.featureCard}>
               <View style={styles.featureIconBox}>
-                <MapPin size={24} color="#C8B6A6" strokeWidth={2.5} />
+                <MapPin size={24} color="#FFFFFF" strokeWidth={2.5} />
               </View>
               <Text style={styles.featureTitle}>Find Nearby</Text>
               <Text style={styles.featureDesc}>Discover salons & spas around you</Text>
@@ -123,7 +123,7 @@ export default function WelcomeScreen() {
 
             <View style={styles.featureCard}>
               <View style={styles.featureIconBox}>
-                <Zap size={24} color="#D4A59A" strokeWidth={2.5} />
+                <Zap size={24} color="#FFFFFF" strokeWidth={2.5} />
               </View>
               <Text style={styles.featureTitle}>Easy Booking</Text>
               <Text style={styles.featureDesc}>Book appointments in seconds</Text>
@@ -131,7 +131,7 @@ export default function WelcomeScreen() {
 
             <View style={styles.featureCard}>
               <View style={styles.featureIconBox}>
-                <Sparkles size={24} color="#F3EDE6" strokeWidth={2.5} />
+                <Sparkles size={24} color="#FFFFFF" strokeWidth={2.5} />
               </View>
               <Text style={styles.featureTitle}>Premium Quality</Text>
               <Text style={styles.featureDesc}>Verified professionals</Text>
@@ -144,7 +144,7 @@ export default function WelcomeScreen() {
               onPress={() => router.push('/auth/phone-register')}
             >
               <LinearGradient
-                colors={["#C8B6A6", "#D4A59A"]}
+                colors={["#1e3a8a", "#3b82f6"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.primaryBtn}
@@ -162,12 +162,12 @@ export default function WelcomeScreen() {
               activeOpacity={0.9}
             >
               <LinearGradient
-                colors={["rgba(200, 182, 166, 0.2)", "rgba(212, 165, 154, 0.15)"]}
+                colors={["rgba(255, 255, 255, 0.95)", "rgba(248, 249, 250, 0.95)"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.vendorBtn}
               >
-                <Building2 size={16} color="#C8B6A6" strokeWidth={2.5} />
+                <Building2 size={16} color="#1e3a8a" strokeWidth={2.5} />
                 <Text style={styles.vendorBtnText}>Become a Partner</Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -215,7 +215,7 @@ const styles = StyleSheet.create({
   circle: {
     position: 'absolute',
     borderRadius: 9999,
-    backgroundColor: 'rgba(200, 182, 166, 0.15)',
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
   circle1: {
     width: width * 0.6,
@@ -228,14 +228,14 @@ const styles = StyleSheet.create({
     height: width * 0.5,
     top: height * 0.1,
     left: -width * 0.2,
-    backgroundColor: 'rgba(212, 165, 154, 0.12)',
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
   },
   circle3: {
     width: width * 0.4,
     height: width * 0.4,
     bottom: height * 0.35,
     left: -width * 0.05,
-    backgroundColor: 'rgba(243, 237, 230, 0.1)',
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
   backgroundImage: {
     ...StyleSheet.absoluteFillObject,
@@ -304,15 +304,15 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     alignItems: "center",
     justifyContent: "center",
-    shadowColor: "#C8B6A6",
+    shadowColor: "#FFFFFF",
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
+    shadowOpacity: 0.4,
     shadowRadius: 8,
     elevation: 6,
   },
   logoText: {
     fontSize: Math.min(width * 0.06, 24),
-    color: "#FFF",
+    color: "#1e3a8a",
   },
   brandName: {
     fontSize: Math.min(width * 0.055, 22),
@@ -404,7 +404,7 @@ const styles = StyleSheet.create({
     paddingVertical: height * 0.014,
     borderRadius: 14,
     alignItems: "center",
-    shadowColor: "#C8B6A6",
+    shadowColor: "#1e3a8a",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 10,
@@ -440,12 +440,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 6,
     borderWidth: 1.5,
-    borderColor: "rgba(200, 182, 166, 0.4)",
+    borderColor: "#e5e7eb",
+    shadowColor: "#1e3a8a",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   vendorBtnText: {
     fontSize: Math.min(width * 0.036, 14),
     fontWeight: "800",
-    color: "#C8B6A6",
+    color: "#1e3a8a",
     letterSpacing: 0.5,
   },
   quickAccessSection: {
