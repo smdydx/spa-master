@@ -1,189 +1,96 @@
 
-import { LinearGradient } from "expo-linear-gradient";
-import { useRouter } from "expo-router";
-import { Building2, MapPin, Zap, Sparkles } from "lucide-react-native";
-import { useState } from "react";
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
+import { Sparkles, MapPin, Calendar, Award } from 'lucide-react-native';
 import {
-  Dimensions,
-  Image,
-  SafeAreaView,
-  StatusBar,
-  StyleSheet,
+  View,
   Text,
   TouchableOpacity,
-  View
-} from "react-native";
+  StyleSheet,
+  Dimensions,
+  Platform,
+  StatusBar,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { OmbaroTheme } from '../constants/theme';
 
 const { width, height } = Dimensions.get('window');
 
-const COLORS = {
-  primary: "#C8B6A6",
-  secondary: "#F3EDE6",
-  accent: "#D4A59A",
-  dark: "#2C2C2C",
-  light: "#F8F6F3",
-  white: "#FFFFFF",
-  overlay: "rgba(44, 44, 44, 0.45)",
-};
-
-const AppLogo = () => {
-  return (
-    <View style={styles.logoContainer}>
-      <LinearGradient
-        colors={["#C8B6A6", "#D4A59A", "#F3EDE6"]}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={styles.logoGradient}
-      >
-        <Text style={styles.logoText}>✧</Text>
-      </LinearGradient>
-    </View>
-  );
-};
-
-const PillLink = ({ label, nav, router }) => {
-  return (
-    <TouchableOpacity
-      style={styles.pill}
-      onPress={() => router.push(nav)}
-      activeOpacity={0.7}
-    >
-      <Text style={styles.pillText}>{label}</Text>
-    </TouchableOpacity>
-  );
-};
-
 export default function WelcomeScreen() {
   const router = useRouter();
-  const [imageLoaded, setImageLoaded] = useState(false);
+
+  const quickAccessItems = [
+    {
+      icon: MapPin,
+      title: 'Find Nearby',
+      subtitle: 'Discover salons & spas around you',
+      route: '/(tabs)/map',
+    },
+    {
+      icon: Calendar,
+      title: 'Easy Booking',
+      subtitle: 'Book appointments in seconds',
+      route: '/booking',
+    },
+    {
+      icon: Award,
+      title: 'Premium Quality',
+      subtitle: 'Verified professionals',
+      route: '/(tabs)',
+    },
+  ];
 
   return (
-    <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="transparent" barStyle="light-content" translucent />
-
-      {/* Background with optimized image loading */}
-      <View style={styles.backgroundContainer}>
-        <LinearGradient
-          colors={["#C8B6A6", "#D4A59A", "#F3EDE6"]}
-          style={StyleSheet.absoluteFillObject}
-        />
-        <LinearGradient
-          colors={["rgba(44, 44, 44, 0.25)", "rgba(44, 44, 44, 0.20)", "rgba(44, 44, 44, 0.30)"]}
-          style={StyleSheet.absoluteFillObject}
-        />
+    <SafeAreaView style={styles.container} edges={['top']}>
+      <StatusBar barStyle="light-content" backgroundColor="#1e3a8a" />
+      
+      {/* Top Section - Navy Blue */}
+      <View style={styles.topSection}>
+        <View style={styles.logoContainer}>
+          <Sparkles size={32} color="#ffffff" strokeWidth={2} />
+        </View>
+        
+        <Text style={styles.brandName}>OMBARO</Text>
+        <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
+        
+        <Text style={styles.welcomeTitle}>Welcome to Your Beauty Journey</Text>
+        <Text style={styles.welcomeSubtitle}>Premium spa & wellness services</Text>
       </View>
 
-      {/* Decorative Circles */}
-      <View style={styles.decorativeCircles}>
-        <View style={[styles.circle, styles.circle1]} />
-        <View style={[styles.circle, styles.circle2]} />
-        <View style={[styles.circle, styles.circle3]} />
-      </View>
-
-      {/* 2:3 Split Layout */}
-      <View style={styles.splitContainer}>
-        {/* Top Section (2 parts) */}
-        <View style={styles.topSection}>
-          <Image
-            source={require('../assets/images/japanese-girl-bg.jpg')}
-            style={styles.topSectionBg}
-            resizeMode="cover"
-            fadeDuration={200}
-            progressiveRenderingEnabled={true}
-          />
-          <LinearGradient
-            colors={['rgba(243, 237, 230, 0.92)', 'rgba(243, 237, 230, 0.88)', 'rgba(248, 246, 243, 0.90)']}
-            style={styles.topSectionOverlay}
-          />
-          <View style={styles.topContent}>
-            <AppLogo />
-            <Text style={styles.brandName}>OMBARO</Text>
-            <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
-            <Text style={styles.heading}>Welcome to Your Beauty Journey</Text>
-            <Text style={styles.subheading}>Premium spa & wellness services</Text>
-          </View>
+      {/* Bottom Section - White */}
+      <View style={styles.bottomSection}>
+        <Text style={styles.quickAccessTitle}>Quick Access</Text>
+        
+        <View style={styles.cardsContainer}>
+          {quickAccessItems.map((item, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.card}
+              onPress={() => router.push(item.route)}
+              activeOpacity={0.8}
+            >
+              <View style={styles.cardIconContainer}>
+                <item.icon size={24} color="#1e3a8a" strokeWidth={2.5} />
+              </View>
+              <Text style={styles.cardTitle}>{item.title}</Text>
+              <Text style={styles.cardSubtitle}>{item.subtitle}</Text>
+            </TouchableOpacity>
+          ))}
         </View>
 
-        {/* Bottom Section (3 parts) */}
-        <View style={styles.bottomSection}>
-          <LinearGradient
-            colors={['#1e1e1e', '#2a2520', '#1a1a1a']}
-            style={styles.bottomSectionGradient}
-          />
-          
-          {/* Features Section */}
-          <View style={styles.featuresSection}>
-            <View style={styles.featureCard}>
-              <View style={styles.featureIconBox}>
-                <MapPin size={24} color="#C8B6A6" strokeWidth={2.5} />
-              </View>
-              <Text style={styles.featureTitle}>Find Nearby</Text>
-              <Text style={styles.featureDesc}>Discover salons & spas around you</Text>
-            </View>
+        <TouchableOpacity
+          style={styles.getStartedButton}
+          onPress={() => router.push('/auth/phone-register')}
+          activeOpacity={0.9}
+        >
+          <Text style={styles.getStartedText}>Get Started</Text>
+        </TouchableOpacity>
 
-            <View style={styles.featureCard}>
-              <View style={styles.featureIconBox}>
-                <Zap size={24} color="#D4A59A" strokeWidth={2.5} />
-              </View>
-              <Text style={styles.featureTitle}>Easy Booking</Text>
-              <Text style={styles.featureDesc}>Book appointments in seconds</Text>
-            </View>
-
-            <View style={styles.featureCard}>
-              <View style={styles.featureIconBox}>
-                <Sparkles size={24} color="#F3EDE6" strokeWidth={2.5} />
-              </View>
-              <Text style={styles.featureTitle}>Premium Quality</Text>
-              <Text style={styles.featureDesc}>Verified professionals</Text>
-            </View>
-          </View>
-
-          <View style={styles.ctaSection}>
-            <TouchableOpacity
-              activeOpacity={0.9}
-              onPress={() => router.push('/auth/phone-register')}
-            >
-              <LinearGradient
-                colors={["#C8B6A6", "#D4A59A"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 0 }}
-                style={styles.primaryBtn}
-              >
-                <Text style={styles.primaryBtnText}>Get Started</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-
-            <TouchableOpacity style={styles.secondaryBtn} activeOpacity={0.9}>
-              <Text style={styles.secondaryBtnText}>Login to Account</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              onPress={() => router.push('/Partner')}
-              activeOpacity={0.9}
-            >
-              <LinearGradient
-                colors={["rgba(200, 182, 166, 0.2)", "rgba(212, 165, 154, 0.15)"]}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.vendorBtn}
-              >
-                <Building2 size={16} color="#C8B6A6" strokeWidth={2.5} />
-                <Text style={styles.vendorBtnText}>Become a Partner</Text>
-              </LinearGradient>
-            </TouchableOpacity>
-          </View>
-
-          <View style={styles.quickAccessSection}>
-            <Text style={styles.quickAccessLabel}>Quick Access</Text>
-            <View style={styles.pillsContainer}>
-              <PillLink label="Employee" nav="/Employee/auth/login" router={router} />
-              <PillLink label="Vendor" nav="/Vendor/auth/login" router={router} />
-              <PillLink label="Therapist" nav="/Therapist/auth/login" router={router} />
-              <PillLink label="Beautician" nav="/Therapist/auth/login" router={router} />
-              <PillLink label="Admin" nav="/Admin/auth/login" router={router} />
-              <PillLink label="Departments" nav="/Department/auth/login" router={router} />
-            </View>
-          </View>
+        <View style={styles.loginRow}>
+          <Text style={styles.loginText}>Already have an account? </Text>
+          <TouchableOpacity onPress={() => router.push('/auth/phone-register')}>
+            <Text style={styles.loginLink}>Sign In</Text>
+          </TouchableOpacity>
         </View>
       </View>
     </SafeAreaView>
@@ -193,292 +100,150 @@ export default function WelcomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#1A1A2E",
-    width: '100%',
-    maxWidth: '100%',
-    overflow: 'hidden',
-  },
-  backgroundContainer: {
-    ...StyleSheet.absoluteFillObject,
-    width: '100%',
-    overflow: 'hidden',
-  },
-  decorativeCircles: {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    right: 0,
-    bottom: 0,
-    pointerEvents: 'none',
-    overflow: 'hidden',
-  },
-  circle: {
-    position: 'absolute',
-    borderRadius: 9999,
-    backgroundColor: 'rgba(200, 182, 166, 0.15)',
-  },
-  circle1: {
-    width: width * 0.6,
-    height: width * 0.6,
-    top: height * 0.15,
-    right: -width * 0.25,
-  },
-  circle2: {
-    width: width * 0.5,
-    height: width * 0.5,
-    top: height * 0.1,
-    left: -width * 0.2,
-    backgroundColor: 'rgba(212, 165, 154, 0.12)',
-  },
-  circle3: {
-    width: width * 0.4,
-    height: width * 0.4,
-    bottom: height * 0.35,
-    left: -width * 0.05,
-    backgroundColor: 'rgba(243, 237, 230, 0.1)',
-  },
-  backgroundImage: {
-    ...StyleSheet.absoluteFillObject,
-    width: '100%',
-    height: '100%',
-  },
-  bottomSectionGradient: {
-    ...StyleSheet.absoluteFillObject,
-  },
-  splitContainer: {
-    flex: 1,
-    flexDirection: 'column',
-    width: '100%',
-    maxWidth: '100%',
+    backgroundColor: '#ffffff',
   },
   topSection: {
-    flex: 2,
-    justifyContent: 'center',
-    paddingHorizontal: width * 0.05,
-    paddingTop: height * 0.03,
-    paddingBottom: height * 0.05,
-    overflow: 'hidden',
-    zIndex: 1,
-    width: '100%',
-    maxWidth: '100%',
-  },
-  topSectionBg: {
-    ...StyleSheet.absoluteFillObject,
-    width: '100%',
-    height: '100%',
-  },
-  topSectionOverlay: {
-    ...StyleSheet.absoluteFillObject,
-    width: '100%',
-  },
-  bottomSection: {
-    flex: 3,
-    paddingHorizontal: width * 0.05,
-    paddingTop: height * 0.04,
-    paddingBottom: height * 0.03,
-    justifyContent: 'space-between',
-    borderTopLeftRadius: 40,
-    borderTopRightRadius: 40,
-    marginTop: -30,
-    zIndex: 2,
-    width: '100%',
-    maxWidth: '100%',
-    overflow: 'hidden',
-  },
-  topContent: {
-    alignItems: "center",
-    width: '100%',
-    maxWidth: '100%',
+    backgroundColor: '#1e3a8a',
+    paddingTop: 20,
+    paddingBottom: 40,
+    paddingHorizontal: 24,
+    alignItems: 'center',
+    borderBottomLeftRadius: 32,
+    borderBottomRightRadius: 32,
   },
   logoContainer: {
-    marginBottom: height * 0.012,
-  },
-  logoGradient: {
-    width: Math.min(width * 0.12, 48),
-    height: Math.min(width * 0.12, 48),
-    borderRadius: 14,
-    alignItems: "center",
-    justifyContent: "center",
-    shadowColor: "#C8B6A6",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 6,
-  },
-  logoText: {
-    fontSize: Math.min(width * 0.06, 24),
-    color: "#FFF",
-  },
-  brandName: {
-    fontSize: Math.min(width * 0.055, 22),
-    fontWeight: "900",
-    color: "#2C2C2C",
-    letterSpacing: 2.5,
-    marginBottom: height * 0.005,
-    textShadowColor: "rgba(200, 182, 166, 0.3)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 4,
-  },
-  tagline: {
-    fontSize: Math.min(width * 0.025, 10),
-    color: "#8B6F47",
-    fontWeight: "700",
-    marginBottom: height * 0.015,
-    letterSpacing: 0.5,
-    textAlign: 'center',
-  },
-  heading: {
-    fontSize: Math.min(width * 0.06, 24),
-    fontWeight: "900",
-    color: "#1A1A1A",
-    lineHeight: Math.min(width * 0.07, 28),
-    marginBottom: height * 0.008,
-    textAlign: "center",
-    textShadowColor: "rgba(200, 182, 166, 0.2)",
-    textShadowOffset: { width: 0, height: 1 },
-    textShadowRadius: 3,
-  },
-  subheading: {
-    fontSize: Math.min(width * 0.025, 10),
-    color: "rgba(44, 44, 44, 0.75)",
-    lineHeight: Math.min(width * 0.035, 14),
-    textAlign: "center",
-    paddingHorizontal: width * 0.02,
-  },
-  featuresSection: {
-    flexDirection: 'row',
-    gap: width * 0.025,
-    justifyContent: 'space-between',
-    paddingVertical: height * 0.01,
-    width: '100%',
-    maxWidth: '100%',
-    zIndex: 1,
-  },
-  featureCard: {
-    flex: 1,
-    backgroundColor: 'rgba(255, 255, 255, 0.12)',
-    borderRadius: 18,
-    padding: width * 0.03,
-    alignItems: 'center',
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
-    minHeight: height * 0.13,
-    justifyContent: 'center',
-    maxWidth: width * 0.28,
-  },
-  featureIconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
+    width: 64,
+    height: 64,
+    borderRadius: 16,
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: height * 0.008,
+    marginBottom: 16,
   },
-  featureTitle: {
-    fontSize: Math.min(width * 0.03, 12),
-    fontWeight: '800',
-    color: '#FFF',
-    marginBottom: height * 0.004,
+  brandName: {
+    fontSize: 32,
+    fontWeight: '700',
+    color: '#ffffff',
+    letterSpacing: 2,
+    marginBottom: 8,
+  },
+  tagline: {
+    fontSize: 14,
+    color: 'rgba(255, 255, 255, 0.9)',
+    fontWeight: '500',
+    marginBottom: 24,
+  },
+  welcomeTitle: {
+    fontSize: 24,
+    fontWeight: '700',
+    color: '#ffffff',
     textAlign: 'center',
+    marginBottom: 8,
   },
-  featureDesc: {
-    fontSize: Math.min(width * 0.024, 9.5),
-    color: 'rgba(255, 255, 255, 0.75)',
+  welcomeSubtitle: {
+    fontSize: 16,
+    color: 'rgba(255, 255, 255, 0.85)',
     textAlign: 'center',
-    lineHeight: Math.min(width * 0.032, 13),
+    fontWeight: '500',
   },
-  ctaSection: {
-    gap: height * 0.01,
-    marginVertical: height * 0.008,
-    width: '100%',
-    maxWidth: '100%',
-    zIndex: 1,
+  bottomSection: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+    paddingHorizontal: 24,
+    paddingTop: 32,
+    paddingBottom: 24,
   },
-  primaryBtn: {
-    paddingVertical: height * 0.014,
-    borderRadius: 14,
-    alignItems: "center",
-    shadowColor: "#C8B6A6",
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 10,
-    elevation: 5,
+  quickAccessTitle: {
+    fontSize: 20,
+    fontWeight: '700',
+    color: '#1e3a8a',
+    marginBottom: 20,
   },
-  primaryBtnText: {
-    color: "#FFF",
-    fontSize: Math.min(width * 0.04, 16),
-    fontWeight: "900",
-    letterSpacing: 1.5,
+  cardsContainer: {
+    gap: 16,
+    marginBottom: 32,
+  },
+  card: {
+    backgroundColor: '#f8fafc',
+    borderRadius: 16,
+    padding: 20,
+    borderWidth: 1,
+    borderColor: '#e2e8f0',
+    flexDirection: 'row',
+    alignItems: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#1e3a8a',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
+  },
+  cardIconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 12,
+    backgroundColor: 'rgba(30, 58, 138, 0.1)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: 16,
+  },
+  cardTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#1e3a8a',
+    marginBottom: 4,
+    flex: 1,
+  },
+  cardSubtitle: {
+    fontSize: 13,
+    color: '#64748b',
+    fontWeight: '500',
+    flex: 1,
+  },
+  getStartedButton: {
+    backgroundColor: '#1e3a8a',
+    borderRadius: 12,
+    paddingVertical: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 20,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#1e3a8a',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
+  },
+  getStartedText: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#ffffff',
     textTransform: 'uppercase',
+    letterSpacing: 1,
   },
-  secondaryBtn: {
-    paddingVertical: height * 0.014,
-    borderRadius: 14,
-    borderWidth: 1.5,
-    borderColor: "rgba(255, 255, 255, 0.3)",
-    backgroundColor: "rgba(255, 255, 255, 0.06)",
-    alignItems: "center",
+  loginRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
-  secondaryBtnText: {
-    color: "#FFF",
-    fontSize: Math.min(width * 0.038, 15),
-    fontWeight: "800",
-    letterSpacing: 0.5,
+  loginText: {
+    fontSize: 14,
+    color: '#64748b',
+    fontWeight: '500',
   },
-  vendorBtn: {
-    paddingVertical: height * 0.012,
-    paddingHorizontal: width * 0.04,
-    borderRadius: 14,
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: 6,
-    borderWidth: 1.5,
-    borderColor: "rgba(200, 182, 166, 0.4)",
-  },
-  vendorBtnText: {
-    fontSize: Math.min(width * 0.036, 14),
-    fontWeight: "800",
-    color: "#C8B6A6",
-    letterSpacing: 0.5,
-  },
-  quickAccessSection: {
-    alignItems: "center",
-    paddingBottom: height * 0.01,
-    width: '100%',
-    maxWidth: '100%',
-    zIndex: 1,
-  },
-  quickAccessLabel: {
-    fontSize: Math.min(width * 0.026, 10),
-    fontWeight: "800",
-    color: "rgba(255, 255, 255, 0.6)",
-    letterSpacing: 1.8,
-    textTransform: "uppercase",
-    marginBottom: height * 0.01,
-  },
-  pillsContainer: {
-    flexDirection: "row",
-    gap: width * 0.02,
-    flexWrap: "wrap",
-    justifyContent: "center",
-    width: '100%',
-    maxWidth: '100%',
-    paddingHorizontal: width * 0.02,
-  },
-  pill: {
-    paddingHorizontal: width * 0.035,
-    paddingVertical: height * 0.009,
-    borderRadius: 18,
-    backgroundColor: "rgba(255, 255, 255, 0.12)",
-    borderWidth: 1.5,
-    borderColor: "rgba(255, 255, 255, 0.25)",
-  },
-  pillText: {
-    color: "#FFF",
-    fontWeight: "800",
-    fontSize: Math.min(width * 0.026, 10),
-    letterSpacing: 0.4,
+  loginLink: {
+    fontSize: 14,
+    color: '#1e3a8a',
+    fontWeight: '700',
   },
 });
