@@ -34,12 +34,6 @@ export default function PhoneRegisterScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <ScrollView 
-        style={styles.scrollView}
-        contentContainerStyle={styles.scrollContent}
-        showsVerticalScrollIndicator={false}
-        bounces={false}
-      >
         <View style={styles.mainContainer}>
           {/* Navy Blue Section */}
           <View style={styles.navySection}>
@@ -59,9 +53,8 @@ export default function PhoneRegisterScreen() {
               <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
               
               <View style={styles.welcomeBox}>
-                <Text style={styles.welcomeTitle}>Welcome!</Text>
-                <Text style={styles.welcomeSubtitle}>
-                  Join thousands of beauty enthusiasts
+                <Text style={styles.welcomeMessage}>
+                  Welcome! Join thousands of beauty enthusiasts
                 </Text>
               </View>
             </View>
@@ -128,7 +121,6 @@ export default function PhoneRegisterScreen() {
             </View>
           </View>
         </View>
-      </ScrollView>
     </SafeAreaView>
   );
 }
@@ -138,90 +130,76 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: OmbaroTheme.colors.white,
   },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    flexGrow: 1,
-  },
   mainContainer: {
     flex: 1,
     flexDirection: width >= 768 ? 'row' : 'column',
-    minHeight: height,
+    height: height,
   },
   
   // Navy Blue Section
   navySection: {
     backgroundColor: OmbaroTheme.colors.primary,
     width: width >= 768 ? '50%' : '100%',
-    minHeight: width >= 768 ? '100%' : verticalScale(340),
+    height: width >= 768 ? '100%' : height * 0.42,
     paddingHorizontal: scale(20),
-    paddingTop: verticalScale(12),
-    paddingBottom: verticalScale(20),
+    paddingTop: verticalScale(10),
+    paddingBottom: verticalScale(16),
+    justifyContent: 'space-between',
   },
   backButton: {
-    width: scale(44),
-    height: scale(44),
+    width: scale(42),
+    height: scale(42),
     borderRadius: scale(12),
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-start',
-    marginBottom: verticalScale(16),
   },
   brandSection: {
     alignItems: 'center',
     paddingHorizontal: scale(12),
-    paddingVertical: verticalScale(12),
   },
   iconContainer: {
-    width: scale(72),
-    height: scale(72),
-    borderRadius: scale(18),
+    width: scale(64),
+    height: scale(64),
+    borderRadius: scale(16),
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: verticalScale(16),
+    marginBottom: verticalScale(12),
     borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   brand: {
-    fontSize: scale(36),
+    fontSize: scale(32),
     fontWeight: OmbaroTheme.fontWeight.bold,
     color: OmbaroTheme.colors.white,
     letterSpacing: 2.5,
-    marginBottom: verticalScale(6),
+    marginBottom: verticalScale(4),
   },
   tagline: {
-    fontSize: scale(13),
+    fontSize: scale(12),
     color: 'rgba(255, 255, 255, 0.95)',
     fontWeight: OmbaroTheme.fontWeight.medium,
-    marginBottom: verticalScale(20),
+    marginBottom: verticalScale(14),
     letterSpacing: 0.5,
   },
   welcomeBox: {
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    borderRadius: scale(16),
-    paddingVertical: scale(18),
-    paddingHorizontal: scale(24),
+    borderRadius: scale(14),
+    paddingVertical: scale(14),
+    paddingHorizontal: scale(20),
     borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.25)',
-    width: '85%',
-    maxWidth: scale(280),
+    width: '90%',
+    maxWidth: scale(320),
   },
-  welcomeTitle: {
-    fontSize: scale(22),
-    fontWeight: OmbaroTheme.fontWeight.bold,
+  welcomeMessage: {
+    fontSize: scale(14),
+    fontWeight: OmbaroTheme.fontWeight.semibold,
     color: OmbaroTheme.colors.white,
-    marginBottom: verticalScale(6),
     textAlign: 'center',
-  },
-  welcomeSubtitle: {
-    fontSize: scale(13),
-    color: 'rgba(255, 255, 255, 0.95)',
     lineHeight: scale(20),
-    textAlign: 'center',
-    fontWeight: OmbaroTheme.fontWeight.medium,
   },
 
   // White Section
@@ -230,11 +208,12 @@ const styles = StyleSheet.create({
     width: width >= 768 ? '50%' : '100%',
     flex: 1,
     paddingHorizontal: scale(20),
-    paddingTop: verticalScale(28),
-    paddingBottom: verticalScale(24),
-    borderTopLeftRadius: width >= 768 ? 0 : scale(28),
-    borderTopRightRadius: width >= 768 ? 0 : scale(28),
-    marginTop: width >= 768 ? 0 : -scale(20),
+    paddingTop: verticalScale(20),
+    paddingBottom: verticalScale(16),
+    borderTopLeftRadius: width >= 768 ? 0 : scale(32),
+    borderTopRightRadius: width >= 768 ? 0 : scale(32),
+    marginTop: width >= 768 ? 0 : -scale(24),
+    justifyContent: 'center',
   },
   formContainer: {
     width: '100%',
@@ -242,27 +221,27 @@ const styles = StyleSheet.create({
     alignSelf: 'center',
   },
   formTitle: {
-    fontSize: scale(24),
+    fontSize: scale(22),
     fontWeight: OmbaroTheme.fontWeight.bold,
     color: OmbaroTheme.colors.textDark,
-    marginBottom: verticalScale(6),
+    marginBottom: verticalScale(4),
   },
   formSubtitle: {
-    fontSize: scale(13),
+    fontSize: scale(12),
     color: OmbaroTheme.colors.textGray,
-    marginBottom: verticalScale(24),
+    marginBottom: verticalScale(18),
     fontWeight: OmbaroTheme.fontWeight.medium,
   },
   
   // Form Elements
   inputGroup: {
-    marginBottom: verticalScale(18),
+    marginBottom: verticalScale(14),
   },
   label: {
-    fontSize: scale(13),
+    fontSize: scale(12),
     fontWeight: OmbaroTheme.fontWeight.semibold,
     color: OmbaroTheme.colors.textDark,
-    marginBottom: verticalScale(7),
+    marginBottom: verticalScale(6),
   },
   inputWrapper: {
     flexDirection: 'row',
@@ -272,7 +251,7 @@ const styles = StyleSheet.create({
     borderWidth: 1.5,
     borderColor: '#E0E7FF',
     paddingRight: scale(12),
-    height: verticalScale(50),
+    height: verticalScale(46),
   },
   iconBox: {
     width: scale(50),
@@ -319,10 +298,10 @@ const styles = StyleSheet.create({
   button: {
     backgroundColor: OmbaroTheme.colors.primary,
     borderRadius: scale(12),
-    paddingVertical: verticalScale(15),
+    paddingVertical: verticalScale(14),
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: verticalScale(10),
+    marginTop: verticalScale(8),
     shadowColor: OmbaroTheme.colors.primary,
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -336,7 +315,7 @@ const styles = StyleSheet.create({
     elevation: 0,
   },
   buttonText: {
-    fontSize: scale(15),
+    fontSize: scale(14),
     fontWeight: OmbaroTheme.fontWeight.bold,
     color: OmbaroTheme.colors.white,
     textTransform: 'uppercase',
@@ -346,12 +325,12 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: verticalScale(16),
+    marginTop: verticalScale(12),
     paddingHorizontal: scale(12),
     gap: scale(6),
   },
   privacyText: {
-    fontSize: scale(12),
+    fontSize: scale(11),
     color: OmbaroTheme.colors.textGray,
     fontWeight: OmbaroTheme.fontWeight.medium,
   },
