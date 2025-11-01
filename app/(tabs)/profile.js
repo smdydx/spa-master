@@ -120,7 +120,7 @@ export default function ProfileScreen() {
           {/* Logout */}
           <TouchableOpacity
             style={[styles.logoutItem, CARD_SHADOW]}
-            onPress={() => router.replace('/')}
+            onPress={() => router.replace('/auth')}
             activeOpacity={0.7}
           >
             <View style={styles.logoutIconWrap}>
