@@ -4,6 +4,7 @@ import { View, Text, TouchableOpacity, StyleSheet, Dimensions, ScrollView } from
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Phone, Gift, Lock, Sparkles } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../../context/AuthContext';
 import { OmbaroTheme } from '../../constants/theme';
 
@@ -37,6 +38,21 @@ export default function PhoneRegisterScreen() {
         <View style={styles.mainContainer}>
           {/* Navy Blue Section */}
           <View style={styles.navySection}>
+            {/* Gradient Background */}
+            <LinearGradient
+              colors={['#1e3a8a', '#2563eb', '#1e40af']}
+              style={StyleSheet.absoluteFillObject}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+            />
+            
+            {/* Decorative Circles */}
+            <View style={styles.decorativeCircles}>
+              <View style={[styles.circle, styles.circle1]} />
+              <View style={[styles.circle, styles.circle2]} />
+              <View style={[styles.circle, styles.circle3]} />
+            </View>
+
             <TouchableOpacity
               onPress={() => router.back()}
               style={styles.backButton}
@@ -145,8 +161,40 @@ const styles = StyleSheet.create({
     paddingTop: verticalScale(10),
     paddingBottom: verticalScale(24),
     justifyContent: 'space-between',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  decorativeCircles: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 0,
+  },
+  circle: {
+    position: 'absolute',
+    borderRadius: 999,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+  },
+  circle1: {
+    width: scale(280),
+    height: scale(280),
+    top: -scale(100),
+    right: -scale(80),
+  },
+  circle2: {
+    width: scale(200),
+    height: scale(200),
+    bottom: -scale(60),
+    left: -scale(50),
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  circle3: {
+    width: scale(150),
+    height: scale(150),
+    top: '40%',
+    left: -scale(40),
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
   },
   backButton: {
+    zIndex: 1,
     width: scale(42),
     height: scale(42),
     borderRadius: scale(12),
@@ -159,6 +207,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     paddingHorizontal: scale(12),
     paddingBottom: verticalScale(16),
+    zIndex: 1,
   },
   iconContainer: {
     width: scale(60),
