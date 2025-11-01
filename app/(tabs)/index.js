@@ -1,9 +1,9 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { 
-  Bell, Calendar, Filter, LogOut, MapPin, Search, Star, 
+import {
+  Bell, Calendar, Filter, LogOut, MapPin, Search, Star,
   Sparkles, Zap, Shield, CreditCard, ChevronRight,
-  User
+  User, Heart, Scissors, Flower2
 } from 'lucide-react-native';
 import { useRef, useState } from 'react';
 import {
@@ -43,11 +43,39 @@ export default function HomeScreen() {
   const router = useRouter();
 
   const quickCategories = [
-    { id: 1, name: 'Spa & Massage', icon: '💆‍♀️', color: '#8b5cf6' },
-    { id: 2, name: 'Bridal Makeup', icon: '👰', color: '#ec4899' },
-    { id: 3, name: 'Hair Salon', icon: '💇‍♀️', color: '#3b82f6' },
-    { id: 4, name: 'Skincare', icon: '✨', color: '#10b981' },
+    { id: 1, name: 'Spa & Massage', icon: Sparkles, color: '#8b5cf6' },
+    { id: 2, name: 'Bridal Makeup', icon: Heart, color: '#ec4899' },
+    { id: 3, name: 'Hair Salon', icon: Scissors, color: '#3b82f6' },
+    { id: 4, name: 'Skincare', icon: Flower2, color: '#10b981' },
   ];
+
+  const heroSlides = [
+    {
+      id: 1,
+      title: 'Premium Massage Therapy',
+      subtitle: 'Relaxing Body Massage',
+      description: 'Deep tissue, Swedish, Thai, and aromatherapy massages by expert therapists',
+      image: 'https://images.pexels.com/photos/3757952/pexels-photo-3757952.jpeg',
+      badge: '50,000+ Happy Customers',
+    },
+    {
+      id: 2,
+      title: 'Luxury Spa Experience',
+      subtitle: 'Rejuvenate Your Senses',
+      description: 'Complete wellness packages with aromatherapy and personalized treatments',
+      image: 'https://images.pexels.com/photos/3985360/pexels-photo-3985360.jpeg',
+      badge: 'Rated 4.9 Stars',
+    },
+    {
+      id: 3,
+      title: 'Bridal Makeover',
+      subtitle: 'Your Special Day',
+      description: 'Professional bridal makeup and styling for your perfect wedding look',
+      image: 'https://images.pexels.com/photos/1024311/pexels-photo-1024311.jpeg',
+      badge: 'Expert Stylists',
+    },
+  ];
+
 
   const services = [
     {
@@ -100,13 +128,13 @@ export default function HomeScreen() {
     },
   ];
 
-  
+
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
       <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
         <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
-        
+
         <LinearGradient
           colors={[COLORS.primary, COLORS.secondary, COLORS.primaryDark]}
           start={{ x: 0, y: 0 }}
@@ -128,8 +156,8 @@ export default function HomeScreen() {
               <TouchableOpacity style={styles.headerBtn} activeOpacity={0.7}>
                 <Bell size={20} color="#fff" strokeWidth={2.5} />
               </TouchableOpacity>
-              <TouchableOpacity 
-                style={styles.headerBtn} 
+              <TouchableOpacity
+                style={styles.headerBtn}
                 activeOpacity={0.7}
                 onPress={() => router.replace('/')}
               >
@@ -158,6 +186,61 @@ export default function HomeScreen() {
           </View>
         </LinearGradient>
 
+        {/* HERO CAROUSEL */}
+        <ScrollView
+          ref={heroScrollRef}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onMomentumScrollEnd={(e) => {
+            const index = Math.round(e.nativeEvent.contentOffset.x / (width - (isSmallDevice ? 32 : 40)));
+            setActiveHeroIndex(index);
+          }}
+          style={styles.heroScroll}
+        >
+          {heroSlides.map((slide) => (
+            <LinearGradient
+              key={slide.id}
+              colors={['rgba(30, 58, 138, 0.9)', 'rgba(59, 130, 246, 0.7)']}
+              start={{ x: 0, y: 0 }}
+              end={{ x: 1, y: 1 }}
+              style={styles.heroCard}
+            >
+              <Image source={{ uri: slide.image }} style={styles.heroBg} blurRadius={2} />
+              <View style={styles.heroOverlay} />
+              <View style={styles.heroContent}>
+                <Text style={styles.heroSubtitle}>{slide.subtitle}</Text>
+                <Text style={styles.heroTitle}>{slide.title}</Text>
+                <Text style={styles.heroDescription}>{slide.description}</Text>
+                <TouchableOpacity
+                  style={styles.heroButton}
+                  activeOpacity={0.8}
+                  onPress={() => router.push('/booking')}
+                >
+                  <Text style={styles.heroButtonText}>Book Massage →</Text>
+                </TouchableOpacity>
+                <View style={styles.heroBadge}>
+                  <Text style={styles.heroBadgeText}>{slide.badge}</Text>
+                </View>
+              </View>
+            </LinearGradient>
+          ))}
+        </ScrollView>
+
+        {/* Pagination dots */}
+        <View style={styles.paginationDots}>
+          {heroSlides.map((_, index) => (
+            <View
+              key={index}
+              style={[
+                styles.dot,
+                { backgroundColor: index === activeHeroIndex ? COLORS.primary : '#cbd5e1' },
+              ]}
+            />
+          ))}
+        </View>
+
+
         <View style={styles.categoriesSection}>
           <Text style={styles.sectionTitle}>Quick Categories</Text>
           <View style={styles.categoriesGrid}>
@@ -169,7 +252,7 @@ export default function HomeScreen() {
                 onPress={() => router.push('/booking')}
               >
                 <View style={[styles.categoryIcon, { backgroundColor: category.color + '20' }]}>
-                  <Text style={styles.categoryEmoji}>{category.icon}</Text>
+                  <category.icon size={32} color={category.color} />
                 </View>
                 <Text style={styles.categoryName}>{category.name}</Text>
               </TouchableOpacity>
@@ -210,7 +293,7 @@ export default function HomeScreen() {
           </View>
         </View>
 
-        
+
 
       </ScrollView>
     </SafeAreaView>
@@ -220,37 +303,37 @@ export default function HomeScreen() {
 const CARD_SHADOW =
   Platform.OS === 'android'
     ? { elevation: 3 }
-    : { 
-        shadowColor: '#000', 
-        shadowOpacity: 0.1, 
-        shadowRadius: 12, 
-        shadowOffset: { width: 0, height: 4 } 
+    : {
+        shadowColor: '#000',
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        shadowOffset: { width: 0, height: 4 }
       };
 
 const styles = StyleSheet.create({
-  safe: { 
-    flex: 1, 
+  safe: {
+    flex: 1,
     backgroundColor: '#F9FAFB'
   },
-  scroll: { 
-    flex: 1 
+  scroll: {
+    flex: 1
   },
 
-  headerGrad: { 
-    paddingHorizontal: isSmallDevice ? 16 : isMediumDevice ? 20 : 32, 
-    paddingTop: isSmallDevice ? 12 : 16, 
+  headerGrad: {
+    paddingHorizontal: isSmallDevice ? 16 : isMediumDevice ? 20 : 32,
+    paddingTop: isSmallDevice ? 12 : 16,
     paddingBottom: isSmallDevice ? 20 : 24,
     borderBottomLeftRadius: 32,
     borderBottomRightRadius: 32,
   },
-  headerRow: { 
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
-    alignItems: 'center', 
-    marginBottom: isSmallDevice ? 12 : 16 
+  headerRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginBottom: isSmallDevice ? 12 : 16
   },
-  locRow: { 
-    flexDirection: 'row', 
+  locRow: {
+    flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
     marginRight: 16,
@@ -264,17 +347,17 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     marginRight: 12,
   },
-  locLabel: { 
-    fontSize: isSmallDevice ? 11 : 12, 
+  locLabel: {
+    fontSize: isSmallDevice ? 11 : 12,
     color: 'rgba(255,255,255,0.85)',
     fontWeight: '500',
   },
-  locCity: { 
-    fontSize: isSmallDevice ? 14 : 15, 
-    fontWeight: '700', 
-    color: '#fff' 
+  locCity: {
+    fontSize: isSmallDevice ? 14 : 15,
+    fontWeight: '700',
+    color: '#fff'
   },
-  headerBtns: { 
+  headerBtns: {
     flexDirection: 'row',
     gap: 12,
   },
@@ -286,17 +369,17 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  greetingWrap: { 
-    marginBottom: isSmallDevice ? 14 : 16 
+  greetingWrap: {
+    marginBottom: isSmallDevice ? 14 : 16
   },
-  greetingTitle: { 
-    fontSize: isSmallDevice ? 22 : 26, 
-    fontWeight: '800', 
-    color: '#fff', 
-    marginBottom: 4 
+  greetingTitle: {
+    fontSize: isSmallDevice ? 22 : 26,
+    fontWeight: '800',
+    color: '#fff',
+    marginBottom: 4
   },
-  greetingSub: { 
-    fontSize: isSmallDevice ? 14 : 15, 
+  greetingSub: {
+    fontSize: isSmallDevice ? 14 : 15,
     color: 'rgba(255,255,255,0.95)',
     fontWeight: '500',
   },
@@ -310,10 +393,10 @@ const styles = StyleSheet.create({
     paddingVertical: isSmallDevice ? 10 : 12,
     ...CARD_SHADOW,
   },
-  searchInput: { 
-    flex: 1, 
-    marginLeft: 12, 
-    fontSize: isSmallDevice ? 14 : 15, 
+  searchInput: {
+    flex: 1,
+    marginLeft: 12,
+    fontSize: isSmallDevice ? 14 : 15,
     color: COLORS.textDark,
     fontWeight: '500',
   },
@@ -325,6 +408,103 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     marginLeft: 12,
+  },
+
+  searchContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: isSmallDevice ? 12 : 14,
+    marginBottom: 20,
+    ...CARD_SHADOW,
+  },
+  heroScroll: {
+    marginBottom: 16,
+  },
+  heroCard: {
+    width: width - (isSmallDevice ? 32 : 40),
+    height: isSmallDevice ? 280 : 320,
+    marginHorizontal: isSmallDevice ? 16 : 20,
+    borderRadius: 24,
+    overflow: 'hidden',
+    position: 'relative',
+  },
+  heroBg: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  },
+  heroOverlay: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+    backgroundColor: 'rgba(0, 0, 0, 0.3)',
+  },
+  heroContent: {
+    flex: 1,
+    padding: isSmallDevice ? 20 : 24,
+    justifyContent: 'flex-end',
+  },
+  heroSubtitle: {
+    fontSize: isSmallDevice ? 13 : 14,
+    color: '#FFFFFF',
+    fontWeight: '600',
+    marginBottom: 4,
+    opacity: 0.9,
+  },
+  heroTitle: {
+    fontSize: isSmallDevice ? 26 : 32,
+    fontWeight: '800',
+    color: '#FFFFFF',
+    marginBottom: 8,
+  },
+  heroDescription: {
+    fontSize: isSmallDevice ? 13 : 14,
+    color: '#FFFFFF',
+    marginBottom: 20,
+    opacity: 0.9,
+    lineHeight: 20,
+  },
+  heroButton: {
+    backgroundColor: '#FFFFFF',
+    paddingVertical: 14,
+    paddingHorizontal: 24,
+    borderRadius: 12,
+    alignSelf: 'flex-start',
+  },
+  heroButtonText: {
+    color: COLORS.primary,
+    fontWeight: '700',
+    fontSize: 15,
+  },
+  heroBadge: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 20,
+    backdropFilter: 'blur(10px)',
+  },
+  heroBadgeText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '600',
+  },
+  paginationDots: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginBottom: 20,
+    gap: 8,
+  },
+  dot: {
+    width: 8,
+    height: 8,
+    borderRadius: 4,
   },
 
   categoriesSection: {
@@ -444,5 +624,5 @@ const styles = StyleSheet.create({
     color: COLORS.primary,
   },
 
-  
+
 });
