@@ -1,10 +1,16 @@
+
 import React, { useEffect, useRef, useState } from 'react';
-import { View, Text, TouchableOpacity, TextInput, Pressable, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, Pressable, StyleSheet, Dimensions } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ArrowLeft } from 'lucide-react-native';
-import { AuthLayout, GradientHeader, FormCard, PrimaryButton } from '../../components/auth';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { KeyboardAvoidingView, Platform } from 'react-native';
 import { useAuth } from '../../context/AuthContext';
 import { OmbaroTheme } from '../../constants/theme';
+
+const { height, width } = Dimensions.get('window');
+const scale = (size) => (width / 375) * size;
+const verticalScale = (size) => (height / 812) * size;
 
 const OTP_LENGTH = 4;
 const RESEND_SECONDS = 30;
@@ -64,97 +70,173 @@ export default function OtpVerificationScreen() {
   const isComplete = code.length === OTP_LENGTH;
 
   return (
-    <AuthLayout>
-      <TouchableOpacity
-        onPress={() => router.back()}
-        style={styles.backButton}
-        activeOpacity={0.7}
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardView}
       >
-        <ArrowLeft size={24} color={OmbaroTheme.colors.textDark} />
-      </TouchableOpacity>
+        <View style={styles.content}>
+          <TouchableOpacity
+            onPress={() => router.back()}
+            style={styles.backButton}
+            activeOpacity={0.7}
+          >
+            <ArrowLeft size={scale(20)} color={OmbaroTheme.colors.textDark} />
+          </TouchableOpacity>
 
-      <GradientHeader
-        title="Enter Verification Code"
-        subtitle={`We've sent a ${OTP_LENGTH}-digit code to ${maskPhone(phoneNumber)}`}
-      />
-
-      <FormCard>
-        <TextInput
-          ref={inputRef}
-          value={code}
-          onChangeText={onChangeCode}
-          keyboardType="number-pad"
-          textContentType="oneTimeCode"
-          maxLength={OTP_LENGTH}
-          autoFocus
-          style={styles.hiddenInput}
-        />
-
-        <Pressable
-          onPress={() => inputRef.current?.focus()}
-          style={styles.otpRow}
-        >
-          {Array.from({ length: OTP_LENGTH }).map((_, i) => {
-            const char = code[i] ?? '';
-            const active = i === code.length && code.length < OTP_LENGTH;
-            return (
-              <View
-                key={i}
-                style={[
-                  styles.otpCell,
-                  active && styles.otpCellActive,
-                  error && styles.otpCellError,
-                ]}
-              >
-                <Text style={styles.otpChar}>{char}</Text>
-              </View>
-            );
-          })}
-        </Pressable>
-
-        {error && <Text style={styles.errorText}>{error}</Text>}
-
-        <View style={styles.resendContainer}>
-          <Text style={styles.resendText}>
-            Didn't receive the code?{' '}
-            <Text
-              style={[
-                styles.resendLink,
-                { color: seconds > 0 ? OmbaroTheme.colors.textGray : OmbaroTheme.colors.roseGold }
-              ]}
-              onPress={handleResend}
-            >
-              {seconds > 0 ? `Resend in ${seconds}s` : 'Tap to resend'}
+          <View style={styles.headerSection}>
+            <View style={styles.iconContainer}>
+              <Text style={styles.icon}>✨</Text>
+            </View>
+            <Text style={styles.brand}>OMBARO</Text>
+            <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
+            <Text style={styles.title}>Enter Verification Code</Text>
+            <Text style={styles.subtitle}>
+              We've sent a {OTP_LENGTH}-digit code to {maskPhone(phoneNumber)}
             </Text>
-          </Text>
-        </View>
+          </View>
 
-        <PrimaryButton
-          title={verifying ? 'Verifying...' : 'Verify & Continue'}
-          onPress={handleVerify}
-          disabled={!isComplete}
-          loading={verifying}
-        />
+          <View style={styles.formSection}>
+            <TextInput
+              ref={inputRef}
+              value={code}
+              onChangeText={onChangeCode}
+              keyboardType="number-pad"
+              textContentType="oneTimeCode"
+              maxLength={OTP_LENGTH}
+              autoFocus
+              style={styles.hiddenInput}
+            />
 
-        <View style={styles.hintCard}>
-          <Text style={styles.hintText}>
-            💡 Hint: Use OTP code <Text style={styles.hintCode}>1234</Text> to verify
-          </Text>
+            <Pressable
+              onPress={() => inputRef.current?.focus()}
+              style={styles.otpRow}
+            >
+              {Array.from({ length: OTP_LENGTH }).map((_, i) => {
+                const char = code[i] ?? '';
+                const active = i === code.length && code.length < OTP_LENGTH;
+                return (
+                  <View
+                    key={i}
+                    style={[
+                      styles.otpCell,
+                      active && styles.otpCellActive,
+                      error && styles.otpCellError,
+                    ]}
+                  >
+                    <Text style={styles.otpChar}>{char}</Text>
+                  </View>
+                );
+              })}
+            </Pressable>
+
+            {error && <Text style={styles.errorText}>{error}</Text>}
+
+            <View style={styles.resendContainer}>
+              <Text style={styles.resendText}>
+                Didn't receive the code?{' '}
+                <Text
+                  style={[
+                    styles.resendLink,
+                    { color: seconds > 0 ? OmbaroTheme.colors.textGray : OmbaroTheme.colors.roseGold }
+                  ]}
+                  onPress={handleResend}
+                >
+                  {seconds > 0 ? `Resend in ${seconds}s` : 'Tap to resend'}
+                </Text>
+              </Text>
+            </View>
+
+            <TouchableOpacity
+              style={[styles.button, !isComplete && styles.buttonDisabled]}
+              onPress={handleVerify}
+              disabled={!isComplete}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.buttonText}>
+                {verifying ? 'Verifying...' : 'Verify & Continue'}
+              </Text>
+            </TouchableOpacity>
+
+            <View style={styles.hintCard}>
+              <Text style={styles.hintText}>
+                💡 Hint: Use OTP code <Text style={styles.hintCode}>1234</Text> to verify
+              </Text>
+            </View>
+          </View>
         </View>
-      </FormCard>
-    </AuthLayout>
+      </KeyboardAvoidingView>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: OmbaroTheme.colors.beigeLight,
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    paddingHorizontal: scale(20),
+    paddingVertical: verticalScale(10),
+  },
   backButton: {
-    width: 48,
-    height: 48,
-    borderRadius: OmbaroTheme.borderRadius.md,
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(10),
     backgroundColor: OmbaroTheme.colors.beige,
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: OmbaroTheme.spacing.md,
+    marginBottom: verticalScale(12),
+  },
+  headerSection: {
+    alignItems: 'center',
+    marginBottom: verticalScale(16),
+  },
+  iconContainer: {
+    width: scale(50),
+    height: scale(50),
+    borderRadius: scale(12),
+    backgroundColor: OmbaroTheme.colors.roseGold,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: verticalScale(8),
+  },
+  icon: {
+    fontSize: scale(24),
+  },
+  brand: {
+    fontSize: scale(22),
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: OmbaroTheme.colors.textDark,
+    letterSpacing: 1.5,
+    marginBottom: verticalScale(4),
+  },
+  tagline: {
+    fontSize: scale(11),
+    color: OmbaroTheme.colors.roseGoldDark,
+    fontWeight: OmbaroTheme.fontWeight.medium,
+    marginBottom: verticalScale(12),
+  },
+  title: {
+    fontSize: scale(18),
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: OmbaroTheme.colors.textDark,
+    textAlign: 'center',
+    marginTop: verticalScale(6),
+  },
+  subtitle: {
+    fontSize: scale(12),
+    color: OmbaroTheme.colors.textGray,
+    textAlign: 'center',
+    marginTop: verticalScale(4),
+  },
+  formSection: {
+    flex: 1,
+    justifyContent: 'center',
   },
   hiddenInput: {
     position: 'absolute',
@@ -165,15 +247,15 @@ const styles = StyleSheet.create({
   otpRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginVertical: OmbaroTheme.spacing.xl,
-    gap: OmbaroTheme.spacing.md,
+    marginVertical: verticalScale(20),
+    gap: scale(8),
   },
   otpCell: {
     flex: 1,
     aspectRatio: 1,
-    maxWidth: 70,
-    backgroundColor: OmbaroTheme.colors.darkCard,
-    borderRadius: OmbaroTheme.borderRadius.md,
+    maxWidth: scale(60),
+    backgroundColor: OmbaroTheme.colors.beige,
+    borderRadius: scale(10),
     borderWidth: 2,
     borderColor: OmbaroTheme.colors.border,
     alignItems: 'center',
@@ -186,39 +268,57 @@ const styles = StyleSheet.create({
     borderColor: OmbaroTheme.colors.error,
   },
   otpChar: {
-    fontSize: OmbaroTheme.fontSize.xxl,
+    fontSize: scale(24),
     fontWeight: OmbaroTheme.fontWeight.bold,
-    color: OmbaroTheme.colors.textLight,
+    color: OmbaroTheme.colors.textDark,
   },
   errorText: {
-    fontSize: OmbaroTheme.fontSize.sm,
+    fontSize: scale(11),
     color: OmbaroTheme.colors.error,
     textAlign: 'center',
-    marginTop: -OmbaroTheme.spacing.lg,
-    marginBottom: OmbaroTheme.spacing.md,
+    marginTop: verticalScale(-12),
+    marginBottom: verticalScale(8),
   },
   resendContainer: {
     alignItems: 'center',
-    marginBottom: OmbaroTheme.spacing.lg,
+    marginBottom: verticalScale(16),
   },
   resendText: {
-    fontSize: OmbaroTheme.fontSize.sm,
-    color: OmbaroTheme.colors.textLight,
+    fontSize: scale(11),
+    color: OmbaroTheme.colors.textDark,
   },
   resendLink: {
     fontWeight: OmbaroTheme.fontWeight.semibold,
   },
-  hintCard: {
+  button: {
+    backgroundColor: OmbaroTheme.colors.roseGold,
+    borderRadius: scale(10),
+    paddingVertical: verticalScale(12),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonDisabled: {
     backgroundColor: OmbaroTheme.colors.darkCard,
-    borderRadius: OmbaroTheme.borderRadius.md,
-    padding: OmbaroTheme.spacing.md,
-    marginTop: OmbaroTheme.spacing.md,
+    opacity: 0.5,
+  },
+  buttonText: {
+    fontSize: scale(14),
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: OmbaroTheme.colors.textDark,
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+  },
+  hintCard: {
+    backgroundColor: OmbaroTheme.colors.beige,
+    borderRadius: scale(10),
+    padding: scale(10),
+    marginTop: verticalScale(12),
     borderWidth: 1,
     borderColor: OmbaroTheme.colors.roseGold,
   },
   hintText: {
-    fontSize: OmbaroTheme.fontSize.sm,
-    color: OmbaroTheme.colors.textLight,
+    fontSize: scale(11),
+    color: OmbaroTheme.colors.textDark,
     textAlign: 'center',
   },
   hintCode: {
