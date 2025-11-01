@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -14,16 +14,23 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { Star, X, MapPin } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
 
-// Conditionally import MapView only on native platforms
-let MapView, Marker, PROVIDER_GOOGLE;
-if (Platform.OS !== 'web') {
-  const maps = require('react-native-maps');
-  MapView = maps.default;
-  Marker = maps.Marker;
-  PROVIDER_GOOGLE = maps.PROVIDER_GOOGLE;
-}
-
 const { width, height } = Dimensions.get('window');
+
+// Lazy load MapView only on native platforms
+let MapView = null;
+let Marker = null;
+let PROVIDER_GOOGLE = null;
+
+if (Platform.OS !== 'web') {
+  try {
+    const maps = require('react-native-maps');
+    MapView = maps.default;
+    Marker = maps.Marker;
+    PROVIDER_GOOGLE = maps.PROVIDER_GOOGLE;
+  } catch (error) {
+    console.warn('react-native-maps not available:', error);
+  }
+}
 
 export default function MapViewScreen() {
   const [selectedSpa, setSelectedSpa] = useState(null);
@@ -87,37 +94,45 @@ export default function MapViewScreen() {
     },
   ];
 
+  const renderMapView = () => {
+    if (Platform.OS === 'web' || !MapView) {
+      return (
+        <View style={styles.webMapPlaceholder}>
+          <MapPin size={64} color="#1e3a8a" strokeWidth={1.5} />
+          <Text style={styles.webMapText}>Map view is available on mobile devices</Text>
+          <Text style={styles.webMapSubtext}>Browse nearby salons below</Text>
+        </View>
+      );
+    }
+
+    return (
+      <MapView
+        provider={PROVIDER_GOOGLE}
+        style={styles.map}
+        region={region}
+        onRegionChangeComplete={setRegion}
+        showsUserLocation
+        showsMyLocationButton
+      >
+        {nearbySpas.map((spa) => (
+          <Marker
+            key={spa.id}
+            coordinate={spa.coordinate}
+            onPress={() => setSelectedSpa(spa)}
+          >
+            <View style={[styles.marker, { backgroundColor: spa.isOpen ? '#22c55e' : '#9ca3af' }]}>
+              <Text style={styles.markerText}>₹</Text>
+            </View>
+          </Marker>
+        ))}
+      </MapView>
+    );
+  };
+
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <View style={styles.mapContainer}>
-        {Platform.OS !== 'web' ? (
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            style={styles.map}
-            region={region}
-            onRegionChangeComplete={setRegion}
-            showsUserLocation
-            showsMyLocationButton
-          >
-            {nearbySpas.map((spa) => (
-              <Marker
-                key={spa.id}
-                coordinate={spa.coordinate}
-                onPress={() => setSelectedSpa(spa)}
-              >
-                <View style={[styles.marker, { backgroundColor: spa.isOpen ? '#22c55e' : '#9ca3af' }]}>
-                  <Text style={styles.markerText}>₹</Text>
-                </View>
-              </Marker>
-            ))}
-          </MapView>
-        ) : (
-          <View style={styles.webMapPlaceholder}>
-            <MapPin size={64} color="#1e3a8a" strokeWidth={1.5} />
-            <Text style={styles.webMapText}>Map view is available on mobile devices</Text>
-            <Text style={styles.webMapSubtext}>Browse nearby salons below</Text>
-          </View>
-        )}
+        {renderMapView()}
 
         {selectedSpa && (
           <View style={styles.selectedCard}>
@@ -173,11 +188,13 @@ export default function MapViewScreen() {
               activeOpacity={0.9}
               onPress={() => {
                 setSelectedSpa(spa);
-                setRegion({
-                  ...spa.coordinate,
-                  latitudeDelta: 0.02,
-                  longitudeDelta: 0.02,
-                });
+                if (Platform.OS !== 'web' && MapView) {
+                  setRegion({
+                    ...spa.coordinate,
+                    latitudeDelta: 0.02,
+                    longitudeDelta: 0.02,
+                  });
+                }
               }}
             >
               <Image source={{ uri: spa.image }} style={styles.listImage} />
