@@ -51,8 +51,6 @@ export default function AdminLogin() {
               </View>
               <Text style={styles.brandName}>OMBARO</Text>
               <Text style={styles.brandTagline}>Admin Portal</Text>
-              <Text style={styles.welcomeText}>Admin Login</Text>
-              <Text style={styles.subText}>Administrative control panel</Text>
             </View>
           </LinearGradient>
 

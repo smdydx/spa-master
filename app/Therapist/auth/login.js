@@ -51,8 +51,6 @@ export default function TherapistLogin() {
               </View>
               <Text style={styles.brandName}>OMBARO</Text>
               <Text style={styles.brandTagline}>Therapist Portal</Text>
-              <Text style={styles.welcomeText}>Therapist Login</Text>
-              <Text style={styles.subText}>Manage appointments & schedules</Text>
             </View>
           </LinearGradient>
 

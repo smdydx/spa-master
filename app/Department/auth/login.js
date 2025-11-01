@@ -51,8 +51,6 @@ export default function DepartmentLogin() {
               </View>
               <Text style={styles.brandName}>OMBARO</Text>
               <Text style={styles.brandTagline}>Department Portal</Text>
-              <Text style={styles.welcomeText}>Department Login</Text>
-              <Text style={styles.subText}>Manage department operations</Text>
             </View>
           </LinearGradient>
 

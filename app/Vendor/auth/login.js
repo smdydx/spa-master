@@ -51,8 +51,6 @@ export default function VendorLogin() {
               </View>
               <Text style={styles.brandName}>OMBARO</Text>
               <Text style={styles.brandTagline}>Vendor Portal</Text>
-              <Text style={styles.welcomeText}>Vendor Login</Text>
-              <Text style={styles.subText}>Manage business operations</Text>
             </View>
           </LinearGradient>
 

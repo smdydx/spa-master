@@ -52,8 +52,6 @@ export default function EmployeeLogin() {
               </View>
               <Text style={styles.brandName}>OMBARO</Text>
               <Text style={styles.brandTagline}>Employee Portal</Text>
-              <Text style={styles.welcomeText}>Employee Login</Text>
-              <Text style={styles.subText}>Access your dashboard</Text>
             </View>
           </LinearGradient>
 
