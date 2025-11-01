@@ -1,11 +1,10 @@
-
 import React, { useState } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  StyleSheet, 
+import {
+  View,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  StyleSheet,
   KeyboardAvoidingView,
   Platform,
   Dimensions,
@@ -51,12 +50,12 @@ export default function EmployeeLogin() {
 
             <View style={styles.brandSection}>
               <View style={styles.iconContainer}>
-                <Text style={styles.iconText}>💼</Text>
+                <View style={styles.iconCircle} />
               </View>
               <Text style={styles.brandName}>OMBARO</Text>
               <Text style={styles.brandTagline}>Employee Portal</Text>
-              <Text style={styles.welcomeText}>Welcome Back</Text>
-              <Text style={styles.subText}>Sign in to access your dashboard</Text>
+              <Text style={styles.welcomeText}>Employee Login</Text>
+              <Text style={styles.subText}>Access your dashboard</Text>
             </View>
           </LinearGradient>
 
@@ -142,90 +141,102 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   topSection: {
-    flex: 2,
+    flex: 1.5, // Adjusted flex for better proportion
     paddingHorizontal: 24,
     paddingTop: 20,
     paddingBottom: 40,
-    justifyContent: 'space-between',
+    justifyContent: 'center', // Center content vertically
+    alignItems: 'center', // Center content horizontally
   },
   backButton: {
+    position: 'absolute',
+    top: 30,
+    left: 24,
     width: 40,
     height: 40,
     borderRadius: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     alignItems: 'center',
     justifyContent: 'center',
+    zIndex: 1, // Ensure back button is above gradient
   },
   brandSection: {
     alignItems: 'center',
-    flex: 1,
     justifyContent: 'center',
+    width: '100%', // Take full width
   },
   iconContainer: {
-    width: 64,
-    height: 64,
-    borderRadius: 16,
+    width: 72, // Slightly larger icon container
+    height: 72,
+    borderRadius: 18, // Slightly larger border radius
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: 20, // Increased margin
   },
-  iconText: {
-    fontSize: 32,
+  iconCircle: {
+    width: 40, // Size of the inner circle
+    height: 40, // Size of the inner circle
+    borderRadius: 20, // Half of width/height for a perfect circle
+    backgroundColor: '#FFFFFF', // White circle
   },
   brandName: {
-    fontSize: 32,
+    fontSize: width * 0.08, // Responsive font size
     fontWeight: '900',
     color: '#2C2C2C',
     letterSpacing: 3,
-    marginBottom: 8,
+    marginBottom: 10, // Reduced margin
   },
   brandTagline: {
-    fontSize: 13,
+    fontSize: width * 0.035, // Responsive font size
     fontWeight: '700',
     color: '#8B6F47',
     letterSpacing: 1,
-    marginBottom: 24,
+    marginBottom: 20, // Increased margin
   },
   welcomeText: {
-    fontSize: 28,
+    fontSize: width * 0.06, // Responsive font size for welcome text
     fontWeight: '900',
     color: '#1A1A1A',
-    marginBottom: 8,
-  },
-  subText: {
-    fontSize: 14,
-    color: 'rgba(44, 44, 44, 0.7)',
+    marginBottom: 10, // Reduced margin
     textAlign: 'center',
   },
+  subText: {
+    fontSize: width * 0.04, // Responsive font size for sub text
+    color: 'rgba(44, 44, 44, 0.8)', // Slightly darker for better readability
+    textAlign: 'center',
+    paddingHorizontal: 20, // Add padding to prevent text from touching edges
+  },
   bottomSection: {
-    flex: 3,
+    flex: 2, // Increased flex for the form section
     borderTopLeftRadius: 32,
     borderTopRightRadius: 32,
     marginTop: -24,
     overflow: 'hidden',
+    justifyContent: 'center', // Center form content
   },
   formContainer: {
     flex: 1,
     paddingHorizontal: 24,
-    paddingTop: 32,
-    paddingBottom: 24,
+    paddingTop: 40, // Increased padding top
+    paddingBottom: 32, // Increased padding bottom
+    justifyContent: 'center', // Center form elements
   },
   formTitle: {
-    fontSize: 24,
+    fontSize: width * 0.07, // Responsive font size
     fontWeight: '900',
     color: '#FFFFFF',
     marginBottom: 32,
     textAlign: 'center',
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: 24, // Increased margin between input groups
   },
   label: {
-    fontSize: 13,
+    fontSize: width * 0.035, // Responsive font size
     fontWeight: '700',
     color: '#C8B6A6',
-    marginBottom: 8,
+    marginBottom: 10, // Increased margin
     letterSpacing: 0.5,
   },
   inputWrapper: {
@@ -241,16 +252,16 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     marginLeft: 12,
-    fontSize: 15,
+    fontSize: width * 0.04, // Responsive font size
     color: '#FFFFFF',
     fontWeight: '600',
   },
   forgotButton: {
     alignSelf: 'flex-end',
-    marginBottom: 24,
+    marginBottom: 32, // Increased margin
   },
   forgotText: {
-    fontSize: 13,
+    fontSize: width * 0.035, // Responsive font size
     fontWeight: '700',
     color: '#D4A59A',
   },
@@ -266,7 +277,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   loginButtonText: {
-    fontSize: 16,
+    fontSize: width * 0.045, // Responsive font size
     fontWeight: '900',
     color: '#FFFFFF',
     letterSpacing: 2,

@@ -1,4 +1,5 @@
 
+
 import React, { useState } from 'react';
 import { 
   View, 
@@ -48,12 +49,12 @@ export default function VendorLogin() {
 
             <View style={styles.brandSection}>
               <View style={styles.iconContainer}>
-                <Text style={styles.iconText}>🏪</Text>
+                <View style={styles.iconCircle} />
               </View>
               <Text style={styles.brandName}>OMBARO</Text>
               <Text style={styles.brandTagline}>Vendor Portal</Text>
-              <Text style={styles.welcomeText}>Vendor Access</Text>
-              <Text style={styles.subText}>Manage your business operations</Text>
+              <Text style={styles.welcomeText}>Vendor Login</Text>
+              <Text style={styles.subText}>Manage business operations</Text>
             </View>
           </LinearGradient>
 
@@ -132,14 +133,14 @@ const styles = StyleSheet.create({
   },
   topSection: {
     flex: 2,
-    paddingHorizontal: 24,
-    paddingTop: 20,
-    paddingBottom: 40,
+    paddingHorizontal: Math.min(width * 0.05, 24),
+    paddingTop: height * 0.025,
+    paddingBottom: height * 0.05,
     justifyContent: 'space-between',
   },
   backButton: {
-    width: 40,
-    height: 40,
+    width: Math.min(width * 0.1, 40),
+    height: Math.min(width * 0.1, 40),
     borderRadius: 12,
     backgroundColor: 'rgba(255, 255, 255, 0.3)',
     alignItems: 'center',
@@ -151,40 +152,43 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   iconContainer: {
-    width: 64,
-    height: 64,
-    borderRadius: 16,
+    width: Math.min(width * 0.12, 48),
+    height: Math.min(width * 0.12, 48),
+    borderRadius: 14,
     backgroundColor: 'rgba(255, 255, 255, 0.25)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: 16,
+    marginBottom: height * 0.012,
   },
-  iconText: {
-    fontSize: 32,
+  iconCircle: {
+    width: Math.min(width * 0.06, 24),
+    height: Math.min(width * 0.06, 24),
+    borderRadius: 12,
+    backgroundColor: 'rgba(200, 182, 166, 0.8)',
   },
   brandName: {
-    fontSize: 32,
+    fontSize: Math.min(width * 0.055, 22),
     fontWeight: '900',
     color: '#2C2C2C',
-    letterSpacing: 3,
-    marginBottom: 8,
+    letterSpacing: 2.5,
+    marginBottom: height * 0.005,
   },
   brandTagline: {
-    fontSize: 13,
+    fontSize: Math.min(width * 0.025, 10),
     fontWeight: '700',
     color: '#8B6F47',
-    letterSpacing: 1,
-    marginBottom: 24,
+    letterSpacing: 0.5,
+    marginBottom: height * 0.015,
   },
   welcomeText: {
-    fontSize: 28,
+    fontSize: Math.min(width * 0.06, 24),
     fontWeight: '900',
     color: '#1A1A1A',
-    marginBottom: 8,
+    marginBottom: height * 0.008,
   },
   subText: {
-    fontSize: 14,
-    color: 'rgba(44, 44, 44, 0.7)',
+    fontSize: Math.min(width * 0.025, 10),
+    color: 'rgba(44, 44, 44, 0.75)',
     textAlign: 'center',
   },
   bottomSection: {
@@ -196,25 +200,25 @@ const styles = StyleSheet.create({
   },
   formContainer: {
     flex: 1,
-    paddingHorizontal: 24,
-    paddingTop: 32,
-    paddingBottom: 24,
+    paddingHorizontal: Math.min(width * 0.05, 24),
+    paddingTop: height * 0.04,
+    paddingBottom: height * 0.03,
   },
   formTitle: {
-    fontSize: 24,
+    fontSize: Math.min(width * 0.06, 24),
     fontWeight: '900',
     color: '#FFFFFF',
-    marginBottom: 32,
+    marginBottom: height * 0.04,
     textAlign: 'center',
   },
   inputGroup: {
-    marginBottom: 20,
+    marginBottom: height * 0.025,
   },
   label: {
-    fontSize: 13,
+    fontSize: Math.min(width * 0.032, 13),
     fontWeight: '700',
     color: '#C8B6A6',
-    marginBottom: 8,
+    marginBottom: height * 0.01,
     letterSpacing: 0.5,
   },
   inputWrapper: {
@@ -224,27 +228,27 @@ const styles = StyleSheet.create({
     borderRadius: 14,
     borderWidth: 1.5,
     borderColor: 'rgba(200, 182, 166, 0.3)',
-    paddingHorizontal: 16,
-    height: 56,
+    paddingHorizontal: width * 0.04,
+    height: Math.min(height * 0.07, 56),
   },
   input: {
     flex: 1,
     marginLeft: 12,
-    fontSize: 15,
+    fontSize: Math.min(width * 0.038, 15),
     color: '#FFFFFF',
     fontWeight: '600',
   },
   forgotButton: {
     alignSelf: 'flex-end',
-    marginBottom: 24,
+    marginBottom: height * 0.03,
   },
   forgotText: {
-    fontSize: 13,
+    fontSize: Math.min(width * 0.032, 13),
     fontWeight: '700',
     color: '#D4A59A',
   },
   loginButton: {
-    height: 56,
+    height: Math.min(height * 0.07, 56),
     borderRadius: 14,
     alignItems: 'center',
     justifyContent: 'center',
@@ -255,7 +259,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   loginButtonText: {
-    fontSize: 16,
+    fontSize: Math.min(width * 0.04, 16),
     fontWeight: '900',
     color: '#FFFFFF',
     letterSpacing: 2,
