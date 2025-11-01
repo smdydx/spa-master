@@ -1,347 +1,227 @@
-// app/auth/SelectRoleScreen.js
-import { useRouter } from "expo-router";
-import { Badge, Building, Building2, Calculator, Cpu, Database, DollarSign, Gavel, Headphones, List, Megaphone, Receipt, Scale, ShieldCheck, UserRoundCog, Users, Users2 } from "lucide-react-native";
-import { useMemo, useState } from "react";
-import { SafeAreaView, ScrollView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import React, { useState } from 'react';
+import { 
+  View, 
+  Text, 
+  TextInput, 
+  TouchableOpacity, 
+  StyleSheet, 
+  KeyboardAvoidingView,
+  Platform,
+  useWindowDimensions
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter } from 'expo-router';
+import { OmbaroTheme } from '../../../constants/theme';
 
-const COLORS = {
-  bg: "#F1F5FF",
-  card: "#FFFFFF",
-  text: "#0F172A",
-  sub: "#475569",
-  border: "#E5E7EB",
-  primary: "#0F67C6",
-  purple: "#7C3AED",
-};
-
-const SectionTitle = ({ label }) => (
-  <Text style={styles.sectionTitle}>{label}</Text>
-);
-
-const IconBox = ({ children, bg }) => (
-  <View style={[styles.iconBox, { backgroundColor: bg }]}>{children}</View>
-);
-
-const RoleCard = ({ title, subtitle, icon, selected, onPress }) => (
-  <TouchableOpacity
-    activeOpacity={0.9}
-    onPress={onPress}
-    style={[
-      styles.roleCard,
-      selected && { borderColor: "#A78BFA", shadowOpacity: 0.12 },
-    ]}
-  >
-    <IconBox bg="rgba(124,58,237,0.08)">{icon}</IconBox>
-    <View style={{ flex: 1 }}>
-      <Text style={styles.roleTitle}>{title}</Text>
-      <Text style={styles.roleSub} numberOfLines={2}>
-        {subtitle}
-      </Text>
-    </View>
-  </TouchableOpacity>
-);
-
-export default function SelectRoleScreen() {
+export default function DepartmentLogin() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const router = useRouter();
-  const [selectedId, setSelectedId] = useState("fo");
+  const { width, height } = useWindowDimensions();
 
-  // Sections + roles (IDs must be unique)
-  const sections = useMemo(
-    () => [
-      {
-        label: "Core Departments",
-        roles: [
-          {
-            id: "accounts",
-            title: "Accounts Department",
-            subtitle: "Financial accounting and bookkeeping",
-            icon: <Calculator size={22} color="#16A34A" />,
-          },
-          {
-            id: "marketing",
-            title: "Marketing Department",
-            subtitle: "Brand promotion and customer acquisition",
-            icon: <Megaphone size={22} color="#EC4899" />,
-          },
-          {
-            id: "finance",
-            title: "Finance Department",
-            subtitle: "Financial planning and analysis",
-            icon: <DollarSign size={22} color="#0EA5E9" />,
-          },
-          {
-            id: "hr",
-            title: "HR Department",
-            subtitle: "Human resources and employee management",
-            icon: <Users2 size={22} color="#A855F7" />,
-          },
-          {
-            id: "it",
-            title: "IT Department",
-            subtitle: "Technology infrastructure and support",
-            icon: <Cpu size={22} color="#6366F1" />,
-          },
-        ],
-      },
-      {
-        label: "Operations",
-        roles: [
-          {
-            id: "care",
-            title: "Customer Care",
-            subtitle: "Customer support and service",
-            icon: <Headphones size={22} color="#10B981" />,
-          },
-          {
-            id: "staff",
-            title: "Staff Department",
-            subtitle: "Staff management and coordination",
-            icon: <Users size={22} color="#FB923C" />,
-          },
-          {
-            id: "fo",
-            title: "F.O. Department",
-            subtitle: "Front office operations",
-            icon: <Badge size={22} color="#F59E0B" />,
-          },
-        ],
-      },
-      {
-        label: "Data Management",
-        roles: [
-          {
-            id: "vendorlist",
-            title: "Vendor List",
-            subtitle: "Vendor database management",
-            icon: <List size={22} color="#22C55E" />,
-          },
-          {
-            id: "customerdata",
-            title: "Customer Data",
-            subtitle: "Customer information management",
-            icon: <Database size={22} color="#06B6D4" />,
-          },
-        ],
-      },
-      {
-        label: "Legal & Compliance",
-        roles: [
-          {
-            id: "legal",
-            title: "Legal Department",
-            subtitle: "Legal affairs and compliance",
-            icon: <Scale size={22} color="#F87171" />,
-          },
-          {
-            id: "advocate",
-            title: "Advocate",
-            subtitle: "Legal representation and advice",
-            icon: <Gavel size={22} color="#EF4444" />,
-          },
-          {
-            id: "cacs",
-            title: "CA & CS",
-            subtitle: "Chartered Accountant & Company Secretary",
-            icon: <Receipt size={22} color="#F59E0B" />,
-          },
-        ],
-      },
-      {
-        label: "Leadership",
-        roles: [
-          {
-            id: "superadmin",
-            title: "Command Power — Super Admin",
-            subtitle: "Ultimate system control and oversight",
-            icon: <ShieldCheck size={22} color="#3B82F6" />,
-          },
-          {
-            id: "directors",
-            title: "Directors' Details",
-            subtitle: "Board of directors and executive management",
-            icon: <UserRoundCog size={22} color="#111827" />,
-          },
-        ],
-      },
-      {
-        label: "Office Management",
-        roles: [
-          {
-            id: "ho",
-            title: "H.O. Details",
-            subtitle: "Head office administration",
-            icon: <Building2 size={22} color="#22D3EE" />,
-          },
-          {
-            id: "corp",
-            title: "Corporate Office Details",
-            subtitle: "Corporate office management",
-            icon: <Building size={22} color="#64748B" />,
-          },
-        ],
-      },
-    ],
-    []
-  );
+  const isSmallDevice = height < 700;
+  const scale = Math.min(width / 390, 1.2);
 
-  const selectedRole = useMemo(() => {
-    for (const s of sections) {
-      const found = s.roles.find((r) => r.id === selectedId);
-      if (found) return found;
-    }
-    return null;
-  }, [sections, selectedId]);
-
-  const onContinue = () => {
-    // Navigate based on role or pass selectedId
-    // Example:
-    // router.push(`/onboard?role=${selectedId}`)
+  const handleLogin = () => {
+    router.replace('/Department');
   };
 
   return (
-    <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backBtn} onPress={() => {}}>
-          <Text style={{ fontSize: 20 }}>←</Text>
-        </TouchableOpacity>
-        <View style={{ flex: 1 }}>
-          <Text style={styles.headerTitle}>Select Your Role</Text>
-          <Text style={styles.headerSub}>Choose your department or position</Text>
-        </View>
-      </View>
-
-      <ScrollView
-        showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.content}
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.keyboardView}
       >
-        {sections.map((sec) => (
-          <View key={sec.label} style={{ marginBottom: 18 }}>
-            <SectionTitle label={sec.label} />
-            {sec.roles.map((r) => (
-              <RoleCard
-                key={r.id}
-                title={r.title}
-                subtitle={r.subtitle}
-                icon={r.icon}
-                selected={selectedId === r.id}
-                onPress={() => setSelectedId(r.id)}
-              />
-            ))}
+        <View style={styles.content}>
+          {/* Header */}
+          <View style={[styles.header, { marginBottom: height * (isSmallDevice ? 0.02 : 0.03) }]}>
+            <View style={[styles.iconContainer, { 
+              width: 56 * scale, 
+              height: 56 * scale,
+              marginBottom: height * 0.015
+            }]}>
+              <Text style={{ fontSize: 28 * scale }}>🏢</Text>
+            </View>
+            <Text style={[styles.brand, { fontSize: 28 * scale }]}>OMBARO</Text>
+            <Text style={[styles.tagline, { fontSize: 12 * scale }]}>Department Portal</Text>
           </View>
-        ))}
 
-        <View style={{ height: 16 }} />
-      </ScrollView>
+          {/* Form Card */}
+          <View style={[styles.formCard, { 
+            padding: 24 * scale,
+            marginBottom: height * (isSmallDevice ? 0.015 : 0.02)
+          }]}>
+            <Text style={[styles.formTitle, { 
+              fontSize: 20 * scale,
+              marginBottom: height * 0.02
+            }]}>Department Access</Text>
 
-      {/* Footer CTA */}
-      <View style={styles.footer}>
-        <TouchableOpacity
-          activeOpacity={0.9}
-          onPress={onContinue}
-          style={styles.ctaBtn}
-        >
-          <Text style={styles.ctaText}>
-            Continue as {selectedRole ? selectedRole.title : "—"}
-          </Text>
-        </TouchableOpacity>
+            {/* Email Input */}
+            <View style={[styles.inputContainer, { marginBottom: height * 0.015 }]}>
+              <Text style={[styles.label, { fontSize: 13 * scale }]}>Email</Text>
+              <View style={[styles.inputWrapper, { height: 48 * scale }]}>
+                <Text style={{ fontSize: 16 * scale, marginRight: 8 }}>📧</Text>
+                <TextInput
+                  style={[styles.input, { fontSize: 15 * scale }]}
+                  placeholder="Enter your email"
+                  placeholderTextColor={OmbaroTheme.colors.textGray}
+                  value={email}
+                  onChangeText={setEmail}
+                  keyboardType="email-address"
+                  autoCapitalize="none"
+                />
+              </View>
+            </View>
 
-        <View style={styles.demoNote}>
-          <Text style={styles.demoLine}>
-            <Text style={{ color: "#64748B" }}>Demo Mode:</Text>{" "}
-            <Text style={{ fontWeight: "700" }}>Password: 1234</Text>{" "}
-            <Text style={{ color: "#64748B" }}>for all roles</Text>
-          </Text>
+            {/* Password Input */}
+            <View style={[styles.inputContainer, { marginBottom: height * 0.015 }]}>
+              <Text style={[styles.label, { fontSize: 13 * scale }]}>Password</Text>
+              <View style={[styles.inputWrapper, { height: 48 * scale }]}>
+                <Text style={{ fontSize: 16 * scale, marginRight: 8 }}>🔒</Text>
+                <TextInput
+                  style={[styles.input, { fontSize: 15 * scale }]}
+                  placeholder="Enter your password"
+                  placeholderTextColor={OmbaroTheme.colors.textGray}
+                  value={password}
+                  onChangeText={setPassword}
+                  secureTextEntry
+                />
+              </View>
+            </View>
+
+            {/* Forgot Password */}
+            <TouchableOpacity style={styles.forgotContainer}>
+              <Text style={[styles.forgotText, { fontSize: 13 * scale }]}>Forgot Password?</Text>
+            </TouchableOpacity>
+
+            {/* Login Button */}
+            <TouchableOpacity
+              style={[styles.loginButton, { 
+                height: 52 * scale,
+                marginTop: height * 0.015
+              }]}
+              onPress={handleLogin}
+              activeOpacity={0.8}
+            >
+              <Text style={[styles.loginButtonText, { fontSize: 15 * scale }]}>LOGIN</Text>
+            </TouchableOpacity>
+          </View>
+
+          {/* Back Button */}
+          <TouchableOpacity
+            style={[styles.backButton, { height: 48 * scale }]}
+            onPress={() => router.back()}
+            activeOpacity={0.8}
+          >
+            <Text style={[styles.backButtonText, { fontSize: 14 * scale }]}>← Back to Home</Text>
+          </TouchableOpacity>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </SafeAreaView>
   );
 }
 
-const CARD_SHADOW = {
-  shadowColor: "#000",
-  shadowOpacity: 0.08,
-  shadowRadius: 10,
-  shadowOffset: { width: 0, height: 4 },
-  elevation: 2,
-};
-
 const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: OmbaroTheme.colors.beigeLight,
+  },
+  keyboardView: {
+    flex: 1,
+  },
+  content: {
+    flex: 1,
+    justifyContent: 'center',
+    paddingHorizontal: 24,
+  },
   header: {
-    flexDirection: "row",
-    alignItems: "center",
-    paddingHorizontal: 16,
-    paddingTop: 6,
-    paddingBottom: 10,
-    marginTop: 40,
+    alignItems: 'center',
   },
-  backBtn: {
-    width: 40,
-    height: 40,
-    borderRadius: 12,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
-    marginRight: 10,
+  iconContainer: {
+    borderRadius: 16,
+    backgroundColor: OmbaroTheme.colors.roseGold,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  brand: {
+    fontWeight: '800',
+    color: OmbaroTheme.colors.textDark,
+    letterSpacing: 2,
+    marginBottom: 4,
+  },
+  tagline: {
+    color: OmbaroTheme.colors.roseGoldDark,
+    fontWeight: '600',
+  },
+  formCard: {
+    backgroundColor: OmbaroTheme.colors.white,
+    borderRadius: 20,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.1,
+    shadowRadius: 12,
+    elevation: 5,
+  },
+  formTitle: {
+    fontWeight: '800',
+    color: OmbaroTheme.colors.textDark,
+    textAlign: 'center',
+  },
+  inputContainer: {
+    width: '100%',
+  },
+  label: {
+    fontWeight: '600',
+    color: OmbaroTheme.colors.textDark,
+    marginBottom: 6,
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F9FAFB',
     borderWidth: 1,
-    borderColor: "#EEF2FF",
+    borderColor: OmbaroTheme.colors.border,
+    borderRadius: 12,
+    paddingHorizontal: 12,
   },
-  headerTitle: { fontSize: 18, fontWeight: "800", color: COLORS.text },
-  headerSub: { fontSize: 12, color: COLORS.sub, marginTop: 2 },
-
-  content: { paddingHorizontal: 16, paddingBottom: 90 },
-
-  sectionTitle: {
-    fontSize: 13,
-    fontWeight: "800",
-    color: "#334155",
-    marginBottom: 10,
+  input: {
+    flex: 1,
+    color: OmbaroTheme.colors.textDark,
+  },
+  forgotContainer: {
+    alignSelf: 'flex-end',
     marginTop: 8,
   },
-
-  roleCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 12,
-    backgroundColor: COLORS.card,
+  forgotText: {
+    color: OmbaroTheme.colors.roseGoldDark,
+    fontWeight: '600',
+  },
+  loginButton: {
+    backgroundColor: OmbaroTheme.colors.roseGold,
     borderRadius: 14,
-    borderWidth: 1,
-    borderColor: COLORS.border,
-    padding: 14,
-    marginBottom: 10,
-    ...CARD_SHADOW,
+    alignItems: 'center',
+    justifyContent: 'center',
+    shadowColor: OmbaroTheme.colors.roseGold,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 5,
   },
-  iconBox: {
-    width: 44,
-    height: 44,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
+  loginButtonText: {
+    color: OmbaroTheme.colors.white,
+    fontWeight: '900',
+    letterSpacing: 1.5,
   },
-  roleTitle: { fontSize: 15, fontWeight: "800", color: COLORS.text },
-  roleSub: { fontSize: 12.5, color: COLORS.sub, marginTop: 2 },
-
-  footer: {
-    paddingHorizontal: 16,
-    paddingTop: 10,
-    paddingBottom: 16,
-    backgroundColor: "rgba(255,255,255,0.6)",
-  },
-  ctaBtn: {
-    backgroundColor: COLORS.primary,
-    paddingVertical: 14,
+  backButton: {
+    borderWidth: 1.5,
+    borderColor: OmbaroTheme.colors.border,
     borderRadius: 14,
-    alignItems: "center",
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: 'transparent',
   },
-  ctaText: { color: "#fff", fontSize: 16, fontWeight: "800" },
-
-  demoNote: {
-    marginTop: 10,
-    backgroundColor: "#F1F5FF",
-    borderColor: "#D8E2FF",
-    borderWidth: 1,
-    borderRadius: 12,
-    paddingVertical: 8,
-    alignItems: "center",
+  backButtonText: {
+    color: OmbaroTheme.colors.textDark,
+    fontWeight: '700',
   },
-  demoLine: { fontSize: 12.5, color: COLORS.text },
 });
