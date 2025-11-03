@@ -47,22 +47,22 @@ export default function EmployeeDashboard() {
   return (
     <ScrollView style={styles.container} showsVerticalScrollIndicator={false}>
       {/* HEADER */}
-      <StatusBar backgroundColor="#7b2ff7" barStyle="dark-content" hidden={false} animated={true} />
+      <StatusBar backgroundColor="#001f3f" barStyle="light-content" hidden={false} animated={true} />
 
       <LinearGradient
-        colors={["#7b2ff7", "#f107a3"]}
+        colors={["#001f3f", "#003366", "#004080"]}
         start={{ x: 0, y: 0 }}
         end={{ x: 1, y: 1 }}
         style={styles.header}
       >
         <Text style={styles.title}>Employee Dashboard</Text>
-        <Text style={styles.subtitle}>Welcome back, Employee ID: 0987654345</Text>
+        <Text style={styles.subtitle}>Welcome back, Employee</Text>
 
         <View style={styles.searchBox}>
-          <Search size={18} color="#999" />
+          <Search size={18} color="#64748b" />
           <TextInput
-            placeholder="Search spas, vendors, or services"
-            placeholderTextColor="#999"
+            placeholder="Search spas, vendors, or services..."
+            placeholderTextColor="#94a3b8"
             style={styles.searchInput}
           />
           <TouchableOpacity style={styles.filterBtn} >
@@ -74,28 +74,32 @@ export default function EmployeeDashboard() {
       {/* STATS CARDS */}
       <View style={styles.statsContainer}>
         <StatCard
-          icon={<MapPin color="#a855f7" size={20} />}
+          icon={<MapPin color="#001f3f" size={22} />}
           title="Total Spas"
           value="47"
           subText="+5 this month"
+          bgColor="#e0f2fe"
         />
         <StatCard
-          icon={<Users color="#22c55e" size={20} />}
+          icon={<Users color="#003366" size={22} />}
           title="Active Vendors"
           value="32"
           subText="+3 this week"
+          bgColor="#dbeafe"
         />
         <StatCard
-          icon={<AlertCircle color="#f59e0b" size={20} />}
+          icon={<AlertCircle color="#004080" size={22} />}
           title="Pending Approvals"
           value="8"
           subText="2 urgent"
+          bgColor="#bfdbfe"
         />
         <StatCard
-          icon={<BarChart2 color="#3b82f6" size={20} />}
+          icon={<BarChart2 color="#001f3f" size={22} />}
           title="Monthly Revenue"
           value="₹2.4L"
           subText="+12% growth"
+          bgColor="#93c5fd"
         />
       </View>
 
@@ -122,8 +126,8 @@ export default function EmployeeDashboard() {
 }
 
 // --- COMPONENTS ---
-const StatCard = ({ icon, title, value, subText }) => (
-  <View style={styles.statCard}>
+const StatCard = ({ icon, title, value, subText, bgColor }) => (
+  <View style={[styles.statCard, { backgroundColor: bgColor || '#f9fafb' }]}>
     <View style={styles.iconCircle}>{icon}</View>
     <Text style={styles.statValue}>{value}</Text>
     <Text style={styles.statTitle}>{title}</Text>
@@ -133,56 +137,92 @@ const StatCard = ({ icon, title, value, subText }) => (
 
 // --- STYLES ---
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#fff" },
+  container: { flex: 1, backgroundColor: "#f8fafc" },
   header: {
     padding: 20,
     paddingTop: 60,
-    borderBottomLeftRadius: 24,
-    borderBottomRightRadius: 24,
+    borderBottomLeftRadius: 28,
+    borderBottomRightRadius: 28,
+    shadowColor: "#001f3f",
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 8,
   },
-  title: { color: "#fff", fontSize: 20, fontWeight: "700" },
-  subtitle: { color: "#e0e0e0", marginTop: 4 },
+  title: { color: "#fff", fontSize: 26, fontWeight: "900", letterSpacing: 0.5 },
+  subtitle: { color: "rgba(255, 255, 255, 0.85)", marginTop: 6, fontSize: 14 },
   searchBox: {
-    marginTop: 16,
+    marginTop: 20,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: "#fff",
-    borderRadius: 12,
-    paddingHorizontal: 12,
-    paddingVertical: 6,
+    borderRadius: 14,
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  searchInput: { flex: 1, marginLeft: 8, color: "#333" },
-  filterBtn: { backgroundColor: "#7b2ff7", padding: 5, borderRadius: 8 },
+  searchInput: { flex: 1, marginLeft: 12, color: "#001f3f", fontSize: 15, fontWeight: "600" },
+  filterBtn: { 
+    backgroundColor: "#001f3f", 
+    padding: 8, 
+    borderRadius: 10,
+    shadowColor: "#001f3f",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 2,
+  },
   statsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "space-between",
     padding: 16,
+    backgroundColor: "#f8fafc",
   },
   statCard: {
     width: width / 2 - 24,
-    backgroundColor: "#f9fafb",
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 12,
+    borderRadius: 18,
+    padding: 18,
+    marginBottom: 16,
+    shadowColor: "#001f3f",
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    elevation: 4,
   },
   iconCircle: {
-    width: 36,
-    height: 36,
-    borderRadius: 10,
-    backgroundColor: "#f3f4f6",
+    width: 44,
+    height: 44,
+    borderRadius: 12,
+    backgroundColor: "rgba(255, 255, 255, 0.8)",
     justifyContent: "center",
     alignItems: "center",
+    marginBottom: 8,
   },
-  statValue: { fontSize: 18, fontWeight: "700", marginTop: 8 },
-  statTitle: { color: "#444", fontSize: 14 },
-  statSub: { color: "#888", fontSize: 12 },
+  statValue: { fontSize: 22, fontWeight: "900", marginTop: 8, color: "#001f3f" },
+  statTitle: { color: "#001f3f", fontSize: 13, fontWeight: "700", marginTop: 4 },
+  statSub: { color: "#64748b", fontSize: 12, fontWeight: "600", marginTop: 2 },
   tabContainer: {
     flexDirection: "row",
-    borderBottomWidth: 1,
-    borderColor: "#e5e7eb",
+    borderBottomWidth: 2,
+    borderColor: "#e2e8f0",
     paddingHorizontal: 16,
+    backgroundColor: "#fff",
   },
-  tab: { marginRight: 24, paddingVertical: 10, color: "#777" },
-  activeTab: { color: "#0284c7", borderBottomWidth: 2, borderBottomColor: "#0284c7" },
+  tab: { 
+    marginRight: 24, 
+    paddingVertical: 14, 
+    color: "#64748b",
+    fontSize: 15,
+    fontWeight: "700",
+  },
+  activeTab: { 
+    color: "#001f3f", 
+    borderBottomWidth: 3, 
+    borderBottomColor: "#001f3f",
+  },
 });
