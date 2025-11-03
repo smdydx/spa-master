@@ -156,9 +156,12 @@ export default function HomeScreen() {
 
   return (
     <SafeAreaView style={styles.safe} edges={['top']}>
-      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-        <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
-
+      <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
+      <ScrollView 
+        style={styles.scroll} 
+        showsVerticalScrollIndicator={false}
+        nestedScrollEnabled={false}
+      >
         <LinearGradient
           colors={[COLORS.primary, COLORS.secondary, COLORS.primaryDark]}
           start={{ x: 0, y: 0 }}
@@ -203,22 +206,21 @@ export default function HomeScreen() {
           </View>
         </LinearGradient>
 
-        {/* HERO CAROUSEL */}
         <View style={styles.heroSection}>
-          <ScrollView
+          <FlatList
             ref={heroScrollRef}
+            data={heroSlides}
             horizontal
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             onMomentumScrollEnd={(e) => {
               const cardWidth = width - (isSmallDevice ? 32 : isMediumDevice ? 40 : 48);
-              const index = Math.round(e.nativeEvent.contentOffset.x / cardWidth);
+              const index = Math.round(e.nativeEvent.contentOffset.x / (cardWidth + (isSmallDevice ? 32 : isMediumDevice ? 40 : 48)));
               setActiveHeroIndex(index);
             }}
-            style={styles.heroScroll}
-          >
-            {heroSlides.map((slide) => (
-              <View key={slide.id} style={styles.heroCardWrapper}>
+            keyExtractor={(item) => item.id.toString()}
+            renderItem={({ item: slide }) => (
+              <View style={styles.heroCardWrapper}>
                 <LinearGradient
                   colors={['rgba(30, 58, 138, 0.95)', 'rgba(59, 130, 246, 0.85)']}
                   start={{ x: 0, y: 0 }}
@@ -228,12 +230,14 @@ export default function HomeScreen() {
                   <Image source={{ uri: slide.image }} style={styles.heroBg} blurRadius={3} />
                   <View style={styles.heroOverlay} />
                   <View style={styles.heroContent}>
-                    <View style={styles.heroBadge}>
-                      <Text style={styles.heroBadgeText}>{slide.badge}</Text>
+                    <View>
+                      <View style={styles.heroBadge}>
+                        <Text style={styles.heroBadgeText}>{slide.badge}</Text>
+                      </View>
+                      <Text style={styles.heroSubtitle}>{slide.subtitle}</Text>
+                      <Text style={styles.heroTitle}>{slide.title}</Text>
+                      <Text style={styles.heroDescription}>{slide.description}</Text>
                     </View>
-                    <Text style={styles.heroSubtitle}>{slide.subtitle}</Text>
-                    <Text style={styles.heroTitle}>{slide.title}</Text>
-                    <Text style={styles.heroDescription}>{slide.description}</Text>
                     <TouchableOpacity
                       style={styles.heroButton}
                       activeOpacity={0.8}
@@ -245,23 +249,25 @@ export default function HomeScreen() {
                   </View>
                 </LinearGradient>
               </View>
+            )}
+            snapToInterval={width - (isSmallDevice ? 0 : isMediumDevice ? 0 : 0)}
+            decelerationRate="fast"
+            nestedScrollEnabled={false}
+            scrollEnabled={true}
+          />
+
+          <View style={styles.paginationDots}>
+            {heroSlides.map((_, index) => (
+              <View
+                key={index}
+                style={[
+                  styles.dot,
+                  { backgroundColor: index === activeHeroIndex ? COLORS.primary : '#cbd5e1' },
+                ]}
+              />
             ))}
-          </ScrollView>
+          </View>
         </View>
-
-        {/* Pagination dots */}
-        <View style={styles.paginationDots}>
-          {heroSlides.map((_, index) => (
-            <View
-              key={index}
-              style={[
-                styles.dot,
-                { backgroundColor: index === activeHeroIndex ? COLORS.primary : '#cbd5e1' },
-              ]}
-            />
-          ))}
-        </View>
-
 
         <View style={styles.categoriesSection}>
           <Text style={styles.sectionTitle}>Quick Categories</Text>
@@ -319,9 +325,6 @@ export default function HomeScreen() {
             ))}
           </View>
         </View>
-
-
-
       </ScrollView>
     </SafeAreaView>
   );
@@ -449,17 +452,17 @@ const styles = StyleSheet.create({
   },
   heroSection: {
     marginTop: 20,
-    marginBottom: 16,
+    marginBottom: 8,
   },
   heroScroll: {
     marginBottom: 16,
   },
   heroCardWrapper: {
-    width: width - (isSmallDevice ? 32 : isMediumDevice ? 40 : 48),
+    width: width,
     paddingHorizontal: isSmallDevice ? 16 : isMediumDevice ? 20 : 24,
   },
   heroCard: {
-    width: '100%',
+    width: width - (isSmallDevice ? 32 : isMediumDevice ? 40 : 48),
     height: isSmallDevice ? 280 : isMediumDevice ? 320 : 360,
     borderRadius: 24,
     overflow: 'hidden',
@@ -481,6 +484,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: isSmallDevice ? 16 : isMediumDevice ? 20 : 28,
     justifyContent: 'space-between',
+    minHeight: isSmallDevice ? 260 : isMediumDevice ? 300 : 340,
   },
   heroSubtitle: {
     fontSize: isSmallDevice ? 11 : isMediumDevice ? 12 : 14,
@@ -545,6 +549,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
+    marginTop: 12,
     marginBottom: 20,
     gap: 8,
   },
