@@ -14,19 +14,19 @@ import {
     View,
 } from "react-native";
 
-// --- palette ----------------------------------------------------
+// --- palette (Navy Blue + White Theme) ----------------------------------------------------
 const COLORS = {
-    bg: "#FAF3E7",                  // soft warm background like the screenshot edges
+    bg: "#F8FAFC",                  // light background
     cardBg: "#FFFFFF",
-    text: "#121826",
-    textMuted: "#6B7280",
-    primary: "#3B82F6",
-    primaryDark: "#2563EB",
-    border: "rgba(2, 6, 23, 0.08)",
-    noteBg: "#EEF5FF",
-    noteText: "#3B5CCC",
-    ctaText: "#F8FAFC",
-    iconBg: "#F3F5F7",
+    text: "#001f3f",                // navy blue
+    textMuted: "#64748B",
+    primary: "#001f3f",             // navy blue
+    primaryDark: "#001428",
+    border: "#E0F2FE",
+    noteBg: "#E0F2FE",
+    noteText: "#001f3f",
+    ctaText: "#001f3f",
+    iconBg: "#DBEAFE",
 };
 
 // --- responsive helpers -----------------------------------------
@@ -257,7 +257,7 @@ const styles = StyleSheet.create({
     cta: {
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#FEF3C7",
+        backgroundColor: "#001f3f",
     },
-    ctaText: { color: "#B45309"},
+    ctaText: { color: "#FFFFFF", fontWeight: "800"},
 });

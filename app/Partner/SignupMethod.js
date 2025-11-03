@@ -13,19 +13,19 @@ import {
 } from "react-native";
 
 const COLORS = {
-  bg: "#FAF3E7",
+  bg: "#F8FAFC",
   cardBg: "#FFFFFF",
-  border: "rgba(2,6,23,0.08)",
-  text: "#121826",
-  textMuted: "#6B7280",
-  iconBg1: "#FDE68A",
-  iconBg2: "#DBEAFE",
-  tagFast: "#22C55E",
-  tagRec: "#3B82F6",
-  noteBg: "#FEF9C3",
-  noteText: "#854D0E",
-  check: "#10B981",
-  divider: "rgba(2,6,23,0.06)",
+  border: "#E0F2FE",
+  text: "#001f3f",
+  textMuted: "#64748B",
+  iconBg1: "#DBEAFE",
+  iconBg2: "#E0F2FE",
+  tagFast: "#001f3f",
+  tagRec: "#001f3f",
+  noteBg: "#E0F2FE",
+  noteText: "#001f3f",
+  check: "#001f3f",
+  divider: "#E2E8F0",
 };
 
 function useScale() {
@@ -206,15 +206,16 @@ export default function SignupMethod({ onBack }) {
           style={({ pressed }) => [
             styles.cta,
             {
-              backgroundColor: selected ? COLORS.tagRec : "#A5B4FC",
+              backgroundColor: selected ? COLORS.tagRec : "#94A3B8",
               opacity: pressed ? 0.9 : 1,
               borderRadius: sw(14),
-              paddingVertical: sw(14),
+              paddingVertical: sw(16),
               marginTop: sw(20),
             },
+            shadowStyle,
           ]}
         >
-          <Text style={[styles.ctaText, { fontSize: sw(15), fontWeight: "700" }]}>
+          <Text style={[styles.ctaText, { fontSize: sw(16), fontWeight: "900" }]}>
             {selected ? "Continue" : "Select a method to continue"}
           </Text>
         </Pressable>
@@ -234,15 +235,21 @@ const styles = StyleSheet.create({
   iconWrap: { alignItems: "center", justifyContent: "center" },
   card: {
     width: "100%",
-    borderWidth: StyleSheet.hairlineWidth,
-    borderRadius: 14,
-    padding: 14,
+    borderWidth: 2,
+    borderColor: COLORS.border,
+    borderRadius: 16,
+    padding: 16,
+    shadowColor: "#001f3f",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
   },
-  headerTitle: { color: COLORS.text, fontWeight: "700", lineHeight: 24, textAlign: "right" },
-  sectionTitle: { color: COLORS.text, fontWeight: "800" },
-  sectionSub: { color: COLORS.textMuted },
-  title: { color: COLORS.text, fontWeight: "700", marginTop: 8 },
-  subtitle: { color: COLORS.textMuted },
+  headerTitle: { color: COLORS.text, fontWeight: "900", lineHeight: 24, textAlign: "right" },
+  sectionTitle: { color: COLORS.text, fontWeight: "900" },
+  sectionSub: { color: COLORS.textMuted, fontWeight: "600" },
+  title: { color: COLORS.text, fontWeight: "900", marginTop: 8 },
+  subtitle: { color: COLORS.textMuted, fontWeight: "600" },
   cta: { alignItems: "center", justifyContent: "center" },
-  ctaText: { color: "#fff" },
+  ctaText: { color: "#FFFFFF", fontWeight: "900" },
 });

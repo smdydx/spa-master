@@ -177,6 +177,7 @@ export default function WelcomeScreen() {
             <Text style={styles.quickAccessLabel}>Quick Access</Text>
             <View style={styles.pillsContainer}>
               <PillLink label="Employee" nav="/Employee/auth/login" router={router} />
+              <PillLink label="Partner" nav="/Partner" router={router} />
               <PillLink label="Vendor" nav="/Vendor/auth/login" router={router} />
               <PillLink label="Therapist" nav="/Therapist/auth/login" router={router} />
               <PillLink label="Beautician" nav="/Therapist/auth/login" router={router} />
