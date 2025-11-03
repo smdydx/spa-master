@@ -12,16 +12,16 @@ import { Ionicons, Feather, MaterialCommunityIcons } from "@expo/vector-icons";
 
 // ---------- theme ----------
 const C = {
-  bg: "#F7F8FB",
+  bg: "#f8fafc",
   card: "#FFFFFF",
-  text: "#0F172A",
-  muted: "#6B7280",
-  border: "#E5E7EB",
-  primary: "#2563EB",
-  accent: "#7C3AED",
+  text: "#001f3f",
+  muted: "#64748b",
+  border: "#e0f2fe",
+  primary: "#001f3f",
+  accent: "#003366",
   success: "#10B981",
   warn: "#F59E0B",
-  shadow: "rgba(15,23,42,0.06)",
+  shadow: "rgba(0,31,63,0.08)",
 };
 
 const STEP_META = [

@@ -29,59 +29,59 @@ export default function Overview() {
       <Text style={styles.sectionTitle}>Quick Actions</Text>
       <View style={styles.quickContainer}>
         <QuickAction
-          icon={<Plus color="#fff" size={18} />}
-          bg="#0284c7"
+          icon={<Plus color="#fff" size={20} />}
+          bg="#001f3f"
           title="Onboard New Spa"
           desc="Add a new spa to platform"
         />
         <QuickAction
-          icon={<MapPin color="#0284c7" size={18} />}
+          icon={<MapPin color="#001f3f" size={20} />}
           title="Manage Spas"
           desc="View and edit existing spas"
         />
         <QuickAction
-          icon={<AlertCircle color="#0284c7" size={18} />}
+          icon={<AlertCircle color="#001f3f" size={20} />}
           title="Review Approvals"
           desc="8 items need attention"
         />
         <QuickAction
-          icon={<Users color="#0284c7" size={18} />}
+          icon={<Users color="#001f3f" size={20} />}
           title="Vendor Relations"
           desc="Manage vendor partnerships"
         />
         <QuickAction
-          icon={<BarChart2 color="#0284c7" size={18} />}
+          icon={<BarChart2 color="#001f3f" size={20} />}
           title="Analytics"
           desc="View performance metrics"
         />
         <QuickAction
-          icon={<Settings color="#0284c7" size={18} />}
+          icon={<Settings color="#001f3f" size={20} />}
           title="System Settings"
           desc="Configure preferences"
           nav={() => navigation.navigate("Employee/QuickAction/systemSetting")}
         />
 
         <QuickAction
-          icon={<User color="#0284c7" size={18} />}
+          icon={<User color="#001f3f" size={20} />}
           title="My Profile"
           desc="View and edit profile"
           nav={() => navigation.navigate("Employee/QuickAction/MyProfile")}
         />
 
         <QuickAction
-          icon={<Clock color="#0284c7" size={18} />}
+          icon={<Clock color="#001f3f" size={20} />}
           title="Self Attendance"
           desc="Mark attendance with location"
           nav={() => navigation.navigate("Employee/QuickAction/SelfAttendance")}
         />
         <QuickAction
-          icon={<CheckSquare color="#0284c7" size={18} />}
+          icon={<CheckSquare color="#001f3f" size={20} />}
           title="Leave Management"
           desc="Apply for leave or view history"
           nav={() => navigation.navigate("Employee/QuickAction/LeaveManage")}
         />
         <QuickAction
-          icon={<Briefcase color="#0284c7" size={18} />}
+          icon={<Briefcase color="#001f3f" size={20} />}
           title="HR Documents"
           desc="Salary, documents & performance"
           nav={() => navigation.navigate("Employee/QuickAction/HrDocument")}
@@ -151,39 +151,55 @@ const ActivityCard = ({ icon, title, desc, time }) => (
 
 const styles = StyleSheet.create({
   sectionTitle: {
-    fontSize: 16,
-    fontWeight: "600",
+    fontSize: 18,
+    fontWeight: "900",
     marginVertical: 12,
     paddingHorizontal: 16,
+    color: "#001f3f",
   },
   quickContainer: { paddingHorizontal: 16 },
   quickCard: {
-    borderWidth: 1,
-    borderColor: "#bae6fd",
-    borderRadius: 14,
-    padding: 12,
-    marginBottom: 10,
+    borderWidth: 2,
+    borderColor: "#e0f2fe",
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 12,
+    backgroundColor: "#fff",
+    shadowColor: "#001f3f",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 2,
   },
   quickRow: { flexDirection: "row", alignItems: "center" },
   quickIcon: {
-    width: 30,
-    height: 30,
+    width: 36,
+    height: 36,
     justifyContent: "center",
     alignItems: "center",
-    marginRight: 10,
+    marginRight: 12,
+    borderRadius: 10,
+    backgroundColor: "#e0f2fe",
   },
-  quickTitle: { fontWeight: "600", fontSize: 14 },
-  quickDesc: { fontSize: 12, color: "#666" },
+  quickTitle: { fontWeight: "700", fontSize: 15, color: "#001f3f" },
+  quickDesc: { fontSize: 13, color: "#64748b", marginTop: 2 },
 
   activityContainer: { paddingHorizontal: 16, marginBottom: 20 },
   activityCard: {
-    backgroundColor: "#f9fafb",
-    borderRadius: 14,
-    padding: 12,
-    marginBottom: 10,
+    backgroundColor: "#f8fafc",
+    borderRadius: 16,
+    padding: 14,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: "#e2e8f0",
+    shadowColor: "#001f3f",
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.08,
+    shadowRadius: 4,
+    elevation: 2,
   },
   activityRow: { flexDirection: "row", alignItems: "center" },
-  activityTitle: { fontWeight: "600", fontSize: 13 },
-  activityDesc: { color: "#666", fontSize: 12 },
-  activityTime: { alignSelf: "flex-end", color: "#999", fontSize: 11, marginTop: 6 },
+  activityTitle: { fontWeight: "700", fontSize: 14, color: "#001f3f" },
+  activityDesc: { color: "#64748b", fontSize: 13, marginTop: 2 },
+  activityTime: { alignSelf: "flex-end", color: "#94a3b8", fontSize: 12, marginTop: 8 },
 });
