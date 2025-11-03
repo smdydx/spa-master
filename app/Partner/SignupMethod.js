@@ -126,26 +126,28 @@ export default function SignupMethod({ onBack }) {
   return (
     <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
       <StatusBar barStyle="dark-content" />
-      <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80,paddingTop:40,marginHorizontal:15 }}
-                showsVerticalScrollIndicator={false}>
+      <ScrollView 
+        contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 100 }}
+        showsVerticalScrollIndicator={false}
+      >
         {/* header */}
-        <View style={[styles.rowBetween, { marginBottom: sw(10) }]}>
+        <View style={[styles.rowBetween, { marginBottom: sw(12) }]}>
           <Pressable
             onPress={()=>navigation.goBack()}
             hitSlop={12}
             style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
           >
-            <Text style={{ color: COLORS.textMuted, fontSize: sw(16) }}>← Back</Text>
+            <Text style={{ color: COLORS.textMuted, fontSize: sw(16), fontWeight: "700" }}>← Back</Text>
           </Pressable>
           <Text style={[styles.headerTitle, { fontSize: sw(18) }]}>Choose Signup{"\n"}Method</Text>
         </View>
 
         {/* question */}
-        <View style={{ marginBottom: sw(14) }}>
-          <Text style={[styles.sectionTitle, { fontSize: sw(20), marginBottom: sw(6) }]}>
+        <View style={{ marginBottom: sw(16), marginTop: sw(8) }}>
+          <Text style={[styles.sectionTitle, { fontSize: sw(22), marginBottom: sw(8) }]}>
             How would you like to sign up?
           </Text>
-          <Text style={[styles.sectionSub, { fontSize: sw(13) }]}>
+          <Text style={[styles.sectionSub, { fontSize: sw(14) }]}>
             Choose the signup method that works best for you
           </Text>
         </View>

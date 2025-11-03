@@ -106,95 +106,70 @@ export default function index({
     const handlePress = useCallback((item) => setSelected(item), []);
     const keyExtractor = useCallback((it) => it.id, []);
 
-    const header = useMemo(
-        () => (
-            <View style={styles.header}>
-                <Pressable
-                    hitSlop={12}
-                    onPress={()=>router.back()}
-                    style={({ pressed }) => [{ opacity: onBack ? (pressed ? 0.6 : 1) : 0.4 }]}
-                >
-                    <Text style={[styles.back, { fontSize: sw(16) }]}>← Back</Text>
-                </Pressable>
-                <Text style={[styles.headerTitle, { fontSize: sw(18) }]}>Select Your Business{"\n"}Category</Text>
-            </View>
-        ),
-        [onBack, sw]
-    );
+    return (
+        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
+            <StatusBar barStyle="dark-content" />
+            <ScrollView 
+                contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 100 }}
+                showsVerticalScrollIndicator={false}
+            >
+                {/* Header */}
+                <View style={styles.header}>
+                    <Pressable
+                        hitSlop={12}
+                        onPress={()=>router.back()}
+                        style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
+                    >
+                        <Text style={[styles.back, { fontSize: sw(16) }]}>← Back</Text>
+                    </Pressable>
+                    <Text style={[styles.headerTitle, { fontSize: sw(18) }]}>Select Your Business{"\n"}Category</Text>
+                </View>
 
-    const intro = useMemo(
-        () => (
-            <View style={{ marginBottom: sw(12) }}>
-                <Text style={[styles.sectionTitle, { fontSize: sw(20), marginBottom: sw(6) }]}>
-                    What type of business do you operate?
-                </Text>
-                <Text style={[styles.sectionSub, { fontSize: sw(13) }]}>
-                    Choose the category that best describes your services
-                </Text>
-            </View>
-        ),
-        [sw]
-    );
+                {/* Intro */}
+                <View style={{ marginBottom: sw(16), marginTop: sw(12) }}>
+                    <Text style={[styles.sectionTitle, { fontSize: sw(22), marginBottom: sw(8) }]}>
+                        What type of business do you operate?
+                    </Text>
+                    <Text style={[styles.sectionSub, { fontSize: sw(14) }]}>
+                        Choose the category that best describes your services
+                    </Text>
+                </View>
 
-    const footer = useMemo(
-        () => (
-            <View style={{ marginTop: sw(12) }}>
-                <View style={[styles.noteBox, { borderRadius: sw(12), padding: sw(12) }]}>
-                    <Text style={[styles.noteText, { fontSize: sw(12) }]}>
-                        <Text style={{ fontWeight: "700" }}>Note:</Text> You can offer services across multiple
+                {/* Categories */}
+                {CATEGORIES.map((item, index) => (
+                    <View key={item.id}>
+                        <CategoryItem item={item} selected={selected} onPress={handlePress} sw={sw} />
+                        {index < CATEGORIES.length - 1 && <View style={{ height: sw(12) }} />}
+                    </View>
+                ))}
+
+                {/* Note */}
+                <View style={[styles.noteBox, { borderRadius: sw(12), padding: sw(14), marginTop: sw(20) }]}>
+                    <Text style={[styles.noteText, { fontSize: sw(13), lineHeight: sw(20) }]}>
+                        <Text style={{ fontWeight: "900" }}>Note:</Text> You can offer services across multiple
                         categories. Select the primary category that best represents your business.
                     </Text>
                 </View>
 
+                {/* CTA Button */}
                 <Pressable
-                    // onPress={() => selected && onContinue && onContinue(selected)}
-                    onPress={()=>router.push("Partner/SignupMethod")}
+                    onPress={()=>selected && router.push("Partner/SignupMethod")}
                     disabled={!selected}
                     style={({ pressed }) => [
                         styles.cta,
                         {
                             opacity: selected ? (pressed ? 0.9 : 1) : 0.6,
                             borderRadius: sw(14),
-                            paddingVertical: sw(14),
-                            marginTop: sw(16),
+                            paddingVertical: sw(16),
+                            marginTop: sw(20),
                         },
+                        shadowStyle,
                     ]}
                 >
-                    <Text style={[styles.ctaText, { fontSize: sw(15), fontWeight: "700" }]}>
+                    <Text style={[styles.ctaText, { fontSize: sw(16), fontWeight: "900" }]}>
                         {selected ? "Continue" : "Select a Category to Continue"}
                     </Text>
                 </Pressable>
-            </View>
-        ),
-        [onContinue, selected, sw]
-    );
-
-    return (
-        <SafeAreaView style={{ flex: 1 }}>
-            <StatusBar barStyle="dark-content" />
-            <ScrollView contentContainerStyle={{ flexGrow: 1, paddingBottom: 80,paddingTop:40,marginHorizontal:10 }}
-                showsVerticalScrollIndicator={false}>
-                <View style={[styles.card, { borderRadius: sw(16), padding: sw(16) }, shadowStyle]}>
-                    {header}
-                    {intro}
-
-                    <FlatList
-                        data={CATEGORIES}
-                        keyExtractor={keyExtractor}
-                        renderItem={({ item }) => (
-                            <CategoryItem item={item} selected={selected} onPress={handlePress} sw={sw} />
-                        )}
-                        ItemSeparatorComponent={() => <View style={{ height: sw(12) }} />}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{ paddingBottom: sw(8) }}
-                        initialNumToRender={6}
-                        windowSize={7}
-                        removeClippedSubviews
-                        scrollEnabled={false}
-                    />
-
-                    {footer}
-                </View>
             </ScrollView>
         </SafeAreaView>
     );
@@ -207,37 +182,24 @@ const shadowStyle =
         : { elevation: 2 };
 
 const styles = StyleSheet.create({
-    root: { flex: 1 },
-    centerWrap: {
-        flex: 1,
-        alignItems: "center",
-        paddingHorizontal: 12,
-    },
-    card: {
-        flex: 1,
-        width: "100%",
-        maxWidth: 480,
-        backgroundColor: COLORS.cardBg,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: COLORS.border,
-    },
     header: {
         flexDirection: "row",
-        alignItems: "flex-start",
+        alignItems: "center",
         justifyContent: "space-between",
-        marginBottom: 12,
+        marginBottom: 8,
     },
-    back: { color: COLORS.textMuted, fontWeight: "600" },
-    headerTitle: { color: COLORS.text, fontWeight: "700", lineHeight: 24, textAlign: "right" },
-    sectionTitle: { color: COLORS.text, fontWeight: "800" },
-    sectionSub: { color: COLORS.textMuted },
+    back: { color: COLORS.textMuted, fontWeight: "700" },
+    headerTitle: { color: COLORS.text, fontWeight: "900", lineHeight: 24, textAlign: "right" },
+    sectionTitle: { color: COLORS.text, fontWeight: "900" },
+    sectionSub: { color: COLORS.textMuted, fontWeight: "600" },
     row: {
         flexDirection: "row",
         alignItems: "center",
-        padding: 12,
-        borderRadius: 14,
-        borderWidth: StyleSheet.hairlineWidth,
+        padding: 14,
+        borderRadius: 16,
+        borderWidth: 2,
         gap: 12,
+        backgroundColor: COLORS.cardBg,
     },
     iconWrap: {
         alignItems: "center",
@@ -245,19 +207,19 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.iconBg,
     },
     rowText: { flex: 1 },
-    title: { color: COLORS.text, fontWeight: "700" },
-    subtitle: { color: COLORS.textMuted, marginTop: 2 },
-    radio: { borderWidth: 2 },
+    title: { color: COLORS.text, fontWeight: "900" },
+    subtitle: { color: COLORS.textMuted, marginTop: 4, fontWeight: "600" },
+    radio: { borderWidth: 2.5 },
     noteBox: {
         backgroundColor: COLORS.noteBg,
-        borderWidth: StyleSheet.hairlineWidth,
-        borderColor: "rgba(59, 92, 204, 0.25)",
+        borderWidth: 2,
+        borderColor: "#93C5FD",
     },
-    noteText: { color: COLORS.noteText },
+    noteText: { color: COLORS.noteText, fontWeight: "600" },
     cta: {
         alignItems: "center",
         justifyContent: "center",
         backgroundColor: "#001f3f",
     },
-    ctaText: { color: "#FFFFFF", fontWeight: "800"},
+    ctaText: { color: "#FFFFFF", fontWeight: "900" },
 });
