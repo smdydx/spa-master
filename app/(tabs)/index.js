@@ -43,10 +43,34 @@ export default function HomeScreen() {
   const router = useRouter();
 
   const quickCategories = [
-    { id: 1, name: 'Spa & Massage', icon: Sparkles, color: '#8b5cf6' },
-    { id: 2, name: 'Bridal Makeup', icon: Heart, color: '#ec4899' },
-    { id: 3, name: 'Hair Salon', icon: Scissors, color: '#3b82f6' },
-    { id: 4, name: 'Skincare', icon: Flower2, color: '#10b981' },
+    { 
+      id: 1, 
+      name: 'Spa & Massage', 
+      icon: Sparkles, 
+      color: '#8b5cf6',
+      image: require('../../attached_assets/stock_images/professional_spa_mas_338753fe.jpg')
+    },
+    { 
+      id: 2, 
+      name: 'Bridal Makeup', 
+      icon: Heart, 
+      color: '#ec4899',
+      image: require('../../attached_assets/stock_images/bridal_makeup_weddin_12cc5e76.jpg')
+    },
+    { 
+      id: 3, 
+      name: 'Hair Salon', 
+      icon: Scissors, 
+      color: '#3b82f6',
+      image: require('../../attached_assets/stock_images/hair_salon_styling_h_0bb02c12.jpg')
+    },
+    { 
+      id: 4, 
+      name: 'Skincare', 
+      icon: Flower2, 
+      color: '#10b981',
+      image: require('../../attached_assets/stock_images/skincare_facial_trea_613d6f55.jpg')
+    },
   ];
 
   const heroSlides = [
@@ -187,7 +211,8 @@ export default function HomeScreen() {
             pagingEnabled
             showsHorizontalScrollIndicator={false}
             onMomentumScrollEnd={(e) => {
-              const index = Math.round(e.nativeEvent.contentOffset.x / (width - (isSmallDevice ? 32 : 40)));
+              const cardWidth = width - (isSmallDevice ? 32 : isMediumDevice ? 40 : 48);
+              const index = Math.round(e.nativeEvent.contentOffset.x / cardWidth);
               setActiveHeroIndex(index);
             }}
             style={styles.heroScroll}
@@ -248,8 +273,13 @@ export default function HomeScreen() {
                 activeOpacity={0.8}
                 onPress={() => router.push('/booking')}
               >
-                <View style={[styles.categoryIcon, { backgroundColor: category.color + '20' }]}>
-                  <category.icon size={32} color={category.color} />
+                <View style={styles.categoryImageContainer}>
+                  <Image 
+                    source={category.image} 
+                    style={styles.categoryImage} 
+                    resizeMode="cover"
+                  />
+                  <View style={styles.categoryImageOverlay} />
                 </View>
                 <Text style={styles.categoryName}>{category.name}</Text>
               </TouchableOpacity>
@@ -425,12 +455,12 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
   heroCardWrapper: {
-    width: width - (isSmallDevice ? 32 : 40),
-    paddingHorizontal: isSmallDevice ? 16 : 20,
+    width: width - (isSmallDevice ? 32 : isMediumDevice ? 40 : 48),
+    paddingHorizontal: isSmallDevice ? 16 : isMediumDevice ? 20 : 24,
   },
   heroCard: {
     width: '100%',
-    height: isSmallDevice ? 300 : 340,
+    height: isSmallDevice ? 280 : isMediumDevice ? 320 : 360,
     borderRadius: 24,
     overflow: 'hidden',
     position: 'relative',
@@ -539,9 +569,21 @@ const styles = StyleSheet.create({
     width: (width - (isSmallDevice ? 44 : 52)) / 2,
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
-    padding: 20,
-    alignItems: 'center',
+    overflow: 'hidden',
     ...CARD_SHADOW,
+  },
+  categoryImageContainer: {
+    width: '100%',
+    height: isSmallDevice ? 120 : 140,
+    position: 'relative',
+  },
+  categoryImage: {
+    width: '100%',
+    height: '100%',
+  },
+  categoryImageOverlay: {
+    ...StyleSheet.absoluteFillObject,
+    backgroundColor: 'rgba(0, 0, 0, 0.2)',
   },
   categoryIcon: {
     width: 64,
@@ -556,9 +598,11 @@ const styles = StyleSheet.create({
   },
   categoryName: {
     fontSize: 14,
-    fontWeight: '600',
+    fontWeight: '700',
     color: COLORS.textDark,
     textAlign: 'center',
+    paddingVertical: 12,
+    paddingHorizontal: 8,
   },
   sectionTitle: {
     fontSize: isSmallDevice ? 20 : 24,
