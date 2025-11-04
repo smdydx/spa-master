@@ -101,54 +101,90 @@ export default function HomeScreen() {
   ];
 
 
-  const services = [
+  const salons = [
     {
       id: 1,
-      name: 'Spa & Massage Therapy',
-      icon: '💆‍♀️',
-      description: 'Relaxing spa treatments, deep tissue massage, aromatherapy',
+      name: 'Serenity Spa & Wellness',
+      badge: 'Premium',
+      rating: 4.8,
+      reviews: 324,
+      address: 'MG Road, Bangalore',
+      distance: '0.8km',
+      duration: '30 min',
       image: require('../../attached_assets/stock_images/professional_spa_mas_338753fe.jpg'),
-      price: 'from ₹800'
+      services: ['Deep Tissue Massage', 'Aromatherapy'],
+      moreServices: 2,
+      isOpen: true
     },
     {
       id: 2,
-      name: 'Bridal Makeup & Styling',
-      icon: '👰',
-      description: 'Complete bridal makeup, hair styling, pre-wedding packages',
+      name: 'Bliss Beauty Studio',
+      badge: 'Popular',
+      rating: 4.9,
+      reviews: 512,
+      address: 'Koramangala, Bangalore',
+      distance: '1.2km',
+      duration: '25 min',
       image: require('../../attached_assets/stock_images/bridal_makeup_weddin_12cc5e76.jpg'),
-      price: 'from ₹5000'
+      services: ['Bridal Makeup', 'Hair Styling'],
+      moreServices: 3,
+      isOpen: true
     },
     {
       id: 3,
-      name: 'Hair Salon Services',
-      icon: '💇‍♀️',
-      description: 'Professional haircuts, styling, coloring, keratin treatments',
+      name: 'Glamour Hair Lounge',
+      badge: 'Trending',
+      rating: 4.7,
+      reviews: 289,
+      address: 'Indiranagar, Bangalore',
+      distance: '2.1km',
+      duration: '35 min',
       image: require('../../attached_assets/stock_images/hair_salon_styling_h_0bb02c12.jpg'),
-      price: 'from ₹500'
+      services: ['Haircut & Styling', 'Hair Coloring'],
+      moreServices: 4,
+      isOpen: true
     },
     {
       id: 4,
-      name: 'Skincare & Facials',
-      icon: '✨',
-      description: 'Advanced facial treatments, skin analysis, anti-aging solutions',
+      name: 'Glow Skincare Clinic',
+      badge: 'Premium',
+      rating: 4.6,
+      reviews: 198,
+      address: 'Whitefield, Bangalore',
+      distance: '3.5km',
+      duration: '40 min',
       image: require('../../attached_assets/stock_images/skincare_facial_trea_613d6f55.jpg'),
-      price: 'from ₹600'
+      services: ['Facial Treatment', 'Skin Analysis'],
+      moreServices: 5,
+      isOpen: true
     },
     {
       id: 5,
-      name: 'Nail Art & Manicure',
-      icon: '💅',
-      description: 'Professional manicure, pedicure, nail extensions, nail art',
+      name: 'Nail Art Paradise',
+      badge: 'New',
+      rating: 4.5,
+      reviews: 156,
+      address: 'HSR Layout, Bangalore',
+      distance: '1.8km',
+      duration: '28 min',
       image: require('../../attached_assets/stock_images/nail_art_manicure_pe_994f18e3.jpg'),
-      price: 'from ₹300'
+      services: ['Nail Art', 'Manicure & Pedicure'],
+      moreServices: 2,
+      isOpen: false
     },
     {
       id: 6,
-      name: 'Wellness Programs',
-      icon: '🧘‍♀️',
-      description: 'Holistic wellness, yoga, meditation, lifestyle improvement',
+      name: 'Zen Wellness Studio',
+      badge: 'Premium',
+      rating: 4.9,
+      reviews: 445,
+      address: 'Jayanagar, Bangalore',
+      distance: '2.8km',
+      duration: '38 min',
       image: require('../../attached_assets/stock_images/wellness_yoga_medita_db974ec2.jpg'),
-      price: 'from ₹1000'
+      services: ['Yoga Sessions', 'Meditation'],
+      moreServices: 3,
+      isOpen: true
     },
   ];
 
@@ -295,31 +331,59 @@ export default function HomeScreen() {
 
         <View style={styles.servicesSection}>
           <View style={styles.sectionHeaderRow}>
-            <Text style={styles.sectionTitle}>Popular Services</Text>
+            <Text style={styles.sectionTitle}>Popular Salons & Spas</Text>
             <TouchableOpacity onPress={() => router.push('/booking')} activeOpacity={0.7}>
               <Text style={styles.viewAll}>See All</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.servicesGrid}>
-            {services.map((service) => (
+            {salons.map((salon) => (
               <TouchableOpacity
-                key={service.id}
-                style={styles.serviceCard}
+                key={salon.id}
+                style={styles.salonCard}
                 activeOpacity={0.9}
                 onPress={() => router.push('/booking')}
               >
-                <Image source={service.image} style={styles.serviceImage} resizeMode="cover" />
-                <LinearGradient
-                  colors={['rgba(30, 58, 138, 0.1)', 'rgba(30, 58, 138, 0.05)']}
-                  style={styles.serviceOverlay}
-                />
-                <View style={styles.serviceIconBadge}>
-                  <Text style={styles.serviceEmoji}>{service.icon}</Text>
+                <View style={styles.salonImageContainer}>
+                  <Image source={salon.image} style={styles.salonImage} resizeMode="cover" />
+                  <View style={styles.salonBadge}>
+                    <Text style={styles.salonBadgeText}>{salon.badge}</Text>
+                  </View>
+                  <View style={[styles.statusDot, { backgroundColor: salon.isOpen ? '#22c55e' : '#ef4444' }]} />
                 </View>
-                <View style={styles.serviceInfo}>
-                  <Text style={styles.serviceName}>{service.name}</Text>
-                  <Text style={styles.serviceDesc} numberOfLines={2}>{service.description}</Text>
-                  <Text style={styles.servicePrice}>{service.price}</Text>
+                
+                <View style={styles.salonInfo}>
+                  <Text style={styles.salonName}>{salon.name}</Text>
+                  
+                  <View style={styles.salonMetaRow}>
+                    <View style={styles.ratingContainer}>
+                      <Star size={14} color="#f59e0b" fill="#f59e0b" />
+                      <Text style={styles.ratingValue}>{salon.rating}</Text>
+                      <Text style={styles.reviewCount}>({salon.reviews})</Text>
+                    </View>
+                    <View style={styles.distanceContainer}>
+                      <MapPin size={12} color="#6b7280" />
+                      <Text style={styles.distanceText}>{salon.distance}</Text>
+                    </View>
+                  </View>
+
+                  <View style={styles.addressRow}>
+                    <Text style={styles.addressText} numberOfLines={1}>{salon.address}</Text>
+                    <Text style={styles.durationText}>• {salon.duration}</Text>
+                  </View>
+
+                  <View style={styles.servicesRow}>
+                    {salon.services.map((service, index) => (
+                      <View key={index} style={styles.serviceTag}>
+                        <Text style={styles.serviceTagText}>{service}</Text>
+                      </View>
+                    ))}
+                    {salon.moreServices > 0 && (
+                      <View style={styles.moreServicesTag}>
+                        <Text style={styles.moreServicesText}>+{salon.moreServices} more</Text>
+                      </View>
+                    )}
+                  </View>
                 </View>
               </TouchableOpacity>
             ))}
@@ -640,54 +704,135 @@ const styles = StyleSheet.create({
   servicesGrid: {
     gap: 16,
   },
-  serviceCard: {
+  salonCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
     overflow: 'hidden',
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
     ...CARD_SHADOW,
   },
-  serviceImage: {
+  salonImageContainer: {
     width: '100%',
     height: isSmallDevice ? 180 : 200,
+    position: 'relative',
   },
-  serviceOverlay: {
-    ...StyleSheet.absoluteFillObject,
+  salonImage: {
+    width: '100%',
+    height: '100%',
   },
-  serviceIconBadge: {
+  salonBadge: {
     position: 'absolute',
-    top: 16,
-    right: 16,
-    width: 48,
-    height: 48,
-    borderRadius: 24,
-    backgroundColor: '#FFFFFF',
-    alignItems: 'center',
-    justifyContent: 'center',
-    ...CARD_SHADOW,
+    top: 12,
+    left: 12,
+    backgroundColor: '#1e3a8a',
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    borderRadius: 6,
   },
-  serviceEmoji: {
-    fontSize: 24,
-  },
-  serviceInfo: {
-    padding: 16,
-  },
-  serviceName: {
-    fontSize: isSmallDevice ? 16 : 18,
+  salonBadgeText: {
+    fontSize: 11,
     fontWeight: '700',
+    color: '#FFFFFF',
+    textTransform: 'uppercase',
+  },
+  statusDot: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    width: 10,
+    height: 10,
+    borderRadius: 5,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+  },
+  salonInfo: {
+    padding: 14,
+  },
+  salonName: {
+    fontSize: isSmallDevice ? 16 : 17,
+    fontWeight: '800',
     color: COLORS.textDark,
+    marginBottom: 8,
+  },
+  salonMetaRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
     marginBottom: 6,
   },
-  serviceDesc: {
-    fontSize: 13,
-    color: COLORS.textGray,
-    fontWeight: '500',
-    marginBottom: 8,
-    lineHeight: 18,
+  ratingContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
   },
-  servicePrice: {
+  ratingValue: {
     fontSize: 14,
     fontWeight: '700',
-    color: COLORS.primary,
+    color: '#111827',
+  },
+  reviewCount: {
+    fontSize: 13,
+    color: '#6b7280',
+    fontWeight: '500',
+  },
+  distanceContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  distanceText: {
+    fontSize: 13,
+    fontWeight: '600',
+    color: '#6b7280',
+  },
+  addressRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  addressText: {
+    fontSize: 13,
+    color: '#6b7280',
+    fontWeight: '500',
+    flex: 1,
+  },
+  durationText: {
+    fontSize: 12,
+    color: '#9ca3af',
+    fontWeight: '600',
+    marginLeft: 6,
+  },
+  servicesRow: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    gap: 6,
+  },
+  serviceTag: {
+    backgroundColor: '#eff6ff',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#bfdbfe',
+  },
+  serviceTagText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#1e40af',
+  },
+  moreServicesTag: {
+    backgroundColor: '#f3f4f6',
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 6,
+    borderWidth: 1,
+    borderColor: '#d1d5db',
+  },
+  moreServicesText: {
+    fontSize: 11,
+    fontWeight: '600',
+    color: '#6b7280',
   },
 
 
