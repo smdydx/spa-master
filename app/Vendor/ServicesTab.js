@@ -14,6 +14,9 @@ import {
   Settings,
   Star,
   Plus,
+  Edit2,
+  Trash2,
+  MapPin,
 } from "lucide-react-native";
 
 const SERVICES = [
@@ -25,6 +28,9 @@ const SERVICES = [
     bookings: 45,
     status: "Active",
     rating: 4.9,
+    address: "MG Road, Bangalore",
+    distance: "0.8km",
+    reviews: 324,
   },
   {
     id: 2,
@@ -34,6 +40,9 @@ const SERVICES = [
     bookings: 38,
     status: "Active",
     rating: 4.8,
+    address: "MG Road, Bangalore",
+    distance: "0.8km",
+    reviews: 324,
   },
   {
     id: 3,
@@ -43,6 +52,9 @@ const SERVICES = [
     bookings: 22,
     status: "Active",
     rating: 4.7,
+    address: "MG Road, Bangalore",
+    distance: "0.8km",
+    reviews: 324,
   },
   {
     id: 4,
@@ -52,6 +64,9 @@ const SERVICES = [
     bookings: 31,
     status: "Paused",
     rating: 4.6,
+    address: "MG Road, Bangalore",
+    distance: "0.8km",
+    reviews: 324,
   },
   {
     id: 5,
@@ -61,6 +76,9 @@ const SERVICES = [
     bookings: 18,
     status: "Active",
     rating: 4.9,
+    address: "MG Road, Bangalore",
+    distance: "0.8km",
+    reviews: 324,
   },
 ];
 
@@ -83,47 +101,53 @@ export default function ServicesTab() {
             <View style={styles.iconBox}>
               <Package size={18} color="#7c3aed" />
             </View>
-
-            <View style={{ flex: 1 }}>
-              <Text style={styles.name}>{s.name}</Text>
-              <Text style={styles.meta}>
-                {s.price} • {s.duration}
-              </Text>
-              <Text style={styles.subMeta}>• {s.bookings} bookings</Text>
-
-              <View style={styles.badgeRow}>
-                <View
-                  style={[
-                    styles.badge,
-                    s.status === "Active" ? styles.active : styles.paused,
-                  ]}
-                >
-                  <Text
-                    style={[
-                      styles.badgeText,
-                      s.status === "Active" ? styles.activeText : styles.pausedText,
-                    ]}
-                  >
-                    {s.status}
-                  </Text>
-                </View>
-
-                <View style={styles.ratingRow}>
-                  <Star size={12} color="#f59e0b" fill="#f59e0b" />
-                  <Text style={styles.ratingText}>{s.rating}</Text>
-                </View>
+            <View style={styles.info}>
+              <Text style={styles.serviceName}>{s.name}</Text>
+              <View style={styles.locationRow}>
+                <MapPin size={12} color="#64748b" />
+                <Text style={styles.addressText}>{s.address}</Text>
+                <Text style={styles.distanceText}>• {s.distance}</Text>
               </View>
+            </View>
+          </View>
+
+          <View style={styles.detailsRow}>
+            <View style={styles.ratingBox}>
+              <Star size={14} color="#f59e0b" fill="#f59e0b" />
+              <Text style={styles.ratingText}>{s.rating}</Text>
+              <Text style={styles.reviewCount}>({s.reviews})</Text>
+            </View>
+
+            <Text style={styles.durationText}>{s.duration}</Text>
+          </View>
+
+          <View style={styles.serviceDetail}>
+            <Text style={styles.priceText}>{s.price}</Text>
+          </View>
+
+          <View style={styles.row}>
+            <View
+              style={[
+                styles.statusBadge,
+                { backgroundColor: s.status === "Active" ? "#dcfce7" : "#fef3c7" },
+              ]}
+            >
+              <Text
+                style={[
+                  styles.statusText,
+                  { color: s.status === "Active" ? "#15803d" : "#854d0e" },
+                ]}
+              >
+                {s.status}
+              </Text>
             </View>
 
             <View style={styles.actions}>
               <TouchableOpacity style={styles.btnIcon}>
-                <Eye size={16} color="#3b82f6" />
+                <Edit2 size={14} color="#3b82f6" />
               </TouchableOpacity>
               <TouchableOpacity style={[styles.btnIcon, styles.btnIconGray]}>
-                <LayoutList size={16} color="#475569" />
-              </TouchableOpacity>
-              <TouchableOpacity style={[styles.btnIcon, styles.btnIconYellow]}>
-                <Settings size={16} color="#ca8a04" />
+                <Trash2 size={14} color="#64748b" />
               </TouchableOpacity>
             </View>
           </View>
@@ -171,20 +195,34 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     marginRight: 10,
   },
-  name: { fontWeight: "800", fontSize: 14.5, color: "#0f172a" },
-  meta: { fontSize: 12, color: "#334155", marginTop: 2 },
-  subMeta: { fontSize: 12, color: "#94a3b8", marginTop: 2 },
-
-  badgeRow: { flexDirection: "row", alignItems: "center", marginTop: 8 },
-  badge: { borderRadius: 8, paddingHorizontal: 8, paddingVertical: 2 },
-  active: { backgroundColor: "#dcfce7" },
-  paused: { backgroundColor: "#fef9c3" },
-  badgeText: { fontSize: 11, fontWeight: "700" },
-  activeText: { color: "#166534" },
-  pausedText: { color: "#854d0e" },
-
-  ratingRow: { flexDirection: "row", alignItems: "center", marginLeft: 10 },
+  info: { flex: 1 },
+  serviceName: { fontWeight: "800", fontSize: 14.5, color: "#0f172a" },
+  locationRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 4,
+  },
+  addressText: { fontSize: 12, color: "#64748b", marginLeft: 4 },
+  distanceText: { fontSize: 12, color: "#64748b", marginLeft: 4 },
+  detailsRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginTop: 8,
+  },
+  ratingBox: { flexDirection: "row", alignItems: "center", flex: 1 },
   ratingText: { fontSize: 12, color: "#475569", marginLeft: 4 },
+  reviewCount: { fontSize: 12, color: "#94a3b8", marginLeft: 4 },
+  durationText: { fontSize: 12, color: "#334155", fontWeight: "500" },
+  serviceDetail: { marginTop: 8 },
+  priceText: { fontSize: 13, fontWeight: "700", color: "#0f172a" },
+
+  statusBadge: {
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    paddingVertical: 2,
+    marginRight: 10,
+  },
+  statusText: { fontSize: 11, fontWeight: "700" },
 
   actions: { flexDirection: "row", marginLeft: 8 },
   btnIcon: {
