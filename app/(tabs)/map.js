@@ -95,13 +95,14 @@ export default function MapViewScreen() {
   ];
 
   const renderMapView = () => {
-    // Show static map on web with interactive salon list
     if (Platform.OS === 'web') {
       return (
         <View style={styles.webMapPlaceholder}>
-          <MapPin size={64} color="#1e3a8a" strokeWidth={1.5} />
+          <View style={styles.mapIconCircle}>
+            <MapPin size={48} color="#3b82f6" strokeWidth={2} />
+          </View>
           <Text style={styles.webMapText}>Interactive Map</Text>
-          <Text style={styles.webMapSubtext}>Browse nearby salons below and select to view details</Text>
+          <Text style={styles.webMapSubtext}>Browse nearby salons below and tap to view details</Text>
         </View>
       );
     }
@@ -109,7 +110,9 @@ export default function MapViewScreen() {
     if (!MapView) {
       return (
         <View style={styles.webMapPlaceholder}>
-          <MapPin size={64} color="#1e3a8a" strokeWidth={1.5} />
+          <View style={styles.mapIconCircle}>
+            <MapPin size={48} color="#3b82f6" strokeWidth={2} />
+          </View>
           <Text style={styles.webMapText}>Map not available</Text>
           <Text style={styles.webMapSubtext}>Browse nearby salons below</Text>
         </View>
@@ -131,7 +134,7 @@ export default function MapViewScreen() {
             coordinate={spa.coordinate}
             onPress={() => setSelectedSpa(spa)}
           >
-            <View style={[styles.marker, { backgroundColor: spa.isOpen ? '#22c55e' : '#9ca3af' }]}>
+            <View style={[styles.marker, { backgroundColor: spa.isOpen ? '#10b981' : '#ef4444' }]}>
               <Text style={styles.markerText}>₹</Text>
             </View>
           </Marker>
@@ -172,7 +175,7 @@ export default function MapViewScreen() {
 
             <View style={styles.cardActions}>
               <TouchableOpacity
-                style={[styles.actionBtn, styles.directionBtn]}
+                style={[styles.actionBtn, styles.directionBtn, styles.actionBtnSpacing]}
                 activeOpacity={0.8}
               >
                 <Text style={styles.directionBtnText}>Get Directions</Text>
@@ -227,8 +230,13 @@ export default function MapViewScreen() {
 
 const CARD_SHADOW =
   Platform.OS === 'android'
+    ? { elevation: 8 }
+    : { shadowColor: '#000', shadowOpacity: 0.15, shadowRadius: 16, shadowOffset: { width: 0, height: 6 } };
+
+const LIGHT_SHADOW =
+  Platform.OS === 'android'
     ? { elevation: 4 }
-    : { shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 12, shadowOffset: { width: 0, height: 4 } };
+    : { shadowColor: '#000', shadowOpacity: 0.1, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } };
 
 const styles = StyleSheet.create({
   container: {
@@ -247,36 +255,49 @@ const styles = StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#eff6ff',
-    padding: 20,
+    backgroundColor: '#f0f9ff',
+    padding: 32,
   },
-  webMapText: {
-    fontSize: 18,
-    fontWeight: '700',
-    color: '#1e3a8a',
-    marginTop: 16,
-    textAlign: 'center',
-  },
-  webMapSubtext: {
-    fontSize: 14,
-    color: '#6b7280',
-    marginTop: 8,
-    textAlign: 'center',
-  },
-  marker: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
+  mapIconCircle: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: '#dbeafe',
     alignItems: 'center',
     justifyContent: 'center',
-    borderWidth: 3,
+    marginBottom: 20,
+    ...LIGHT_SHADOW,
+  },
+  webMapText: {
+    fontSize: 22,
+    fontWeight: '800',
+    color: '#1e3a8a',
+    marginTop: 8,
+    textAlign: 'center',
+    letterSpacing: 0.5,
+  },
+  webMapSubtext: {
+    fontSize: 15,
+    color: '#64748b',
+    marginTop: 10,
+    textAlign: 'center',
+    lineHeight: 22,
+    maxWidth: 300,
+  },
+  marker: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+    borderWidth: 4,
     borderColor: '#FFFFFF',
     ...CARD_SHADOW,
   },
   markerText: {
     color: '#FFFFFF',
-    fontSize: 18,
-    fontWeight: '800',
+    fontSize: 20,
+    fontWeight: '900',
   },
   selectedCard: {
     position: 'absolute',
@@ -284,160 +305,171 @@ const styles = StyleSheet.create({
     left: 16,
     right: 16,
     backgroundColor: '#FFFFFF',
-    borderRadius: 20,
-    padding: 16,
+    borderRadius: 24,
+    padding: 20,
     ...CARD_SHADOW,
   },
   closeBtn: {
     position: 'absolute',
-    top: 12,
-    right: 12,
-    width: 32,
-    height: 32,
-    borderRadius: 16,
-    backgroundColor: '#f3f4f6',
+    top: 14,
+    right: 14,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#f1f5f9',
     alignItems: 'center',
     justifyContent: 'center',
     zIndex: 10,
+    ...LIGHT_SHADOW,
   },
   cardContent: {
     flexDirection: 'row',
-    marginBottom: 12,
+    marginBottom: 16,
   },
   cardImage: {
-    width: 80,
-    height: 80,
-    borderRadius: 12,
-    marginRight: 12,
-    backgroundColor: '#e5e7eb',
+    width: 90,
+    height: 90,
+    borderRadius: 16,
+    marginRight: 14,
+    backgroundColor: '#e2e8f0',
   },
   cardInfo: {
     flex: 1,
   },
   cardName: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#111827',
-    marginBottom: 4,
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#0f172a',
+    marginBottom: 6,
+    letterSpacing: 0.3,
   },
   ratingRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 6,
   },
   ratingText: {
-    fontSize: 13,
-    fontWeight: '600',
-    color: '#374151',
-    marginLeft: 4,
-    marginRight: 8,
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#1e293b',
+    marginLeft: 5,
+    marginRight: 10,
   },
   statusDot: {
-    width: 6,
-    height: 6,
-    borderRadius: 3,
-    marginRight: 4,
+    width: 7,
+    height: 7,
+    borderRadius: 3.5,
+    marginRight: 5,
   },
   statusText: {
-    fontSize: 12,
-    fontWeight: '500',
-    color: '#6b7280',
-  },
-  cardAddress: {
-    fontSize: 12,
-    color: '#6b7280',
-    marginBottom: 4,
-  },
-  cardPrice: {
     fontSize: 13,
     fontWeight: '600',
+    color: '#475569',
+  },
+  cardAddress: {
+    fontSize: 13,
+    color: '#64748b',
+    marginBottom: 5,
+    lineHeight: 18,
+  },
+  cardPrice: {
+    fontSize: 14,
+    fontWeight: '700',
     color: '#1e3a8a',
   },
   cardActions: {
     flexDirection: 'row',
-    gap: 8,
+  },
+  actionBtnSpacing: {
+    marginRight: 10,
   },
   actionBtn: {
     flex: 1,
-    paddingVertical: 12,
-    borderRadius: 12,
+    paddingVertical: 14,
+    borderRadius: 14,
     alignItems: 'center',
   },
   directionBtn: {
-    backgroundColor: '#eff6ff',
+    backgroundColor: '#dbeafe',
+    borderWidth: 1,
+    borderColor: '#93c5fd',
   },
   directionBtnText: {
     color: '#1e3a8a',
-    fontWeight: '700',
-    fontSize: 14,
+    fontWeight: '800',
+    fontSize: 15,
+    letterSpacing: 0.3,
   },
   bookBtn: {
     backgroundColor: '#1e3a8a',
   },
   bookBtnText: {
     color: '#FFFFFF',
-    fontWeight: '700',
-    fontSize: 14,
+    fontWeight: '800',
+    fontSize: 15,
+    letterSpacing: 0.3,
   },
   listContainer: {
     position: 'absolute',
-    top: 16,
+    top: 20,
     left: 0,
     right: 0,
     backgroundColor: 'transparent',
   },
   listTitle: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#111827',
+    fontSize: 17,
+    fontWeight: '800',
+    color: '#0f172a',
     marginLeft: 16,
-    marginBottom: 8,
+    marginBottom: 12,
     backgroundColor: '#FFFFFF',
     alignSelf: 'flex-start',
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 20,
+    paddingHorizontal: 20,
+    paddingVertical: 12,
+    borderRadius: 24,
+    letterSpacing: 0.3,
     ...CARD_SHADOW,
   },
   horizontalList: {
     paddingLeft: 16,
   },
   listCard: {
-    width: 140,
+    width: 155,
     backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    marginRight: 12,
+    borderRadius: 20,
+    marginRight: 14,
     overflow: 'hidden',
     ...CARD_SHADOW,
   },
   listImage: {
     width: '100%',
-    height: 100,
-    backgroundColor: '#e5e7eb',
+    height: 110,
+    backgroundColor: '#e2e8f0',
   },
   listContent: {
-    padding: 12,
+    padding: 14,
   },
   listName: {
-    fontSize: 14,
-    fontWeight: '700',
-    color: '#111827',
-    marginBottom: 4,
+    fontSize: 15,
+    fontWeight: '800',
+    color: '#0f172a',
+    marginBottom: 6,
+    letterSpacing: 0.2,
   },
   listRating: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginBottom: 4,
+    marginBottom: 5,
   },
   listRatingText: {
-    fontSize: 12,
-    fontWeight: '600',
-    color: '#374151',
-    marginLeft: 4,
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#1e293b',
+    marginLeft: 5,
   },
   listDistance: {
-    fontSize: 11,
-    color: '#6b7280',
-    fontWeight: '500',
+    fontSize: 12,
+    color: '#64748b',
+    fontWeight: '600',
   },
 });
