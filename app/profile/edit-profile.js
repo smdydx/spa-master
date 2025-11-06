@@ -10,10 +10,15 @@ import {
   StyleSheet,
   Image,
   Platform,
+  Modal,
+  Animated,
+  Dimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft, Camera, User, Mail, Phone, MapPin, Save } from 'lucide-react-native';
+import { ArrowLeft, Camera, User, Mail, Phone, MapPin, Save, X } from 'lucide-react-native';
+
+const { width } = Dimensions.get('window');
 
 export default function EditProfile() {
   const router = useRouter();
@@ -24,133 +29,154 @@ export default function EditProfile() {
     address: 'Mumbai, Maharashtra',
   });
 
+  const handleClose = () => {
+    router.back();
+  };
+
   return (
-    <View style={styles.safe}>
-      <LinearGradient
-        colors={['#1e3a8a', '#3b82f6', '#60a5fa']}
-        start={{ x: 0, y: 0 }}
-        end={{ x: 1, y: 1 }}
-        style={StyleSheet.absoluteFillObject}
-      />
-      
-      <SafeAreaView style={styles.safeContent}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-            <ArrowLeft size={24} color="#ffffff" />
-          </TouchableOpacity>
-          <Text style={styles.headerTitle}>Edit Profile</Text>
-          <View style={{ width: 40 }} />
-        </View>
-
-        <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-          <View style={styles.container}>
-            <View style={styles.avatarSection}>
-              <View style={styles.avatarWrapper}>
-                <Image
-                  source={{ uri: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg' }}
-                  style={styles.avatar}
-                />
-                <TouchableOpacity style={styles.cameraBtn} activeOpacity={0.8}>
-                  <LinearGradient
-                    colors={['#3b82f6', '#1e3a8a']}
-                    style={styles.cameraBtnGradient}
-                  >
-                    <Camera size={18} color="#fff" strokeWidth={2.5} />
-                  </LinearGradient>
-                </TouchableOpacity>
-              </View>
-              <Text style={styles.avatarText}>Tap to change photo</Text>
-            </View>
-
-            <View style={styles.formCard}>
-              <View style={styles.form}>
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.label}>Full Name</Text>
-                  <View style={styles.inputWrap}>
-                    <View style={styles.iconBox}>
-                      <User size={18} color="#3b82f6" strokeWidth={2.5} />
-                    </View>
-                    <TextInput
-                      style={styles.input}
-                      value={form.name}
-                      onChangeText={(val) => setForm({ ...form, name: val })}
-                      placeholder="Enter your name"
-                      placeholderTextColor="#94a3b8"
-                    />
-                  </View>
-                </View>
-
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.label}>Email Address</Text>
-                  <View style={styles.inputWrap}>
-                    <View style={styles.iconBox}>
-                      <Mail size={18} color="#3b82f6" strokeWidth={2.5} />
-                    </View>
-                    <TextInput
-                      style={styles.input}
-                      value={form.email}
-                      onChangeText={(val) => setForm({ ...form, email: val })}
-                      placeholder="Enter your email"
-                      placeholderTextColor="#94a3b8"
-                      keyboardType="email-address"
-                    />
-                  </View>
-                </View>
-
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.label}>Phone Number</Text>
-                  <View style={styles.inputWrap}>
-                    <View style={styles.iconBox}>
-                      <Phone size={18} color="#3b82f6" strokeWidth={2.5} />
-                    </View>
-                    <TextInput
-                      style={styles.input}
-                      value={form.phone}
-                      onChangeText={(val) => setForm({ ...form, phone: val })}
-                      placeholder="Enter your phone"
-                      placeholderTextColor="#94a3b8"
-                      keyboardType="phone-pad"
-                    />
-                  </View>
-                </View>
-
-                <View style={styles.fieldGroup}>
-                  <Text style={styles.label}>Address</Text>
-                  <View style={[styles.inputWrap, styles.addressInput]}>
-                    <View style={styles.iconBox}>
-                      <MapPin size={18} color="#3b82f6" strokeWidth={2.5} />
-                    </View>
-                    <TextInput
-                      style={[styles.input, styles.addressTextInput]}
-                      value={form.address}
-                      onChangeText={(val) => setForm({ ...form, address: val })}
-                      placeholder="Enter your address"
-                      placeholderTextColor="#94a3b8"
-                      multiline
-                      numberOfLines={2}
-                    />
-                  </View>
-                </View>
-              </View>
-
-              <TouchableOpacity style={styles.saveBtn} activeOpacity={0.9}>
-                <LinearGradient
-                  colors={['#3b82f6', '#1e3a8a']}
-                  start={{ x: 0, y: 0 }}
-                  end={{ x: 1, y: 0 }}
-                  style={styles.saveBtnGradient}
-                >
-                  <View style={styles.saveBtnIcon}>
-                    <Save size={20} color="#fff" strokeWidth={2.5} />
-                  </View>
-                  <Text style={styles.saveBtnText}>Save Changes</Text>
-                </LinearGradient>
+    <Modal
+      visible={true}
+      transparent={true}
+      animationType="slide"
+      onRequestClose={handleClose}
+    >
+      <View style={styles.modalContainer}>
+        {/* Backdrop */}
+        <TouchableOpacity 
+          style={styles.backdrop} 
+          activeOpacity={1} 
+          onPress={handleClose}
+        />
+        
+        {/* Modal Content */}
+        <View style={styles.modalContent}>
+          <LinearGradient
+            colors={['#1e3a8a', '#3b82f6', '#60a5fa']}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+            style={StyleSheet.absoluteFillObject}
+          />
+          
+          <SafeAreaView style={styles.safeContent}>
+            <View style={styles.header}>
+              <TouchableOpacity onPress={handleClose} style={styles.backBtn}>
+                <X size={24} color="#ffffff" />
               </TouchableOpacity>
+              <Text style={styles.headerTitle}>Edit Profile</Text>
+              <View style={{ width: 40 }} />
             </View>
-          </View>
-        </ScrollView>
-      </SafeAreaView>
-    </View>
+
+            <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
+              <View style={styles.container}>
+                <View style={styles.avatarSection}>
+                  <View style={styles.avatarWrapper}>
+                    <Image
+                      source={{ uri: 'https://images.pexels.com/photos/415829/pexels-photo-415829.jpeg' }}
+                      style={styles.avatar}
+                    />
+                    <TouchableOpacity style={styles.cameraBtn} activeOpacity={0.8}>
+                      <LinearGradient
+                        colors={['#3b82f6', '#1e3a8a']}
+                        style={styles.cameraBtnGradient}
+                      >
+                        <Camera size={18} color="#fff" strokeWidth={2.5} />
+                      </LinearGradient>
+                    </TouchableOpacity>
+                  </View>
+                  <Text style={styles.avatarText}>Tap to change photo</Text>
+                </View>
+
+                <View style={styles.formCard}>
+                  <View style={styles.form}>
+                    <View style={styles.fieldGroup}>
+                      <Text style={styles.label}>Full Name</Text>
+                      <View style={styles.inputWrap}>
+                        <View style={styles.iconBox}>
+                          <User size={18} color="#3b82f6" strokeWidth={2.5} />
+                        </View>
+                        <TextInput
+                          style={styles.input}
+                          value={form.name}
+                          onChangeText={(val) => setForm({ ...form, name: val })}
+                          placeholder="Enter your name"
+                          placeholderTextColor="#94a3b8"
+                        />
+                      </View>
+                    </View>
+
+                    <View style={styles.fieldGroup}>
+                      <Text style={styles.label}>Email Address</Text>
+                      <View style={styles.inputWrap}>
+                        <View style={styles.iconBox}>
+                          <Mail size={18} color="#3b82f6" strokeWidth={2.5} />
+                        </View>
+                        <TextInput
+                          style={styles.input}
+                          value={form.email}
+                          onChangeText={(val) => setForm({ ...form, email: val })}
+                          placeholder="Enter your email"
+                          placeholderTextColor="#94a3b8"
+                          keyboardType="email-address"
+                        />
+                      </View>
+                    </View>
+
+                    <View style={styles.fieldGroup}>
+                      <Text style={styles.label}>Phone Number</Text>
+                      <View style={styles.inputWrap}>
+                        <View style={styles.iconBox}>
+                          <Phone size={18} color="#3b82f6" strokeWidth={2.5} />
+                        </View>
+                        <TextInput
+                          style={styles.input}
+                          value={form.phone}
+                          onChangeText={(val) => setForm({ ...form, phone: val })}
+                          placeholder="Enter your phone"
+                          placeholderTextColor="#94a3b8"
+                          keyboardType="phone-pad"
+                        />
+                      </View>
+                    </View>
+
+                    <View style={styles.fieldGroup}>
+                      <Text style={styles.label}>Address</Text>
+                      <View style={[styles.inputWrap, styles.addressInput]}>
+                        <View style={styles.iconBox}>
+                          <MapPin size={18} color="#3b82f6" strokeWidth={2.5} />
+                        </View>
+                        <TextInput
+                          style={[styles.input, styles.addressTextInput]}
+                          value={form.address}
+                          onChangeText={(val) => setForm({ ...form, address: val })}
+                          placeholder="Enter your address"
+                          placeholderTextColor="#94a3b8"
+                          multiline
+                          numberOfLines={2}
+                        />
+                      </View>
+                    </View>
+                  </View>
+
+                  <TouchableOpacity style={styles.saveBtn} activeOpacity={0.9} onPress={handleClose}>
+                    <LinearGradient
+                      colors={['#3b82f6', '#1e3a8a']}
+                      start={{ x: 0, y: 0 }}
+                      end={{ x: 1, y: 0 }}
+                      style={styles.saveBtnGradient}
+                    >
+                      <View style={styles.saveBtnIcon}>
+                        <Save size={20} color="#fff" strokeWidth={2.5} />
+                      </View>
+                      <Text style={styles.saveBtnText}>Save Changes</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </ScrollView>
+          </SafeAreaView>
+        </View>
+      </View>
+    </Modal>
   );
 }
 
@@ -168,8 +194,19 @@ const SHADOW = Platform.select({
 });
 
 const styles = StyleSheet.create({
-  safe: {
+  modalContainer: {
     flex: 1,
+    flexDirection: 'row',
+  },
+  backdrop: {
+    flex: 1,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+  },
+  modalContent: {
+    width: width * 0.85,
+    maxWidth: 400,
+    backgroundColor: '#fff',
+    ...SHADOW,
   },
   safeContent: {
     flex: 1,
