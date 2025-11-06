@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import {
   View,
@@ -7,16 +8,21 @@ import {
   Image,
   StyleSheet,
   Platform,
+  Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { ArrowLeft } from 'lucide-react-native';
+import { ArrowLeft, Star, MapPin } from 'lucide-react-native';
 import { useRouter } from 'expo-router';
+import { LinearGradient } from 'expo-linear-gradient';
 
 export default function BookingScreen() {
   const [selectedService, setSelectedService] = useState(null);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTime, setSelectedTime] = useState(null);
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isTablet = width >= 768;
 
   const services = [
     { id: 1, name: 'Hair Styling', duration: '1 hour', price: 800, image: '💇‍♀️' },
@@ -44,36 +50,64 @@ export default function BookingScreen() {
     if (canBook) router.push('/payment');
   };
 
-  return (
-    <SafeAreaView style={styles.safe}>
-      {/* Header */}
-      <View style={styles.header}>
+  const NavySection = () => (
+    <LinearGradient
+      colors={['#1e3a8a', '#3b82f6']}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={[styles.navySection, isTablet && styles.navySectionTablet]}
+    >
+      <SafeAreaView style={styles.navyContent}>
         <TouchableOpacity onPress={() => router.back()} style={styles.backBtn}>
-          <ArrowLeft size={24} color="#374151" />
+          <ArrowLeft size={24} color="#ffffff" />
         </TouchableOpacity>
-        <Text style={styles.headerTitle}>Book Appointment</Text>
-      </View>
 
-      <ScrollView style={styles.scroll} showsVerticalScrollIndicator={false}>
-        {/* Salon info */}
-        <View style={[styles.card, styles.cardPad]}>
-          <View style={{ flexDirection: 'row' }}>
-            <Image
-              source={{ uri: 'https://images.pexels.com/photos/3757952/pexels-photo-3757952.jpeg' }}
-              style={styles.salonImg}
-              resizeMode="cover"
-            />
-            <View style={{ flex: 1 }}>
-              <Text style={styles.salonName}>Bliss Spa & Salon</Text>
-              <Text style={styles.salonAddr}>Koramangala 5th Block, Bangalore</Text>
-              <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                <Text style={styles.salonRating}>⭐ 4.8</Text>
-                <Text style={styles.salonDistance}>0.5 km away</Text>
+        <View style={styles.navyHeader}>
+          <Text style={styles.navyTitle}>Book Your{'\n'}Perfect Session</Text>
+          <Text style={styles.navySubtitle}>Choose your service, date & time</Text>
+        </View>
+
+        <View style={styles.salonCard}>
+          <Image
+            source={{ uri: 'https://images.pexels.com/photos/3757952/pexels-photo-3757952.jpeg' }}
+            style={styles.salonImage}
+            resizeMode="cover"
+          />
+          <View style={styles.salonInfo}>
+            <Text style={styles.salonName}>Bliss Spa & Salon</Text>
+            <View style={styles.salonMeta}>
+              <View style={styles.ratingRow}>
+                <Star size={14} color="#fbbf24" fill="#fbbf24" />
+                <Text style={styles.ratingText}>4.8</Text>
+              </View>
+              <View style={styles.locationRow}>
+                <MapPin size={12} color="rgba(255,255,255,0.7)" />
+                <Text style={styles.locationText}>0.5 km away</Text>
               </View>
             </View>
+            <Text style={styles.salonAddress}>Koramangala 5th Block, Bangalore</Text>
           </View>
         </View>
 
+        {selectedService && selectedDate && selectedTime && (
+          <View style={styles.quickSummary}>
+            <Text style={styles.quickSummaryTitle}>Selected</Text>
+            <Text style={styles.quickSummaryText}>{selectedService.name}</Text>
+            <Text style={styles.quickSummaryText}>{selectedDate.date} {selectedDate.day} • {selectedTime}</Text>
+            <Text style={styles.quickSummaryPrice}>₹{selectedService.price}</Text>
+          </View>
+        )}
+      </SafeAreaView>
+    </LinearGradient>
+  );
+
+  const FormSection = () => (
+    <View style={[styles.formSection, isTablet && styles.formSectionTablet]}>
+      <ScrollView 
+        style={styles.formScroll} 
+        contentContainerStyle={styles.formScrollContent}
+        showsVerticalScrollIndicator={false}
+      >
         {/* Services */}
         <View style={styles.section}>
           <Text style={styles.sectionTitle}>Select Service</Text>
@@ -178,7 +212,7 @@ export default function BookingScreen() {
 
         {/* Booking Summary */}
         {selectedService && (
-          <View style={[styles.card, styles.cardPad]}>
+          <View style={styles.summaryCard}>
             <Text style={styles.summaryTitle}>Booking Summary</Text>
             <View style={{ gap: 8 }}>
               <View style={styles.summaryRow}>
@@ -206,6 +240,8 @@ export default function BookingScreen() {
             </View>
           </View>
         )}
+
+        <View style={{ height: 100 }} />
       </ScrollView>
 
       {/* Book Now Button */}
@@ -219,7 +255,23 @@ export default function BookingScreen() {
           <Text style={styles.bookBtnText}>Book Now</Text>
         </TouchableOpacity>
       </View>
-    </SafeAreaView>
+    </View>
+  );
+
+  return (
+    <View style={styles.container}>
+      {isTablet ? (
+        <View style={styles.tabletLayout}>
+          <NavySection />
+          <FormSection />
+        </View>
+      ) : (
+        <>
+          <NavySection />
+          <FormSection />
+        </>
+      )}
+    </View>
   );
 }
 
@@ -229,36 +281,155 @@ const CARD_SHADOW =
     : { shadowColor: '#000', shadowOpacity: 0.06, shadowRadius: 8, shadowOffset: { width: 0, height: 2 } };
 
 const styles = StyleSheet.create({
-  safe: { flex: 1, backgroundColor: '#FEF9F3' }, // cream color
-  scroll: { flex: 1 },
+  container: { flex: 1, backgroundColor: '#ffffff' },
+  tabletLayout: { flex: 1, flexDirection: 'row' },
 
-  // Header
-  header: { flexDirection: 'row', alignItems: 'center', paddingHorizontal: 24, paddingVertical: 16 },
-  backBtn: { marginRight: 12, padding: 6, borderRadius: 12 },
-  headerTitle: { fontSize: 18, fontWeight: '700', color: '#111827' },
-
-  // Cards
-  card: {
-    backgroundColor: '#ffffff',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#f3f4f6',
-    marginHorizontal: 24,
-    marginBottom: 16,
-    ...CARD_SHADOW,
+  // Navy Section
+  navySection: {
+    backgroundColor: '#1e3a8a',
+    paddingHorizontal: 24,
+    paddingTop: 0,
+    minHeight: '35%',
   },
-  cardPad: { padding: 16 },
+  navySectionTablet: {
+    width: '40%',
+    minHeight: '100%',
+  },
+  navyContent: {
+    flex: 1,
+  },
+  backBtn: {
+    marginTop: 8,
+    marginBottom: 16,
+    padding: 8,
+    alignSelf: 'flex-start',
+  },
+  navyHeader: {
+    marginBottom: 24,
+  },
+  navyTitle: {
+    fontSize: Platform.select({ ios: 26, android: 26, default: 28 }),
+    fontWeight: '900',
+    color: '#ffffff',
+    marginBottom: 8,
+    lineHeight: Platform.select({ ios: 32, android: 32, default: 34 }),
+  },
+  navySubtitle: {
+    fontSize: Platform.select({ ios: 13, android: 13, default: 14 }),
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontWeight: '600',
+  },
 
-  // Salon
-  salonImg: { width: 64, height: 64, borderRadius: 12, marginRight: 12, backgroundColor: '#e5e7eb' },
-  salonName: { fontSize: 16, fontWeight: '700', color: '#111827', marginBottom: 2 },
-  salonAddr: { fontSize: 13, color: '#4b5563', marginBottom: 6 },
-  salonRating: { fontSize: 13, color: '#7c3aed', fontWeight: '700' },
-  salonDistance: { fontSize: 12, color: '#6b7280', marginLeft: 8 },
+  // Salon Card
+  salonCard: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: 16,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+    marginBottom: 16,
+  },
+  salonImage: {
+    width: '100%',
+    height: 120,
+    borderRadius: 12,
+    marginBottom: 12,
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+  },
+  salonInfo: {
+    gap: 6,
+  },
+  salonName: {
+    fontSize: 18,
+    fontWeight: '800',
+    color: '#ffffff',
+  },
+  salonMeta: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 12,
+  },
+  ratingRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  ratingText: {
+    fontSize: 13,
+    fontWeight: '700',
+    color: '#ffffff',
+  },
+  locationRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 4,
+  },
+  locationText: {
+    fontSize: 12,
+    color: 'rgba(255, 255, 255, 0.7)',
+    fontWeight: '600',
+  },
+  salonAddress: {
+    fontSize: 13,
+    color: 'rgba(255, 255, 255, 0.8)',
+  },
+
+  // Quick Summary
+  quickSummary: {
+    backgroundColor: 'rgba(255, 255, 255, 0.1)',
+    borderRadius: 14,
+    padding: 14,
+    borderWidth: 1,
+    borderColor: 'rgba(255, 255, 255, 0.2)',
+  },
+  quickSummaryTitle: {
+    fontSize: 12,
+    fontWeight: '700',
+    color: 'rgba(255, 255, 255, 0.7)',
+    textTransform: 'uppercase',
+    marginBottom: 6,
+    letterSpacing: 0.5,
+  },
+  quickSummaryText: {
+    fontSize: 14,
+    color: '#ffffff',
+    fontWeight: '600',
+    marginBottom: 2,
+  },
+  quickSummaryPrice: {
+    fontSize: 20,
+    fontWeight: '800',
+    color: '#fbbf24',
+    marginTop: 6,
+  },
+
+  // Form Section
+  formSection: {
+    flex: 1,
+    backgroundColor: '#ffffff',
+  },
+  formSectionTablet: {
+    width: '60%',
+  },
+  formScroll: {
+    flex: 1,
+  },
+  formScrollContent: {
+    paddingHorizontal: 24,
+    paddingTop: 24,
+    paddingBottom: 24,
+  },
 
   // Sections
-  section: { paddingHorizontal: 24, marginBottom: 16 },
-  sectionTitle: { fontSize: 16, fontWeight: '700', color: '#111827', marginBottom: 12 },
+  section: {
+    marginBottom: 24,
+  },
+  sectionTitle: {
+    fontSize: 16,
+    fontWeight: '700',
+    color: '#111827',
+    marginBottom: 12,
+  },
 
   // Service rows
   serviceRow: {
@@ -271,11 +442,11 @@ const styles = StyleSheet.create({
     ...CARD_SHADOW,
   },
   serviceRowIdle: { borderWidth: 1, borderColor: '#f3f4f6' },
-  serviceRowActive: { borderWidth: 2, borderColor: '#7c3aed' },
+  serviceRowActive: { borderWidth: 2, borderColor: '#1e3a8a' },
   serviceEmoji: { fontSize: 28, marginRight: 12 },
   serviceName: { fontSize: 15, fontWeight: '700', color: '#111827' },
   serviceMeta: { fontSize: 13, color: '#6b7280' },
-  servicePrice: { fontSize: 16, fontWeight: '800', color: '#7c3aed' },
+  servicePrice: { fontSize: 16, fontWeight: '800', color: '#1e3a8a' },
 
   // Date chips
   dateChip: {
@@ -287,7 +458,7 @@ const styles = StyleSheet.create({
     borderColor: '#f3f4f6',
     backgroundColor: '#ffffff',
   },
-  dateChipActive: { backgroundColor: '#7c3aed', borderColor: '#7c3aed' },
+  dateChipActive: { backgroundColor: '#1e3a8a', borderColor: '#1e3a8a' },
   dateChipDisabled: { backgroundColor: '#f3f4f6', borderColor: '#e5e7eb' },
   dateChipTextTop: { fontSize: 13, fontWeight: '600', color: '#111827' },
   dateChipTextBottom: { marginTop: 4, fontSize: 16, fontWeight: '800', color: '#111827' },
@@ -304,23 +475,50 @@ const styles = StyleSheet.create({
     borderWidth: 1,
   },
   timeChipIdle: { backgroundColor: '#ffffff', borderColor: '#e5e7eb' },
-  timeChipActive: { backgroundColor: '#7c3aed', borderColor: '#7c3aed' },
+  timeChipActive: { backgroundColor: '#1e3a8a', borderColor: '#1e3a8a' },
   timeText: { fontSize: 13, fontWeight: '700' },
   timeTextIdle: { color: '#374151' },
 
   // Summary
+  summaryCard: {
+    backgroundColor: '#f8fafc',
+    borderRadius: 16,
+    padding: 16,
+    borderWidth: 1,
+    borderColor: '#e5e7eb',
+  },
   summaryTitle: { fontSize: 16, fontWeight: '700', color: '#111827', marginBottom: 10 },
   summaryRow: { flexDirection: 'row', justifyContent: 'space-between' },
   summaryKey: { color: '#6b7280' },
   summaryVal: { color: '#111827', fontWeight: '600' },
-  summaryTotalRow: { flexDirection: 'row', justifyContent: 'space-between', paddingTop: 10, borderTopWidth: 1, borderTopColor: '#f3f4f6' },
+  summaryTotalRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#e5e7eb',
+    marginTop: 4,
+  },
   summaryTotalLabel: { fontSize: 16, fontWeight: '700', color: '#111827' },
-  summaryTotalValue: { fontSize: 16, fontWeight: '800', color: '#7c3aed' },
+  summaryTotalValue: { fontSize: 16, fontWeight: '800', color: '#1e3a8a' },
 
   // Footer
-  footer: { paddingHorizontal: 24, paddingBottom: 24, paddingTop: 12, backgroundColor: '#ffffff', borderTopWidth: 1, borderTopColor: '#f3f4f6' },
-  bookBtn: { width: '100%', paddingVertical: 14, borderRadius: 16, alignItems: 'center', justifyContent: 'center' },
-  bookBtnActive: { backgroundColor: '#7c3aed' },
+  footer: {
+    paddingHorizontal: 24,
+    paddingBottom: 24,
+    paddingTop: 12,
+    backgroundColor: '#ffffff',
+    borderTopWidth: 1,
+    borderTopColor: '#f3f4f6',
+  },
+  bookBtn: {
+    width: '100%',
+    paddingVertical: 16,
+    borderRadius: 16,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  bookBtnActive: { backgroundColor: '#1e3a8a' },
   bookBtnDisabled: { backgroundColor: '#d1d5db' },
   bookBtnText: { color: '#ffffff', fontSize: 16, fontWeight: '700' },
 });
