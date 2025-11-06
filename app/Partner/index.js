@@ -43,14 +43,14 @@ function useScale() {
 
 // --- Data --------------------------------------------------------
 const CATEGORIES = [
-    { id: "spa", title: "Spa & Massage", subtitle: "Full-service spa with massage therapy", icon: "✨", gradient: ["#6366f1", "#8b5cf6"] },
-    { id: "salon", title: "Beauty Salon", subtitle: "Hair, makeup, and beauty services", icon: "✂️", gradient: ["#ec4899", "#f43f5e"] },
-    { id: "wellness", title: "Wellness Center", subtitle: "Holistic wellness and therapy center", icon: "🤍", gradient: ["#14b8a6", "#06b6d4"] },
-    { id: "home", title: "Home Service", subtitle: "Mobile spa and salon services", icon: "🏠", gradient: ["#f59e0b", "#f97316"] },
-    { id: "hotel", title: "Hotel Spa", subtitle: "Luxury hotel spa facilities", icon: "🏨", gradient: ["#3b82f6", "#2563eb"] },
-    { id: "gym", title: "Gym & Fitness", subtitle: "Fitness center with wellness services", icon: "🏋️", gradient: ["#ef4444", "#dc2626"] },
-    { id: "yoga", title: "Yoga & Meditation", subtitle: "Yoga studio and meditation center", icon: "🧘", gradient: ["#8b5cf6", "#a855f7"] },
-    { id: "ayurveda", title: "Ayurveda Center", subtitle: "Traditional Ayurvedic treatments", icon: "🌿", gradient: ["#10b981", "#059669"] },
+    { id: "spa", title: "Spa & Massage", subtitle: "Full-service spa with massage therapy", gradient: ["#6366f1", "#8b5cf6"] },
+    { id: "salon", title: "Beauty Salon", subtitle: "Hair, makeup, and beauty services", gradient: ["#ec4899", "#f43f5e"] },
+    { id: "wellness", title: "Wellness Center", subtitle: "Holistic wellness and therapy center", gradient: ["#14b8a6", "#06b6d4"] },
+    { id: "home", title: "Home Service", subtitle: "Mobile spa and salon services", gradient: ["#f59e0b", "#f97316"] },
+    { id: "hotel", title: "Hotel Spa", subtitle: "Luxury hotel spa facilities", gradient: ["#3b82f6", "#2563eb"] },
+    { id: "gym", title: "Gym & Fitness", subtitle: "Fitness center with wellness services", gradient: ["#ef4444", "#dc2626"] },
+    { id: "yoga", title: "Yoga & Meditation", subtitle: "Yoga studio and meditation center", gradient: ["#8b5cf6", "#a855f7"] },
+    { id: "ayurveda", title: "Ayurveda Center", subtitle: "Traditional Ayurvedic treatments", gradient: ["#10b981", "#059669"] },
 ];
 
 // --- Category Card (memo) --------------------------------------------
@@ -78,7 +78,7 @@ const CategoryCard = memo(function CategoryCard({ item, selected, onPress, sw })
                     end={{ x: 1, y: 1 }}
                     style={[styles.iconContainer, { width: sw(56), height: sw(56), borderRadius: sw(16) }]}
                 >
-                    <Text style={{ fontSize: sw(28) }}>{item.icon}</Text>
+                    <View style={styles.iconPlaceholder} />
                 </LinearGradient>
 
                 <View style={styles.textContainer}>
@@ -178,7 +178,9 @@ export default function index() {
                 {/* Info Note */}
                 <View style={[styles.noteContainer, { borderRadius: sw(12), padding: sw(16), marginTop: sh(8) }]}>
                     <View style={styles.noteHeader}>
-                        <Text style={{ fontSize: sw(20), marginRight: sw(8) }}>💡</Text>
+                        <View style={styles.infoIcon}>
+                            <Text style={[styles.infoIconText, { fontSize: sw(14) }]}>i</Text>
+                        </View>
                         <Text style={[styles.noteTitle, { fontSize: sw(14) }]}>Good to know</Text>
                     </View>
                     <Text style={[styles.noteText, { fontSize: sw(13), lineHeight: sw(20), marginTop: sh(8) }]}>
@@ -277,6 +279,12 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 2,
     },
+    iconPlaceholder: {
+        width: 28,
+        height: 28,
+        borderRadius: 14,
+        backgroundColor: "rgba(255, 255, 255, 0.3)",
+    },
     textContainer: {
         flex: 1,
         marginLeft: 16,
@@ -305,6 +313,19 @@ const styles = StyleSheet.create({
     noteHeader: {
         flexDirection: "row",
         alignItems: "center",
+    },
+    infoIcon: {
+        width: 20,
+        height: 20,
+        borderRadius: 10,
+        backgroundColor: COLORS.noteText,
+        alignItems: "center",
+        justifyContent: "center",
+        marginRight: 8,
+    },
+    infoIconText: {
+        color: "#FFFFFF",
+        fontWeight: "900",
     },
     noteTitle: {
         color: COLORS.noteText,
