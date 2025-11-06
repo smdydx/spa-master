@@ -1,9 +1,7 @@
-// src/screens/BusinessCategoryScreen.js
+
 import { router } from "expo-router";
-import { memo, useCallback, useMemo, useState } from "react";
+import { memo, useCallback, useState } from "react";
 import {
-    FlatList,
-    Platform,
     Pressable,
     SafeAreaView,
     ScrollView,
@@ -12,214 +10,336 @@ import {
     Text,
     useWindowDimensions,
     View,
+    Platform,
 } from "react-native";
+import { LinearGradient } from 'expo-linear-gradient';
 
-// --- palette (Navy Blue + White Theme) ----------------------------------------------------
+// --- Modern Color Palette ----------------------------------------------------
 const COLORS = {
-    bg: "#F8FAFC",                  // light background
+    bg: "#FFFFFF",
+    gradientStart: "#001f3f",
+    gradientEnd: "#1e3a8a",
     cardBg: "#FFFFFF",
-    text: "#001f3f",                // navy blue
+    text: "#001f3f",
     textMuted: "#64748B",
-    primary: "#001f3f",             // navy blue
-    primaryDark: "#001428",
-    border: "#E0F2FE",
-    noteBg: "#E0F2FE",
-    noteText: "#001f3f",
-    ctaText: "#001f3f",
-    iconBg: "#DBEAFE",
+    primary: "#001f3f",
+    border: "#E2E8F0",
+    iconBg: "#F0F9FF",
+    selectedBorder: "#001f3f",
+    selectedBg: "#EFF6FF",
+    noteBg: "#FEF3C7",
+    noteText: "#92400E",
+    shadow: "#000000",
 };
 
-// --- responsive helpers -----------------------------------------
+// --- Responsive helpers -----------------------------------------
 function useScale() {
-    const { width } = useWindowDimensions();
-    // design base ~ 360-390 width; clamp for tablets
+    const { width, height } = useWindowDimensions();
     const base = Math.min(Math.max(width, 320), 480);
     const sw = (n) => Math.round((base / 390) * n);
-    return { sw };
+    const sh = (n) => Math.round((height / 844) * n);
+    return { sw, sh, width, height };
 }
 
-// --- data --------------------------------------------------------
+// --- Data --------------------------------------------------------
 const CATEGORIES = [
-    { id: "spa", title: "Spa & Massage", subtitle: "Full-service spa with massage therapy", icon: "✨" },
-    { id: "salon", title: "Beauty Salon", subtitle: "Hair, makeup, and beauty services", icon: "✂️" },
-    { id: "wellness", title: "Wellness Center", subtitle: "Holistic wellness and therapy center", icon: "🤍" },
-    { id: "home", title: "Home Service", subtitle: "Mobile spa and salon services", icon: "🏠" },
-    { id: "hotel", title: "Hotel Spa", subtitle: "Luxury hotel spa facilities", icon: "🏨" },
-    { id: "gym", title: "Gym & Fitness", subtitle: "Fitness center with wellness services", icon: "🏋️" },
-    { id: "yoga", title: "Yoga & Meditation", subtitle: "Yoga studio and meditation center", icon: "🧘" },
-    { id: "ayurveda", title: "Ayurveda Center", subtitle: "Traditional Ayurvedic treatments", icon: "🌿" },
+    { id: "spa", title: "Spa & Massage", subtitle: "Full-service spa with massage therapy", icon: "✨", gradient: ["#6366f1", "#8b5cf6"] },
+    { id: "salon", title: "Beauty Salon", subtitle: "Hair, makeup, and beauty services", icon: "✂️", gradient: ["#ec4899", "#f43f5e"] },
+    { id: "wellness", title: "Wellness Center", subtitle: "Holistic wellness and therapy center", icon: "🤍", gradient: ["#14b8a6", "#06b6d4"] },
+    { id: "home", title: "Home Service", subtitle: "Mobile spa and salon services", icon: "🏠", gradient: ["#f59e0b", "#f97316"] },
+    { id: "hotel", title: "Hotel Spa", subtitle: "Luxury hotel spa facilities", icon: "🏨", gradient: ["#3b82f6", "#2563eb"] },
+    { id: "gym", title: "Gym & Fitness", subtitle: "Fitness center with wellness services", icon: "🏋️", gradient: ["#ef4444", "#dc2626"] },
+    { id: "yoga", title: "Yoga & Meditation", subtitle: "Yoga studio and meditation center", icon: "🧘", gradient: ["#8b5cf6", "#a855f7"] },
+    { id: "ayurveda", title: "Ayurveda Center", subtitle: "Traditional Ayurvedic treatments", icon: "🌿", gradient: ["#10b981", "#059669"] },
 ];
 
-// --- item row (memo) --------------------------------------------
-const CategoryItem = memo(function CategoryItem({ item, selected, onPress, sw }) {
+// --- Category Card (memo) --------------------------------------------
+const CategoryCard = memo(function CategoryCard({ item, selected, onPress, sw }) {
     const isSelected = selected?.id === item.id;
+    
     return (
         <Pressable
             onPress={() => onPress(item)}
             style={({ pressed }) => [
-                styles.row,
+                styles.categoryCard,
                 {
-                    borderColor: isSelected ? COLORS.primary : COLORS.border,
-                    backgroundColor: COLORS.cardBg,
-                    transform: [{ scale: pressed ? 0.99 : 1 }],
+                    borderWidth: 2,
+                    borderColor: isSelected ? COLORS.selectedBorder : COLORS.border,
+                    backgroundColor: isSelected ? COLORS.selectedBg : COLORS.cardBg,
+                    transform: [{ scale: pressed ? 0.97 : 1 }],
+                    marginBottom: sw(12),
                 },
-                shadowStyle,
             ]}
         >
-            <View style={[styles.iconWrap, { width: sw(48), height: sw(48), borderRadius: sw(12) }]}>
-                <Text style={{ fontSize: sw(22) }}>{item.icon}</Text>
-            </View>
+            <View style={styles.cardContent}>
+                <LinearGradient
+                    colors={item.gradient}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 1, y: 1 }}
+                    style={[styles.iconContainer, { width: sw(56), height: sw(56), borderRadius: sw(16) }]}
+                >
+                    <Text style={{ fontSize: sw(28) }}>{item.icon}</Text>
+                </LinearGradient>
 
-            <View style={styles.rowText}>
-                <Text numberOfLines={1} style={[styles.title, { fontSize: sw(16) }]}>{item.title}</Text>
-                <Text numberOfLines={2} style={[styles.subtitle, { fontSize: sw(13) }]}>{item.subtitle}</Text>
-            </View>
+                <View style={styles.textContainer}>
+                    <Text numberOfLines={1} style={[styles.categoryTitle, { fontSize: sw(16) }]}>
+                        {item.title}
+                    </Text>
+                    <Text numberOfLines={2} style={[styles.categorySubtitle, { fontSize: sw(13) }]}>
+                        {item.subtitle}
+                    </Text>
+                </View>
 
-            {/* radio indicator */}
-            <View
-                style={[
-                    styles.radio,
-                    {
-                        width: sw(20),
-                        height: sw(20),
-                        borderRadius: sw(12),
-                        borderColor: isSelected ? COLORS.primary : "rgba(2,6,23,0.25)",
-                        backgroundColor: isSelected ? COLORS.primary : "transparent",
-                    },
-                ]}
-            />
+                {/* Selection Indicator */}
+                <View
+                    style={[
+                        styles.radioOuter,
+                        {
+                            width: sw(24),
+                            height: sw(24),
+                            borderRadius: sw(12),
+                            borderWidth: 2,
+                            borderColor: isSelected ? COLORS.primary : "#CBD5E1",
+                        },
+                    ]}
+                >
+                    {isSelected && (
+                        <View
+                            style={[
+                                styles.radioInner,
+                                {
+                                    width: sw(12),
+                                    height: sw(12),
+                                    borderRadius: sw(6),
+                                    backgroundColor: COLORS.primary,
+                                },
+                            ]}
+                        />
+                    )}
+                </View>
+            </View>
         </Pressable>
     );
 });
 
-// --- main screen ------------------------------------------------
-export default function index({
-    onBack,
-    onContinue,
-    initialSelectedId = null,
-}) {
-    const { sw } = useScale();
-    const [selected, setSelected] = useState(
-        initialSelectedId ? CATEGORIES.find((c) => c.id === initialSelectedId) : null
-    );
+// --- Main Screen ------------------------------------------------
+export default function index() {
+    const { sw, sh, width } = useScale();
+    const [selected, setSelected] = useState(null);
 
     const handlePress = useCallback((item) => setSelected(item), []);
-    const keyExtractor = useCallback((it) => it.id, []);
 
     return (
-        <SafeAreaView style={{ flex: 1, backgroundColor: COLORS.bg }}>
-            <StatusBar barStyle="dark-content" />
-            <ScrollView 
-                contentContainerStyle={{ paddingHorizontal: 16, paddingTop: 20, paddingBottom: 100 }}
-                showsVerticalScrollIndicator={false}
+        <SafeAreaView style={styles.container}>
+            <StatusBar barStyle="light-content" />
+            
+            {/* Modern Header with Gradient */}
+            <LinearGradient
+                colors={[COLORS.gradientStart, COLORS.gradientEnd]}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={[styles.header, { paddingBottom: sh(24) }]}
             >
-                {/* Header */}
-                <View style={styles.header}>
-                    <Pressable
-                        hitSlop={12}
-                        onPress={()=>router.back()}
-                        style={({ pressed }) => [{ opacity: pressed ? 0.6 : 1 }]}
-                    >
-                        <Text style={[styles.back, { fontSize: sw(16) }]}>← Back</Text>
-                    </Pressable>
-                    <Text style={[styles.headerTitle, { fontSize: sw(18) }]}>Select Your Business{"\n"}Category</Text>
-                </View>
+                <Pressable
+                    hitSlop={12}
+                    onPress={() => router.back()}
+                    style={[styles.backButton, { width: sw(44), height: sw(44), borderRadius: sw(12) }]}
+                >
+                    <Text style={{ fontSize: sw(18), color: "#FFFFFF", fontWeight: "700" }}>←</Text>
+                </Pressable>
 
-                {/* Intro */}
-                <View style={{ marginBottom: sw(16), marginTop: sw(12) }}>
-                    <Text style={[styles.sectionTitle, { fontSize: sw(22), marginBottom: sw(8) }]}>
-                        What type of business do you operate?
+                <View style={[styles.headerContent, { marginTop: sh(16) }]}>
+                    <Text style={[styles.headerTitle, { fontSize: sw(26) }]}>
+                        Select Your Business
                     </Text>
-                    <Text style={[styles.sectionSub, { fontSize: sw(14) }]}>
+                    <Text style={[styles.headerSubtitle, { fontSize: sw(14), marginTop: sh(8) }]}>
                         Choose the category that best describes your services
                     </Text>
                 </View>
+            </LinearGradient>
 
-                {/* Categories */}
-                {CATEGORIES.map((item, index) => (
-                    <View key={item.id}>
-                        <CategoryItem item={item} selected={selected} onPress={handlePress} sw={sw} />
-                        {index < CATEGORIES.length - 1 && <View style={{ height: sw(12) }} />}
-                    </View>
+            {/* Content */}
+            <ScrollView
+                style={styles.scrollView}
+                contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(16), paddingTop: sh(20), paddingBottom: sh(120) }]}
+                showsVerticalScrollIndicator={false}
+            >
+                {/* Categories Grid */}
+                {CATEGORIES.map((item) => (
+                    <CategoryCard
+                        key={item.id}
+                        item={item}
+                        selected={selected}
+                        onPress={handlePress}
+                        sw={sw}
+                    />
                 ))}
 
-                {/* Note */}
-                <View style={[styles.noteBox, { borderRadius: sw(12), padding: sw(14), marginTop: sw(20) }]}>
-                    <Text style={[styles.noteText, { fontSize: sw(13), lineHeight: sw(20) }]}>
-                        <Text style={{ fontWeight: "900" }}>Note:</Text> You can offer services across multiple
-                        categories. Select the primary category that best represents your business.
+                {/* Info Note */}
+                <View style={[styles.noteContainer, { borderRadius: sw(12), padding: sw(16), marginTop: sh(8) }]}>
+                    <View style={styles.noteHeader}>
+                        <Text style={{ fontSize: sw(20), marginRight: sw(8) }}>💡</Text>
+                        <Text style={[styles.noteTitle, { fontSize: sw(14) }]}>Good to know</Text>
+                    </View>
+                    <Text style={[styles.noteText, { fontSize: sw(13), lineHeight: sw(20), marginTop: sh(8) }]}>
+                        You can offer services across multiple categories. Select the primary category that best represents your business.
                     </Text>
                 </View>
+            </ScrollView>
 
-                {/* CTA Button */}
+            {/* Fixed Bottom Button */}
+            <View style={[styles.bottomBar, { paddingHorizontal: sw(16), paddingVertical: sh(16) }]}>
                 <Pressable
-                    onPress={()=>selected && router.push("Partner/SignupMethod")}
+                    onPress={() => selected && router.push("Partner/SignupMethod")}
                     disabled={!selected}
                     style={({ pressed }) => [
-                        styles.cta,
                         {
-                            opacity: selected ? (pressed ? 0.9 : 1) : 0.6,
-                            borderRadius: sw(14),
-                            paddingVertical: sw(16),
-                            marginTop: sw(20),
+                            opacity: pressed ? 0.9 : 1,
                         },
-                        shadowStyle,
                     ]}
                 >
-                    <Text style={[styles.ctaText, { fontSize: sw(16), fontWeight: "900" }]}>
-                        {selected ? "Continue" : "Select a Category to Continue"}
-                    </Text>
+                    <LinearGradient
+                        colors={selected ? [COLORS.gradientStart, COLORS.gradientEnd] : ["#94A3B8", "#CBD5E1"]}
+                        start={{ x: 0, y: 0 }}
+                        end={{ x: 1, y: 0 }}
+                        style={[styles.ctaButton, { borderRadius: sw(14), paddingVertical: sh(16) }]}
+                    >
+                        <Text style={[styles.ctaText, { fontSize: sw(16) }]}>
+                            {selected ? `Continue with ${selected.title}` : "Select a Category"}
+                        </Text>
+                    </LinearGradient>
                 </Pressable>
-            </ScrollView>
+            </View>
         </SafeAreaView>
     );
 }
 
-// --- styles -----------------------------------------------------
-const shadowStyle =
-    Platform.OS === "ios"
-        ? { shadowColor: "#000", shadowOpacity: 0.08, shadowRadius: 10, shadowOffset: { width: 0, height: 6 } }
-        : { elevation: 2 };
-
+// --- Styles -----------------------------------------------------
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: COLORS.bg,
+    },
     header: {
-        flexDirection: "row",
-        alignItems: "center",
-        justifyContent: "space-between",
-        marginBottom: 8,
+        paddingHorizontal: 20,
+        paddingTop: Platform.OS === 'ios' ? 60 : 20,
+        shadowColor: COLORS.shadow,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.1,
+        shadowRadius: 12,
+        elevation: 8,
     },
-    back: { color: COLORS.textMuted, fontWeight: "700" },
-    headerTitle: { color: COLORS.text, fontWeight: "900", lineHeight: 24, textAlign: "right" },
-    sectionTitle: { color: COLORS.text, fontWeight: "900" },
-    sectionSub: { color: COLORS.textMuted, fontWeight: "600" },
-    row: {
-        flexDirection: "row",
+    backButton: {
+        backgroundColor: "rgba(255, 255, 255, 0.2)",
         alignItems: "center",
-        padding: 14,
+        justifyContent: "center",
+    },
+    headerContent: {
+        alignItems: "center",
+    },
+    headerTitle: {
+        color: "#FFFFFF",
+        fontWeight: "900",
+        textAlign: "center",
+        letterSpacing: 0.5,
+    },
+    headerSubtitle: {
+        color: "rgba(255, 255, 255, 0.9)",
+        textAlign: "center",
+        fontWeight: "500",
+    },
+    scrollView: {
+        flex: 1,
+    },
+    scrollContent: {
+        flexGrow: 1,
+    },
+    categoryCard: {
         borderRadius: 16,
-        borderWidth: 2,
-        gap: 12,
+        padding: 16,
         backgroundColor: COLORS.cardBg,
+        shadowColor: COLORS.shadow,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.08,
+        shadowRadius: 8,
+        elevation: 3,
     },
-    iconWrap: {
+    cardContent: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    iconContainer: {
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: COLORS.iconBg,
+        shadowColor: COLORS.shadow,
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.15,
+        shadowRadius: 4,
+        elevation: 2,
     },
-    rowText: { flex: 1 },
-    title: { color: COLORS.text, fontWeight: "900" },
-    subtitle: { color: COLORS.textMuted, marginTop: 4, fontWeight: "600" },
-    radio: { borderWidth: 2.5 },
-    noteBox: {
+    textContainer: {
+        flex: 1,
+        marginLeft: 16,
+        marginRight: 12,
+    },
+    categoryTitle: {
+        color: COLORS.text,
+        fontWeight: "800",
+        marginBottom: 4,
+    },
+    categorySubtitle: {
+        color: COLORS.textMuted,
+        fontWeight: "500",
+        lineHeight: 18,
+    },
+    radioOuter: {
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    radioInner: {},
+    noteContainer: {
         backgroundColor: COLORS.noteBg,
-        borderWidth: 2,
-        borderColor: "#93C5FD",
+        borderWidth: 1,
+        borderColor: "#FDE68A",
     },
-    noteText: { color: COLORS.noteText, fontWeight: "600" },
-    cta: {
+    noteHeader: {
+        flexDirection: "row",
+        alignItems: "center",
+    },
+    noteTitle: {
+        color: COLORS.noteText,
+        fontWeight: "700",
+    },
+    noteText: {
+        color: COLORS.noteText,
+        fontWeight: "500",
+    },
+    bottomBar: {
+        position: "absolute",
+        bottom: 0,
+        left: 0,
+        right: 0,
+        backgroundColor: COLORS.bg,
+        borderTopWidth: 1,
+        borderTopColor: COLORS.border,
+        shadowColor: COLORS.shadow,
+        shadowOffset: { width: 0, height: -2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 8,
+        elevation: 8,
+    },
+    ctaButton: {
         alignItems: "center",
         justifyContent: "center",
-        backgroundColor: "#001f3f",
+        shadowColor: COLORS.shadow,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 8,
+        elevation: 5,
     },
-    ctaText: { color: "#FFFFFF", fontWeight: "900" },
+    ctaText: {
+        color: "#FFFFFF",
+        fontWeight: "900",
+        letterSpacing: 0.5,
+    },
 });
