@@ -191,16 +191,18 @@ const styles = StyleSheet.create({
     marginBottom: 20,
   },
   headerTitle: {
-    fontSize: 32,
+    fontSize: 28,
     fontWeight: '900',
     color: '#FFFFFF',
-    marginBottom: 8,
-    letterSpacing: 0.5,
+    marginBottom: 6,
+    letterSpacing: 0.3,
+    lineHeight: 32,
   },
   headerSubtitle: {
-    fontSize: 14,
+    fontSize: 13,
     color: 'rgba(255, 255, 255, 0.8)',
     fontWeight: '600',
+    lineHeight: 18,
   },
   iconSection: {
     alignItems: 'center',
