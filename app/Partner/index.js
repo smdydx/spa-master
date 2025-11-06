@@ -13,20 +13,21 @@ import {
     Platform,
 } from "react-native";
 import { LinearGradient } from 'expo-linear-gradient';
+import { Ionicons } from '@expo/vector-icons';
 
 // --- Modern Color Palette ----------------------------------------------------
 const COLORS = {
-    bg: "#FFFFFF",
-    gradientStart: "#001f3f",
-    gradientEnd: "#1e3a8a",
+    bg: "#F8FAFC",
+    gradientStart: "#6366f1",
+    gradientEnd: "#8b5cf6",
     cardBg: "#FFFFFF",
-    text: "#001f3f",
+    text: "#0f172a",
     textMuted: "#64748B",
-    primary: "#001f3f",
+    primary: "#6366f1",
     border: "#E2E8F0",
     iconBg: "#F0F9FF",
-    selectedBorder: "#001f3f",
-    selectedBg: "#EFF6FF",
+    selectedBorder: "#6366f1",
+    selectedBg: "#EEF2FF",
     noteBg: "#FEF3C7",
     noteText: "#92400E",
     shadow: "#000000",
@@ -43,14 +44,62 @@ function useScale() {
 
 // --- Data --------------------------------------------------------
 const CATEGORIES = [
-    { id: "spa", title: "Spa & Massage", subtitle: "Full-service spa with massage therapy", gradient: ["#6366f1", "#8b5cf6"] },
-    { id: "salon", title: "Beauty Salon", subtitle: "Hair, makeup, and beauty services", gradient: ["#ec4899", "#f43f5e"] },
-    { id: "wellness", title: "Wellness Center", subtitle: "Holistic wellness and therapy center", gradient: ["#14b8a6", "#06b6d4"] },
-    { id: "home", title: "Home Service", subtitle: "Mobile spa and salon services", gradient: ["#f59e0b", "#f97316"] },
-    { id: "hotel", title: "Hotel Spa", subtitle: "Luxury hotel spa facilities", gradient: ["#3b82f6", "#2563eb"] },
-    { id: "gym", title: "Gym & Fitness", subtitle: "Fitness center with wellness services", gradient: ["#ef4444", "#dc2626"] },
-    { id: "yoga", title: "Yoga & Meditation", subtitle: "Yoga studio and meditation center", gradient: ["#8b5cf6", "#a855f7"] },
-    { id: "ayurveda", title: "Ayurveda Center", subtitle: "Traditional Ayurvedic treatments", gradient: ["#10b981", "#059669"] },
+    { 
+        id: "spa", 
+        title: "Spa & Massage", 
+        subtitle: "Full-service spa with massage therapy", 
+        icon: "water",
+        iconColor: "#6366f1"
+    },
+    { 
+        id: "salon", 
+        title: "Beauty Salon", 
+        subtitle: "Hair, makeup, and beauty services", 
+        icon: "cut",
+        iconColor: "#ec4899"
+    },
+    { 
+        id: "wellness", 
+        title: "Wellness Center", 
+        subtitle: "Holistic wellness and therapy center", 
+        icon: "heart",
+        iconColor: "#14b8a6"
+    },
+    { 
+        id: "home", 
+        title: "Home Service", 
+        subtitle: "Mobile spa and salon services", 
+        icon: "home",
+        iconColor: "#f59e0b"
+    },
+    { 
+        id: "hotel", 
+        title: "Hotel Spa", 
+        subtitle: "Luxury hotel spa facilities", 
+        icon: "business",
+        iconColor: "#3b82f6"
+    },
+    { 
+        id: "gym", 
+        title: "Gym & Fitness", 
+        subtitle: "Fitness center with wellness services", 
+        icon: "fitness",
+        iconColor: "#ef4444"
+    },
+    { 
+        id: "yoga", 
+        title: "Yoga & Meditation", 
+        subtitle: "Yoga studio and meditation center", 
+        icon: "leaf",
+        iconColor: "#8b5cf6"
+    },
+    { 
+        id: "ayurveda", 
+        title: "Ayurveda Center", 
+        subtitle: "Traditional Ayurvedic treatments", 
+        icon: "flower",
+        iconColor: "#10b981"
+    },
 ];
 
 // --- Category Card (memo) --------------------------------------------
@@ -72,14 +121,19 @@ const CategoryCard = memo(function CategoryCard({ item, selected, onPress, sw })
             ]}
         >
             <View style={styles.cardContent}>
-                <LinearGradient
-                    colors={item.gradient}
-                    start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 1 }}
-                    style={[styles.iconContainer, { width: sw(56), height: sw(56), borderRadius: sw(16) }]}
+                <View
+                    style={[
+                        styles.iconContainer, 
+                        { 
+                            width: sw(56), 
+                            height: sw(56), 
+                            borderRadius: sw(16),
+                            backgroundColor: `${item.iconColor}15`
+                        }
+                    ]}
                 >
-                    <View style={styles.iconPlaceholder} />
-                </LinearGradient>
+                    <Ionicons name={item.icon} size={sw(28)} color={item.iconColor} />
+                </View>
 
                 <View style={styles.textContainer}>
                     <Text numberOfLines={1} style={[styles.categoryTitle, { fontSize: sw(16) }]}>
@@ -145,7 +199,7 @@ export default function index() {
                     onPress={() => router.back()}
                     style={[styles.backButton, { width: sw(44), height: sw(44), borderRadius: sw(12) }]}
                 >
-                    <Text style={{ fontSize: sw(18), color: "#FFFFFF", fontWeight: "700" }}>←</Text>
+                    <Ionicons name="arrow-back" size={sw(20)} color="#FFFFFF" />
                 </Pressable>
 
                 <View style={[styles.headerContent, { marginTop: sh(16) }]}>
@@ -178,8 +232,8 @@ export default function index() {
                 {/* Info Note */}
                 <View style={[styles.noteContainer, { borderRadius: sw(12), padding: sw(16), marginTop: sh(8) }]}>
                     <View style={styles.noteHeader}>
-                        <View style={styles.infoIcon}>
-                            <Text style={[styles.infoIconText, { fontSize: sw(14) }]}>i</Text>
+                        <View style={[styles.infoIcon, { width: sw(20), height: sw(20), borderRadius: sw(10) }]}>
+                            <Ionicons name="information" size={sw(14)} color="#FFFFFF" />
                         </View>
                         <Text style={[styles.noteTitle, { fontSize: sw(14) }]}>Good to know</Text>
                     </View>
@@ -273,17 +327,6 @@ const styles = StyleSheet.create({
     iconContainer: {
         alignItems: "center",
         justifyContent: "center",
-        shadowColor: COLORS.shadow,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.15,
-        shadowRadius: 4,
-        elevation: 2,
-    },
-    iconPlaceholder: {
-        width: 28,
-        height: 28,
-        borderRadius: 14,
-        backgroundColor: "rgba(255, 255, 255, 0.3)",
     },
     textContainer: {
         flex: 1,
@@ -315,17 +358,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
     },
     infoIcon: {
-        width: 20,
-        height: 20,
-        borderRadius: 10,
         backgroundColor: COLORS.noteText,
         alignItems: "center",
         justifyContent: "center",
         marginRight: 8,
-    },
-    infoIconText: {
-        color: "#FFFFFF",
-        fontWeight: "900",
     },
     noteTitle: {
         color: COLORS.noteText,
