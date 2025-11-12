@@ -208,32 +208,23 @@ export default function index() {
                         Grow your business with India's leading wellness platform
                     </Text>
 
-                    {/* Stats Row */}
-                    <View style={[styles.statsRow, { marginTop: sh(20) }]}>
-                        <View style={styles.statItem}>
-                            <Text style={[styles.statNumber, { fontSize: sw(20) }]}>50K+</Text>
-                            <Text style={[styles.statLabel, { fontSize: sw(11) }]}>Partners</Text>
-                        </View>
-                        <View style={styles.statDivider} />
-                        <View style={styles.statItem}>
-                            <Text style={[styles.statNumber, { fontSize: sw(20) }]}>2M+</Text>
-                            <Text style={[styles.statLabel, { fontSize: sw(11) }]}>Bookings</Text>
-                        </View>
-                        <View style={styles.statDivider} />
-                        <View style={styles.statItem}>
-                            <Text style={[styles.statNumber, { fontSize: sw(20) }]}>100+</Text>
-                            <Text style={[styles.statLabel, { fontSize: sw(11) }]}>Cities</Text>
-                        </View>
-                    </View>
+                    
                 </View>
             </LinearGradient>
 
             {/* Content */}
-            <ScrollView
-                style={styles.scrollView}
-                contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(16), paddingTop: sh(20), paddingBottom: sh(140), borderTopLeftRadius: sw(24), borderTopRightRadius: sw(24), backgroundColor: COLORS.bg }]}
-                showsVerticalScrollIndicator={false}
-            >
+            <View style={styles.scrollView}>
+                <LinearGradient
+                    colors={['#FFFFFF', '#F8FAFC', '#F1F5F9']}
+                    start={{ x: 0, y: 0 }}
+                    end={{ x: 0, y: 1 }}
+                    style={styles.contentGradient}
+                />
+                <ScrollView
+                    style={styles.scrollViewInner}
+                    contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(16), paddingTop: sh(20), paddingBottom: sh(140) }]}
+                    showsVerticalScrollIndicator={false}
+                >
                 {/* Section Title */}
                 <View style={[styles.sectionHeader, { marginBottom: sh(16) }]}>
                     <Text style={[styles.sectionTitle, { fontSize: sw(18) }]}>
@@ -255,44 +246,9 @@ export default function index() {
                     />
                 ))}
 
-                {/* Benefits Section */}
-                <View style={[styles.benefitsContainer, { borderRadius: sw(16), padding: sw(16), marginTop: sh(16) }]}>
-                    <View style={styles.benefitsHeader}>
-                        <Ionicons name="rocket" size={sw(20)} color={COLORS.primary} />
-                        <Text style={[styles.benefitsTitle, { fontSize: sw(16), marginLeft: sw(8) }]}>
-                            Why Partner With Us?
-                        </Text>
-                    </View>
-                    
-                    <View style={[styles.benefitItem, { marginTop: sh(12) }]}>
-                        <Ionicons name="checkmark-circle" size={sw(18)} color={COLORS.iconColor} />
-                        <Text style={[styles.benefitText, { fontSize: sw(13), marginLeft: sw(8) }]}>
-                            Zero commission on first 30 bookings
-                        </Text>
-                    </View>
-                    
-                    <View style={styles.benefitItem}>
-                        <Ionicons name="checkmark-circle" size={sw(18)} color={COLORS.iconColor} />
-                        <Text style={[styles.benefitText, { fontSize: sw(13), marginLeft: sw(8) }]}>
-                            Instant payment settlement
-                        </Text>
-                    </View>
-                    
-                    <View style={styles.benefitItem}>
-                        <Ionicons name="checkmark-circle" size={sw(18)} color={COLORS.iconColor} />
-                        <Text style={[styles.benefitText, { fontSize: sw(13), marginLeft: sw(8) }]}>
-                            Free digital marketing support
-                        </Text>
-                    </View>
-                    
-                    <View style={styles.benefitItem}>
-                        <Ionicons name="checkmark-circle" size={sw(18)} color={COLORS.iconColor} />
-                        <Text style={[styles.benefitText, { fontSize: sw(13), marginLeft: sw(8) }]}>
-                            24/7 dedicated partner support
-                        </Text>
-                    </View>
-                </View>
-            </ScrollView>
+                
+                </ScrollView>
+            </View>
 
             {/* Fixed Bottom Button */}
             <View style={[styles.bottomBar, { paddingHorizontal: sw(16), paddingVertical: sh(16) }]}>
@@ -378,37 +334,21 @@ const styles = StyleSheet.create({
         fontWeight: "500",
         paddingHorizontal: 20,
     },
-    statsRow: {
-        flexDirection: 'row',
-        justifyContent: 'space-around',
-        alignItems: 'center',
-        backgroundColor: 'rgba(255, 255, 255, 0.1)',
-        borderRadius: 16,
-        paddingVertical: 16,
-        paddingHorizontal: 20,
-        width: '100%',
-    },
-    statItem: {
-        alignItems: 'center',
-        flex: 1,
-    },
-    statNumber: {
-        color: '#00FF87',
-        fontWeight: '900',
-        marginBottom: 4,
-    },
-    statLabel: {
-        color: 'rgba(255, 255, 255, 0.8)',
-        fontWeight: '600',
-    },
-    statDivider: {
-        width: 1,
-        height: 30,
-        backgroundColor: 'rgba(255, 255, 255, 0.2)',
-    },
+    
     scrollView: {
         flex: 1,
         marginTop: -20,
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
+        overflow: 'hidden',
+    },
+    contentGradient: {
+        ...StyleSheet.absoluteFillObject,
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
+    },
+    scrollViewInner: {
+        flex: 1,
     },
     scrollContent: {
         flexGrow: 1,
@@ -463,29 +403,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     radioInner: {},
-    benefitsContainer: {
-        backgroundColor: COLORS.noteBg,
-        borderWidth: 1,
-        borderColor: '#C8E6C9',
-    },
-    benefitsHeader: {
-        flexDirection: 'row',
-        alignItems: 'center',
-    },
-    benefitsTitle: {
-        color: COLORS.primary,
-        fontWeight: "800",
-    },
-    benefitItem: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        marginTop: 10,
-    },
-    benefitText: {
-        color: COLORS.noteText,
-        fontWeight: "600",
-        flex: 1,
-    },
+    
     bottomBar: {
         position: "absolute",
         bottom: 0,
