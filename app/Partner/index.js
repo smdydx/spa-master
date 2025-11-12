@@ -201,11 +201,14 @@ export default function index() {
                 </View>
 
                 <View style={[styles.headerContent, { marginTop: sh(20) }]}>
-                    <Text style={[styles.headerTitle, { fontSize: sw(24) }]}>
-                        Join Our Partner Network
+                    <Text style={[styles.headerTitle, { fontSize: sw(24), color: '#013B1F' }]}>
+                        OMBARO
                     </Text>
-                    <Text style={[styles.headerSubtitle, { fontSize: sw(12), marginTop: sh(8) }]}>
-                        Grow your business with India's leading wellness platform
+                    <Text style={[styles.headerSubtitle, { fontSize: sw(14), marginTop: sh(4), color: '#016B3A', fontWeight: '600' }]}>
+                        Beauty & Wellness Hub
+                    </Text>
+                    <Text style={[styles.headerSubtitle, { fontSize: sw(12), marginTop: sh(8), color: '#013B1F' }]}>
+                        Welcome to Your Beauty Journey
                     </Text>
 
                     
@@ -215,11 +218,18 @@ export default function index() {
             {/* Content */}
             <View style={[styles.scrollView, { borderTopLeftRadius: sw(28), borderTopRightRadius: sw(28), overflow: 'hidden' }]}>
                 <LinearGradient
-                    colors={['#F8FAFC', '#FFFFFF', '#F8FAFC']}
+                    colors={['#E8F5E9', '#F1F8F1', '#FFFFFF']}
                     start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
+                    end={{ x: 0, y: 1 }}
                     style={styles.contentGradient}
                 />
+                {/* Leaf Pattern Overlay */}
+                <View style={styles.leafPattern}>
+                    <Ionicons name="leaf" size={sw(120)} color="rgba(1, 107, 58, 0.03)" style={{ position: 'absolute', top: sh(20), right: sw(-20), transform: [{ rotate: '25deg' }] }} />
+                    <Ionicons name="leaf" size={sw(80)} color="rgba(1, 107, 58, 0.04)" style={{ position: 'absolute', top: sh(140), left: sw(-10), transform: [{ rotate: '-15deg' }] }} />
+                    <Ionicons name="leaf" size={sw(100)} color="rgba(1, 107, 58, 0.03)" style={{ position: 'absolute', top: sh(280), right: sw(10), transform: [{ rotate: '45deg' }] }} />
+                    <Ionicons name="leaf" size={sw(70)} color="rgba(1, 107, 58, 0.05)" style={{ position: 'absolute', top: sh(400), left: sw(20), transform: [{ rotate: '-30deg' }] }} />
+                </View>
                 <ScrollView
                     style={styles.scrollViewInner}
                     contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(20), paddingTop: sh(40), paddingBottom: sh(140) }]}
@@ -342,6 +352,11 @@ const styles = StyleSheet.create({
         backgroundColor: '#FFFFFF',
     },
     contentGradient: {
+        ...StyleSheet.absoluteFillObject,
+        borderTopLeftRadius: 24,
+        borderTopRightRadius: 24,
+    },
+    leafPattern: {
         ...StyleSheet.absoluteFillObject,
         borderTopLeftRadius: 24,
         borderTopRightRadius: 24,
