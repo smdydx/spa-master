@@ -19,8 +19,8 @@ import {
 
 const COLORS = {
   primary: "#016B3A",
-  gradientColors: ["#00D98A", "#00B572", "#00965E", "#016B3A"],
-  statusBarGradient: ["#00FF87", "#00D98A", "#00B572"],
+  gradientColors: ["#00E676", "#00C853", "#00965E", "#016B3A"],
+  statusBarGradient: ["#00E676", "#00C853", "#00965E"],
   accent: "#FFFFFF",
   dark: "#2C2C2C",
   white: "#FFFFFF",
@@ -66,18 +66,17 @@ const FeatureCard = ({ icon: Icon, title, description, sw, sh }) => (
     style={[
       styles.featureCard,
       {
-        borderRadius: sw(20),
-        padding: sw(20),
-        width: sw(105),
+        borderRadius: sw(16),
+        padding: sw(16),
         ...Platform.select({
           ios: {
             shadowColor: "#000",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.06,
-            shadowRadius: 12,
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.08,
+            shadowRadius: 8,
           },
           android: {
-            elevation: 4,
+            elevation: 3,
           },
         }),
       },
@@ -87,23 +86,23 @@ const FeatureCard = ({ icon: Icon, title, description, sw, sh }) => (
       style={[
         styles.featureIcon,
         {
-          width: sw(52),
-          height: sw(52),
-          borderRadius: sw(16),
+          width: sw(48),
+          height: sw(48),
+          borderRadius: sw(14),
         },
       ]}
     >
-      <Icon size={sw(26)} color="#016B3A" strokeWidth={2.5} />
+      <Icon size={sw(24)} color="#016B3A" strokeWidth={2.5} />
     </View>
     <Text
-      style={[styles.featureTitle, { fontSize: sw(15), marginTop: sh(14) }]}
+      style={[styles.featureTitle, { fontSize: sw(14), marginTop: sh(12) }]}
     >
       {title}
     </Text>
     <Text
       style={[
         styles.featureDescription,
-        { fontSize: sw(11.5), marginTop: sh(6), lineHeight: sh(15) },
+        { fontSize: sw(11), marginTop: sh(6), lineHeight: sh(14) },
       ]}
     >
       {description}
@@ -117,10 +116,10 @@ const QuickAccessPill = ({ label, nav, router, sw, sh }) => {
       style={[
         styles.pill,
         {
-          paddingHorizontal: sw(18),
+          paddingHorizontal: sw(16),
           paddingVertical: sh(10),
-          borderRadius: sw(22),
-          marginRight: sw(10),
+          borderRadius: sw(20),
+          marginRight: sw(8),
           marginBottom: sh(10),
         },
       ]}
@@ -144,7 +143,7 @@ export default function WelcomeScreen() {
         translucent={true}
       />
 
-      {/* Header with Gradient matching status bar */}
+      {/* Header with Dark Green Gradient matching status bar */}
       <LinearGradient
         colors={COLORS.statusBarGradient}
         start={{ x: 0.5, y: 0 }}
@@ -152,26 +151,26 @@ export default function WelcomeScreen() {
         style={[
           styles.header,
           {
-            paddingBottom: sh(32),
-            paddingTop: Platform.OS === "ios" ? sh(50) : sh(40),
+            paddingBottom: sh(30),
+            paddingTop: Platform.OS === "ios" ? sh(50) : sh(45),
             paddingHorizontal: sw(24),
           },
         ]}
       >
         <View style={styles.brandSection}>
           <AppLogo sw={sw} />
-          <Text style={[styles.brand, { fontSize: sw(32), marginTop: sh(18) }]}>
+          <Text style={[styles.brand, { fontSize: sw(30), marginTop: sh(16) }]}>
             OMBARO
           </Text>
           <Text
-            style={[styles.tagline, { fontSize: sw(13), marginTop: sh(6) }]}
+            style={[styles.tagline, { fontSize: sw(12.5), marginTop: sh(6) }]}
           >
             Beauty & Wellness Hub
           </Text>
           <Text
             style={[
               styles.welcomeTitle,
-              { fontSize: sw(22), marginTop: sh(20) },
+              { fontSize: sw(20), marginTop: sh(18) },
             ]}
           >
             Welcome to Your Beauty Journey
@@ -179,7 +178,7 @@ export default function WelcomeScreen() {
           <Text
             style={[
               styles.welcomeSubtitle,
-              { fontSize: sw(14), marginTop: sh(8) },
+              { fontSize: sw(13), marginTop: sh(6) },
             ]}
           >
             Premium spa & wellness services
@@ -192,9 +191,9 @@ export default function WelcomeScreen() {
         style={[
           styles.contentSection,
           {
-            borderTopLeftRadius: sw(32),
-            borderTopRightRadius: sw(32),
-            marginTop: -sh(24),
+            borderTopLeftRadius: sw(30),
+            borderTopRightRadius: sw(30),
+            marginTop: -sh(22),
           },
         ]}
       >
@@ -205,8 +204,8 @@ export default function WelcomeScreen() {
           style={[
             styles.contentGradient,
             {
-              borderTopLeftRadius: sw(32),
-              borderTopRightRadius: sw(32),
+              borderTopLeftRadius: sw(30),
+              borderTopRightRadius: sw(30),
             },
           ]}
         />
@@ -215,15 +214,15 @@ export default function WelcomeScreen() {
           contentContainerStyle={[
             styles.scrollContent,
             {
-              paddingHorizontal: sw(24),
-              paddingTop: sh(32),
+              paddingHorizontal: sw(20),
+              paddingTop: sh(28),
               paddingBottom: sh(40),
             },
           ]}
           showsVerticalScrollIndicator={false}
         >
-          {/* Features Grid */}
-          <View style={[styles.featuresGrid, { marginBottom: sh(28), gap: sw(12) }]}>
+          {/* Features Grid - Fixed width, no horizontal scroll */}
+          <View style={[styles.featuresGrid, { marginBottom: sh(24) }]}>
             <FeatureCard
               icon={MapPin}
               title="Find Nearby"
@@ -248,7 +247,7 @@ export default function WelcomeScreen() {
           </View>
 
           {/* Primary Buttons */}
-          <View style={[styles.buttonContainer, { gap: sh(14) }]}>
+          <View style={[styles.buttonContainer, { gap: sh(12) }]}>
             <TouchableOpacity
               onPress={() => router.push("/auth/phone-register")}
               activeOpacity={0.9}
@@ -260,12 +259,12 @@ export default function WelcomeScreen() {
                 style={[
                   styles.primaryButton,
                   {
-                    borderRadius: sw(16),
-                    paddingVertical: sh(18),
+                    borderRadius: sw(14),
+                    paddingVertical: sh(16),
                   },
                 ]}
               >
-                <Text style={[styles.primaryButtonText, { fontSize: sw(17) }]}>
+                <Text style={[styles.primaryButtonText, { fontSize: sw(16) }]}>
                   GET STARTED
                 </Text>
               </LinearGradient>
@@ -275,15 +274,15 @@ export default function WelcomeScreen() {
               style={[
                 styles.secondaryButton,
                 {
-                  borderRadius: sw(16),
-                  paddingVertical: sh(18),
+                  borderRadius: sw(14),
+                  paddingVertical: sh(16),
                   borderWidth: 2,
                 },
               ]}
               onPress={() => router.push("/auth/phone-register")}
               activeOpacity={0.7}
             >
-              <Text style={[styles.secondaryButtonText, { fontSize: sw(17) }]}>
+              <Text style={[styles.secondaryButtonText, { fontSize: sw(16) }]}>
                 Login to Account
               </Text>
             </TouchableOpacity>
@@ -292,19 +291,19 @@ export default function WelcomeScreen() {
               style={[
                 styles.partnerButton,
                 {
-                  borderRadius: sw(16),
-                  paddingVertical: sh(16),
+                  borderRadius: sw(14),
+                  paddingVertical: sh(14),
                   borderWidth: 1.5,
                 },
               ]}
               onPress={() => router.push("/Partner")}
               activeOpacity={0.7}
             >
-              <Building2 size={sw(20)} color="#016B3A" strokeWidth={2.5} />
+              <Building2 size={sw(18)} color="#016B3A" strokeWidth={2.5} />
               <Text
                 style={[
                   styles.partnerButtonText,
-                  { fontSize: sw(15), marginLeft: sw(10) },
+                  { fontSize: sw(14), marginLeft: sw(8) },
                 ]}
               >
                 Become a Partner
@@ -313,11 +312,11 @@ export default function WelcomeScreen() {
           </View>
 
           {/* Quick Access Section */}
-          <View style={[styles.quickAccessSection, { marginTop: sh(32) }]}>
+          <View style={[styles.quickAccessSection, { marginTop: sh(28) }]}>
             <Text
               style={[
                 styles.quickAccessTitle,
-                { fontSize: sw(14), marginBottom: sh(16) },
+                { fontSize: sw(13), marginBottom: sh(14) },
               ]}
             >
               QUICK ACCESS
@@ -413,7 +412,7 @@ const styles = StyleSheet.create({
   brand: {
     fontWeight: "900",
     color: "#FFFFFF",
-    letterSpacing: 3,
+    letterSpacing: 2.5,
   },
   tagline: {
     color: "rgba(255, 255, 255, 0.95)",
@@ -446,7 +445,8 @@ const styles = StyleSheet.create({
   featuresGrid: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "flex-start",
+    alignItems: "stretch",
+    gap: 10,
   },
   featureCard: {
     flex: 1,
@@ -454,6 +454,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#E8F5E9",
     alignItems: "center",
+    minHeight: 140,
   },
   featureIcon: {
     backgroundColor: "#E8F5E9",
@@ -469,6 +470,7 @@ const styles = StyleSheet.create({
     color: "#64748B",
     textAlign: "center",
     fontWeight: "500",
+    flex: 1,
   },
   buttonContainer: {
     width: "100%",
@@ -521,11 +523,12 @@ const styles = StyleSheet.create({
   quickAccessTitle: {
     fontWeight: "800",
     color: "#016B3A",
-    letterSpacing: 1.8,
+    letterSpacing: 1.5,
   },
   pillsContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
+    justifyContent: "flex-start",
   },
   pill: {
     backgroundColor: "#E8F5E9",
