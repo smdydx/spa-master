@@ -213,12 +213,12 @@ export default function index() {
             </LinearGradient>
 
             {/* Content */}
-            <View style={[styles.scrollView, { borderTopLeftRadius: sw(24), borderTopRightRadius: sw(24) }]}>
+            <View style={[styles.scrollView, { borderTopLeftRadius: sw(28), borderTopRightRadius: sw(28), overflow: 'hidden' }]}>
                 <LinearGradient
                     colors={['#F8FAFC', '#FFFFFF', '#F8FAFC']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    style={[styles.contentGradient, { borderTopLeftRadius: sw(24), borderTopRightRadius: sw(24) }]}
+                    style={styles.contentGradient}
                 />
                 <ScrollView
                     style={styles.scrollViewInner}
