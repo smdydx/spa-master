@@ -130,7 +130,11 @@ export default function WelcomeScreen() {
 
   return (
     <SafeAreaView style={styles.container}>
-      <StatusBar backgroundColor="#016B3A" barStyle="light-content" />
+      <StatusBar 
+        backgroundColor="#016B3A" 
+        barStyle="light-content"
+        translucent={false}
+      />
 
       {/* Header with Gradient */}
       <LinearGradient
