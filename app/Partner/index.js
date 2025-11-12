@@ -24,7 +24,7 @@ const COLORS = {
     textMuted: "#64748B",
     primary: "#016B3A",
     border: "#E2E8F0",
-    iconColor: "#00FF87",
+    iconColor: "#016B3A",
     selectedBorder: "#016B3A",
     selectedBg: "#E8F5E9",
     noteBg: "#E8F5E9",
@@ -231,7 +231,7 @@ export default function index() {
             {/* Content */}
             <ScrollView
                 style={styles.scrollView}
-                contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(16), paddingTop: sh(20), paddingBottom: sh(140) }]}
+                contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(16), paddingTop: sh(20), paddingBottom: sh(140), borderTopLeftRadius: sw(24), borderTopRightRadius: sw(24), backgroundColor: COLORS.bg }]}
                 showsVerticalScrollIndicator={false}
             >
                 {/* Section Title */}
@@ -408,6 +408,7 @@ const styles = StyleSheet.create({
     },
     scrollView: {
         flex: 1,
+        marginTop: -20,
     },
     scrollContent: {
         flexGrow: 1,
