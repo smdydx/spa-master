@@ -219,14 +219,11 @@ export default function index() {
                 </View>
 
                 <View style={[styles.headerContent, { marginTop: sh(20), paddingHorizontal: sw(20) }]}>
-                    <Text style={[styles.headerTitle, { fontSize: sw(24), color: '#013B1F' }]}>
-                        OMBARO
+                    <Text style={[styles.headerTitle, { fontSize: sw(24), color: '#FFFFFF' }]}>
+                        Join Our Partner Network
                     </Text>
-                    <Text style={[styles.headerSubtitle, { fontSize: sw(14), marginTop: sh(4), color: '#016B3A', fontWeight: '600' }]}>
-                        Beauty & Wellness Hub
-                    </Text>
-                    <Text style={[styles.headerSubtitle, { fontSize: sw(12), marginTop: sh(8), color: '#013B1F' }]}>
-                        Welcome to Your Beauty Journey
+                    <Text style={[styles.headerSubtitle, { fontSize: sw(12), marginTop: sh(8), color: '#FFFFFF' }]}>
+                        Grow your business with India's leading wellness platform
                     </Text>
                 </View>
             </LinearGradient>
