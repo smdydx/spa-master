@@ -1,6 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, CheckCircle, Gift, Lock, Mail, Phone, Sparkles, User } from 'lucide-react-native';
+import { Ionicons } from '@expo/vector-icons';
 import { useEffect, useRef, useState } from 'react';
 import {
   Animated,
@@ -417,23 +418,60 @@ export default function PhoneRegisterScreen() {
         </View>
 
         <View style={styles.whiteSection}>
+          {/* Leaf Pattern Overlay */}
+          <View style={styles.leafPattern}>
+            <Ionicons
+              name="leaf"
+              size={moderateScale(120)}
+              color="rgba(1, 107, 58, 0.03)"
+              style={{
+                position: 'absolute',
+                top: verticalScale(20),
+                right: -moderateScale(20),
+                transform: [{ rotate: '25deg' }],
+              }}
+            />
+            <Ionicons
+              name="leaf"
+              size={moderateScale(80)}
+              color="rgba(1, 107, 58, 0.04)"
+              style={{
+                position: 'absolute',
+                top: verticalScale(140),
+                left: -moderateScale(10),
+                transform: [{ rotate: '-15deg' }],
+              }}
+            />
+            <Ionicons
+              name="leaf"
+              size={moderateScale(100)}
+              color="rgba(1, 107, 58, 0.03)"
+              style={{
+                position: 'absolute',
+                top: verticalScale(280),
+                right: moderateScale(10),
+                transform: [{ rotate: '45deg' }],
+              }}
+            />
+            <Ionicons
+              name="leaf"
+              size={moderateScale(70)}
+              color="rgba(1, 107, 58, 0.05)"
+              style={{
+                position: 'absolute',
+                bottom: verticalScale(100),
+                left: moderateScale(20),
+                transform: [{ rotate: '-30deg' }],
+              }}
+            />
+          </View>
+
           <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
             keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 24}
           >
-            <ScrollView
-              ref={scrollRef}
-              keyboardShouldPersistTaps="always"
-              contentContainerStyle={[
-                styles.formScrollContent,
-                { paddingBottom: Math.max(verticalScale(24), kbHeight + verticalScale(12)) },
-              ]}
-              showsVerticalScrollIndicator={false}
-              contentInsetAdjustmentBehavior="automatic"
-              automaticallyAdjustKeyboardInsets
-              style={{ flex: 1 }}
-            >
+            <View style={styles.formScrollContent}>
               <View style={styles.tabSwitch}>
                 {tabOptions.map((tab) => {
                   const isActive = selectedTab === tab.key;
@@ -673,9 +711,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: moderateScale(20),
     paddingTop: verticalScale(24),
     paddingBottom: verticalScale(16),
+    borderTopLeftRadius: moderateScale(28),
+    borderTopRightRadius: moderateScale(28),
+    marginTop: isTablet ? 0 : -verticalScale(20),
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  leafPattern: {
+    ...StyleSheet.absoluteFillObject,
+    borderTopLeftRadius: moderateScale(28),
+    borderTopRightRadius: moderateScale(28),
   },
   formScrollContent: {
-    flexGrow: 1,
+    flex: 1,
     paddingBottom: verticalScale(24),
   },
   tabSwitch: {
