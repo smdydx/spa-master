@@ -35,9 +35,16 @@ const COLORS = {
 // --- Responsive helpers -----------------------------------------
 function useScale() {
     const { width, height } = useWindowDimensions();
-    const base = Math.min(Math.max(width, 320), 480);
-    const sw = (n) => Math.round((base / 390) * n);
-    const sh = (n) => Math.round((height / 844) * n);
+    const baseWidth = 390;
+    const baseHeight = 844;
+    
+    // More accurate scaling for different screen sizes
+    const scale = Math.min(width / baseWidth, 1.2);
+    const verticalScale = Math.min(height / baseHeight, 1.2);
+    
+    const sw = (size) => Math.round(size * scale);
+    const sh = (size) => Math.round(size * verticalScale);
+    
     return { sw, sh, width, height };
 }
 
@@ -94,20 +101,32 @@ const CATEGORIES = [
 ];
 
 // --- Category Card (memo) --------------------------------------------
-const CategoryCard = memo(function CategoryCard({ item, selected, onPress, sw }) {
+const CategoryCard = memo(function CategoryCard({ item, selected, onPress, sw, sh }) {
     const isSelected = selected?.id === item.id;
     
     return (
         <Pressable
             onPress={() => onPress(item)}
             style={({ pressed }) => [
-                styles.categoryCard,
                 {
+                    borderRadius: sw(16),
+                    padding: sw(14),
+                    marginBottom: sh(12),
                     borderWidth: 2,
                     borderColor: isSelected ? COLORS.selectedBorder : COLORS.border,
                     backgroundColor: isSelected ? COLORS.selectedBg : COLORS.cardBg,
                     transform: [{ scale: pressed ? 0.97 : 1 }],
-                    marginBottom: sw(12),
+                    ...Platform.select({
+                        ios: {
+                            shadowColor: COLORS.shadow,
+                            shadowOffset: { width: 0, height: 2 },
+                            shadowOpacity: 0.08,
+                            shadowRadius: 8,
+                        },
+                        android: {
+                            elevation: 3,
+                        },
+                    }),
                 },
             ]}
         >
@@ -135,7 +154,6 @@ const CategoryCard = memo(function CategoryCard({ item, selected, onPress, sw })
                     </Text>
                 </View>
 
-                {/* Selection Indicator */}
                 <View
                     style={[
                         styles.radioOuter,
@@ -169,7 +187,7 @@ const CategoryCard = memo(function CategoryCard({ item, selected, onPress, sw })
 
 // --- Main Screen ------------------------------------------------
 export default function index() {
-    const { sw, sh, width } = useScale();
+    const { sw, sh, width, height } = useScale();
     const [selected, setSelected] = useState(null);
 
     const handlePress = useCallback((item) => setSelected(item), []);
@@ -183,9 +201,9 @@ export default function index() {
                 colors={COLORS.gradientColors}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 0, y: 1 }}
-                style={[styles.header, { paddingBottom: sh(24) }]}
+                style={[styles.header, { paddingBottom: sh(30), paddingTop: Platform.OS === 'ios' ? sh(60) : sh(20) }]}
             >
-                <View style={styles.headerTop}>
+                <View style={[styles.headerTop, { paddingHorizontal: sw(20) }]}>
                     <Pressable
                         hitSlop={12}
                         onPress={() => router.back()}
@@ -194,59 +212,70 @@ export default function index() {
                         <Ionicons name="arrow-back" size={sw(20)} color="#FFFFFF" />
                     </Pressable>
 
-                    <View style={styles.headerBadge}>
+                    <View style={[styles.headerBadge, { paddingHorizontal: sw(12), paddingVertical: sh(6), borderRadius: sw(20) }]}>
                         <Ionicons name="briefcase" size={sw(16)} color="#00FF87" />
-                        <Text style={[styles.headerBadgeText, { fontSize: sw(12) }]}>Partner Program</Text>
+                        <Text style={[styles.headerBadgeText, { fontSize: sw(12), marginLeft: sw(6) }]}>Partner Program</Text>
                     </View>
                 </View>
 
-                <View style={[styles.headerContent, { marginTop: sh(20) }]}>
-                    <Text style={[styles.headerTitle, { fontSize: sw(24) }]}>
-                        Join Our Partner Network
+                <View style={[styles.headerContent, { marginTop: sh(20), paddingHorizontal: sw(20) }]}>
+                    <Text style={[styles.headerTitle, { fontSize: sw(24), color: '#013B1F' }]}>
+                        OMBARO
                     </Text>
-                    <Text style={[styles.headerSubtitle, { fontSize: sw(12), marginTop: sh(8) }]}>
-                        Grow your business with India's leading wellness platform
+                    <Text style={[styles.headerSubtitle, { fontSize: sw(14), marginTop: sh(4), color: '#016B3A', fontWeight: '600' }]}>
+                        Beauty & Wellness Hub
                     </Text>
-
-                    
+                    <Text style={[styles.headerSubtitle, { fontSize: sw(12), marginTop: sh(8), color: '#013B1F' }]}>
+                        Welcome to Your Beauty Journey
+                    </Text>
                 </View>
             </LinearGradient>
 
-            {/* Content */}
+            {/* Content with Leaf Pattern */}
             <View style={[styles.scrollView, { borderTopLeftRadius: sw(28), borderTopRightRadius: sw(28), overflow: 'hidden' }]}>
+                {/* Gradient Background */}
                 <LinearGradient
-                    colors={['#F8FAFC', '#FFFFFF', '#F8FAFC']}
+                    colors={['#E8F5E9', '#F1F8F1', '#FFFFFF']}
                     start={{ x: 0, y: 0 }}
-                    end={{ x: 1, y: 0 }}
-                    style={styles.contentGradient}
+                    end={{ x: 0, y: 1 }}
+                    style={[styles.contentGradient, { borderTopLeftRadius: sw(28), borderTopRightRadius: sw(28) }]}
                 />
+                
+                {/* Leaf Pattern Overlay */}
+                <View style={[styles.leafPattern, { borderTopLeftRadius: sw(28), borderTopRightRadius: sw(28) }]}>
+                    <Ionicons name="leaf" size={sw(120)} color="rgba(1, 107, 58, 0.03)" style={{ position: 'absolute', top: sh(20), right: sw(-20), transform: [{ rotate: '25deg' }] }} />
+                    <Ionicons name="leaf" size={sw(80)} color="rgba(1, 107, 58, 0.04)" style={{ position: 'absolute', top: sh(140), left: sw(-10), transform: [{ rotate: '-15deg' }] }} />
+                    <Ionicons name="leaf" size={sw(100)} color="rgba(1, 107, 58, 0.03)" style={{ position: 'absolute', top: sh(280), right: sw(10), transform: [{ rotate: '45deg' }] }} />
+                    <Ionicons name="leaf" size={sw(70)} color="rgba(1, 107, 58, 0.05)" style={{ position: 'absolute', top: sh(400), left: sw(20), transform: [{ rotate: '-30deg' }] }} />
+                    <Ionicons name="leaf" size={sw(90)} color="rgba(1, 107, 58, 0.02)" style={{ position: 'absolute', top: sh(520), right: sw(30), transform: [{ rotate: '60deg' }] }} />
+                </View>
+
                 <ScrollView
                     style={styles.scrollViewInner}
                     contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(20), paddingTop: sh(40), paddingBottom: sh(140) }]}
                     showsVerticalScrollIndicator={false}
                 >
-                {/* Section Title */}
-                <View style={[styles.sectionHeader, { marginBottom: sh(20) }]}>
-                    <Text style={[styles.sectionTitle, { fontSize: sw(15) }]}>
-                        Select Your Business Type
-                    </Text>
-                    <Text style={[styles.sectionSubtitle, { fontSize: sw(11) }]}>
-                        Choose the category that best describes your services
-                    </Text>
-                </View>
+                    {/* Section Title */}
+                    <View style={[styles.sectionHeader, { marginBottom: sh(20) }]}>
+                        <Text style={[styles.sectionTitle, { fontSize: sw(15) }]}>
+                            Select Your Business Type
+                        </Text>
+                        <Text style={[styles.sectionSubtitle, { fontSize: sw(11), marginTop: sh(4) }]}>
+                            Choose the category that best describes your services
+                        </Text>
+                    </View>
 
-                {/* Categories Grid */}
-                {CATEGORIES.map((item) => (
-                    <CategoryCard
-                        key={item.id}
-                        item={item}
-                        selected={selected}
-                        onPress={handlePress}
-                        sw={sw}
-                    />
-                ))}
-
-                
+                    {/* Categories Grid */}
+                    {CATEGORIES.map((item) => (
+                        <CategoryCard
+                            key={item.id}
+                            item={item}
+                            selected={selected}
+                            onPress={handlePress}
+                            sw={sw}
+                            sh={sh}
+                        />
+                    ))}
                 </ScrollView>
             </View>
 
@@ -287,8 +316,6 @@ const styles = StyleSheet.create({
         backgroundColor: COLORS.bg,
     },
     header: {
-        paddingHorizontal: 20,
-        paddingTop: Platform.OS === 'ios' ? 60 : 20,
         shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.15,
@@ -309,42 +336,34 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         backgroundColor: 'rgba(255, 255, 255, 0.15)',
-        paddingHorizontal: 12,
-        paddingVertical: 6,
-        borderRadius: 20,
     },
     headerBadgeText: {
         color: '#FFFFFF',
         fontWeight: '700',
-        marginLeft: 6,
     },
     headerContent: {
         alignItems: "center",
     },
     headerTitle: {
-        color: "#FFFFFF",
         fontWeight: "900",
         textAlign: "center",
         letterSpacing: 0.5,
         lineHeight: 36,
     },
     headerSubtitle: {
-        color: "rgba(255, 255, 255, 0.9)",
         textAlign: "center",
         fontWeight: "500",
-        paddingHorizontal: 20,
     },
-    
     scrollView: {
         flex: 1,
         marginTop: 0,
-        overflow: 'hidden',
         backgroundColor: '#FFFFFF',
     },
     contentGradient: {
         ...StyleSheet.absoluteFillObject,
-        borderTopLeftRadius: 24,
-        borderTopRightRadius: 24,
+    },
+    leafPattern: {
+        ...StyleSheet.absoluteFillObject,
     },
     scrollViewInner: {
         flex: 1,
@@ -352,27 +371,14 @@ const styles = StyleSheet.create({
     scrollContent: {
         flexGrow: 1,
     },
-    sectionHeader: {
-        marginBottom: 12,
-    },
+    sectionHeader: {},
     sectionTitle: {
         color: COLORS.text,
         fontWeight: "800",
-        marginBottom: 4,
     },
     sectionSubtitle: {
         color: COLORS.textMuted,
         fontWeight: "500",
-    },
-    categoryCard: {
-        borderRadius: 16,
-        padding: 14,
-        backgroundColor: COLORS.cardBg,
-        shadowColor: COLORS.shadow,
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.08,
-        shadowRadius: 8,
-        elevation: 3,
     },
     cardContent: {
         flexDirection: "row",
@@ -402,7 +408,6 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     radioInner: {},
-    
     bottomBar: {
         position: "absolute",
         bottom: 0,
