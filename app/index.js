@@ -88,16 +88,11 @@ export default function WelcomeScreen() {
       <View style={styles.splitContainer}>
         {/* Top Section (2 parts) */}
         <View style={styles.topSection}>
-          <Image
-            source={require('../assets/images/japanese-girl-bg.jpg')}
-            style={styles.topSectionBg}
-            resizeMode="cover"
-            fadeDuration={200}
-            progressiveRenderingEnabled={true}
-          />
           <LinearGradient
-            colors={['rgba(1, 107, 58, 0.5)', 'rgba(1, 107, 58, 0.4)', 'rgba(1, 59, 31, 0.55)']}
+            colors={['#00FF87', '#016B3A', '#013B1F', '#012B17']}
             style={styles.topSectionOverlay}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
           />
           <View style={styles.topContent}>
             <AppLogo />

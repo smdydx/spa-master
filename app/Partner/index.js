@@ -13,6 +13,7 @@ import {
 } from "react-native";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 // --- Dark Green Color Palette ----------------------------------------------------
 const COLORS = {
@@ -210,6 +211,7 @@ const CategoryCard = memo(function CategoryCard({
 export default function index() {
     const { sw, sh, width, height } = useScale();
     const [selected, setSelected] = useState(null);
+    const insets = useSafeAreaInsets();
 
     const handlePress = useCallback((item) => setSelected(item), []);
 
@@ -405,7 +407,7 @@ export default function index() {
                         {
                             paddingHorizontal: sw(20),
                             paddingTop: sh(40),
-                            paddingBottom: sh(100),
+                            paddingBottom: sh(120),
                         },
                     ]}
                     showsVerticalScrollIndicator={false}
@@ -451,8 +453,9 @@ export default function index() {
                     styles.bottomBar,
                     { 
                         paddingHorizontal: sw(16), 
-                        paddingVertical: sh(12),
-                        paddingBottom: Platform.OS === 'ios' ? sh(20) : sh(12),
+                        paddingTop: sh(12),
+                        paddingBottom: Math.max(insets.bottom + sh(8), 20),
+                        bottom: 0,
                     },
                 ]}
             >
@@ -601,7 +604,6 @@ const styles = StyleSheet.create({
     radioInner: {},
     bottomBar: {
         position: "absolute",
-        bottom: 0,
         left: 0,
         right: 0,
         backgroundColor: COLORS.bg,
