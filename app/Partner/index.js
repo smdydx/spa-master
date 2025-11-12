@@ -405,10 +405,11 @@ export default function index() {
                         {
                             paddingHorizontal: sw(20),
                             paddingTop: sh(40),
-                            paddingBottom: sh(140),
+                            paddingBottom: sh(100),
                         },
                     ]}
                     showsVerticalScrollIndicator={false}
+                    keyboardShouldPersistTaps="handled"
                 >
                     {/* Section Title */}
                     <View
@@ -448,7 +449,11 @@ export default function index() {
             <View
                 style={[
                     styles.bottomBar,
-                    { paddingHorizontal: sw(16), paddingVertical: sh(16) },
+                    { 
+                        paddingHorizontal: sw(16), 
+                        paddingVertical: sh(12),
+                        paddingBottom: Platform.OS === 'ios' ? sh(20) : sh(12),
+                    },
                 ]}
             >
                 <Pressable
@@ -606,7 +611,8 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: -4 },
         shadowOpacity: 0.1,
         shadowRadius: 12,
-        elevation: 10,
+        elevation: 20,
+        zIndex: 1000,
     },
     ctaButton: {
         flexDirection: "row",

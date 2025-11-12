@@ -258,7 +258,11 @@ const styles = StyleSheet.create({
   },
   bottomSectionGradient: {
     ...StyleSheet.absoluteFillObject,
-    opacity: 0,
+    opacity: 1,
+  },
+  leafPatternWelcome: {
+    ...StyleSheet.absoluteFillObject,
+    pointerEvents: 'none',
   },
   splitContainer: {
     flex: 1,
@@ -276,7 +280,7 @@ const styles = StyleSheet.create({
     zIndex: 1,
     width: '100%',
     maxWidth: '100%',
-    backgroundColor: '#1e3a8a',
+    backgroundColor: '#016B3A',
   },
   topSectionBg: {
     ...StyleSheet.absoluteFillObject,
@@ -326,7 +330,7 @@ const styles = StyleSheet.create({
   },
   logoText: {
     fontSize: Math.min(width * 0.06, 24),
-    color: "#1e3a8a",
+    color: "#016B3A",
   },
   brandName: {
     fontSize: Math.min(width * 0.055, 22),
@@ -340,7 +344,7 @@ const styles = StyleSheet.create({
   },
   tagline: {
     fontSize: Math.min(width * 0.025, 10),
-    color: "#93c5fd",
+    color: "#00FF87",
     fontWeight: "700",
     marginBottom: height * 0.015,
     letterSpacing: 0.5,
@@ -389,7 +393,7 @@ const styles = StyleSheet.create({
     width: Math.min(width * 0.113, 44),
     height: Math.min(width * 0.113, 44),
     borderRadius: Math.min(width * 0.031, 12),
-    backgroundColor: '#1e3a8a',
+    backgroundColor: '#016B3A',
     alignItems: 'center',
     justifyContent: 'center',
     marginBottom: Math.max(height * 0.008, 6),
@@ -397,7 +401,7 @@ const styles = StyleSheet.create({
   featureTitle: {
     fontSize: Math.min(width * 0.03, 12),
     fontWeight: '800',
-    color: '#1e3a8a',
+    color: '#016B3A',
     marginBottom: height * 0.004,
     textAlign: 'center',
   },
@@ -418,7 +422,7 @@ const styles = StyleSheet.create({
     paddingVertical: Math.max(height * 0.014, 12),
     borderRadius: Math.min(width * 0.036, 14),
     alignItems: "center",
-    shadowColor: "#1e3a8a",
+    shadowColor: "#016B3A",
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 10,
@@ -435,12 +439,12 @@ const styles = StyleSheet.create({
     paddingVertical: Math.max(height * 0.014, 12),
     borderRadius: Math.min(width * 0.036, 14),
     borderWidth: 1.5,
-    borderColor: "#1e3a8a",
+    borderColor: "#016B3A",
     backgroundColor: "transparent",
     alignItems: "center",
   },
   secondaryBtnText: {
-    color: "#1e3a8a",
+    color: "#016B3A",
     fontSize: Math.min(width * 0.038, 15),
     fontWeight: "800",
     letterSpacing: 0.5,
@@ -455,7 +459,7 @@ const styles = StyleSheet.create({
     gap: 6,
     borderWidth: 1.5,
     borderColor: "#e5e7eb",
-    shadowColor: "#1e3a8a",
+    shadowColor: "#016B3A",
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.1,
     shadowRadius: 4,
@@ -464,7 +468,7 @@ const styles = StyleSheet.create({
   vendorBtnText: {
     fontSize: Math.min(width * 0.036, 14),
     fontWeight: "800",
-    color: "#1e3a8a",
+    color: "#016B3A",
     letterSpacing: 0.5,
   },
   quickAccessSection: {
