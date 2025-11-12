@@ -116,21 +116,21 @@ const CategoryCard = memo(function CategoryCard({ item, selected, onPress, sw })
                     style={[
                         styles.iconContainer, 
                         { 
-                            width: sw(56), 
-                            height: sw(56), 
-                            borderRadius: sw(16),
+                            width: sw(48), 
+                            height: sw(48), 
+                            borderRadius: sw(14),
                             backgroundColor: isSelected ? '#C8E6C9' : '#F1F5F9'
                         }
                     ]}
                 >
-                    <Ionicons name={item.icon} size={sw(28)} color={COLORS.iconColor} />
+                    <Ionicons name={item.icon} size={sw(24)} color={COLORS.iconColor} />
                 </View>
 
                 <View style={styles.textContainer}>
-                    <Text numberOfLines={1} style={[styles.categoryTitle, { fontSize: sw(16) }]}>
+                    <Text numberOfLines={1} style={[styles.categoryTitle, { fontSize: sw(14) }]}>
                         {item.title}
                     </Text>
-                    <Text numberOfLines={2} style={[styles.categorySubtitle, { fontSize: sw(13) }]}>
+                    <Text numberOfLines={2} style={[styles.categorySubtitle, { fontSize: sw(11) }]}>
                         {item.subtitle}
                     </Text>
                 </View>
@@ -201,10 +201,10 @@ export default function index() {
                 </View>
 
                 <View style={[styles.headerContent, { marginTop: sh(20) }]}>
-                    <Text style={[styles.headerTitle, { fontSize: sw(28) }]}>
+                    <Text style={[styles.headerTitle, { fontSize: sw(24) }]}>
                         Join Our Partner Network
                     </Text>
-                    <Text style={[styles.headerSubtitle, { fontSize: sw(14), marginTop: sh(8) }]}>
+                    <Text style={[styles.headerSubtitle, { fontSize: sw(12), marginTop: sh(8) }]}>
                         Grow your business with India's leading wellness platform
                     </Text>
 
@@ -215,22 +215,22 @@ export default function index() {
             {/* Content */}
             <View style={styles.scrollView}>
                 <LinearGradient
-                    colors={['#FFFFFF', '#F8FAFC', '#F1F5F9']}
+                    colors={['#F8FAFC', '#FFFFFF', '#F8FAFC']}
                     start={{ x: 0, y: 0 }}
-                    end={{ x: 0, y: 1 }}
+                    end={{ x: 1, y: 0 }}
                     style={styles.contentGradient}
                 />
                 <ScrollView
                     style={styles.scrollViewInner}
-                    contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(16), paddingTop: sh(20), paddingBottom: sh(140) }]}
+                    contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(20), paddingTop: sh(28), paddingBottom: sh(140) }]}
                     showsVerticalScrollIndicator={false}
                 >
                 {/* Section Title */}
-                <View style={[styles.sectionHeader, { marginBottom: sh(16) }]}>
-                    <Text style={[styles.sectionTitle, { fontSize: sw(18) }]}>
+                <View style={[styles.sectionHeader, { marginBottom: sh(20) }]}>
+                    <Text style={[styles.sectionTitle, { fontSize: sw(15) }]}>
                         Select Your Business Type
                     </Text>
-                    <Text style={[styles.sectionSubtitle, { fontSize: sw(13) }]}>
+                    <Text style={[styles.sectionSubtitle, { fontSize: sw(11) }]}>
                         Choose the category that best describes your services
                     </Text>
                 </View>
@@ -367,7 +367,7 @@ const styles = StyleSheet.create({
     },
     categoryCard: {
         borderRadius: 16,
-        padding: 16,
+        padding: 14,
         backgroundColor: COLORS.cardBg,
         shadowColor: COLORS.shadow,
         shadowOffset: { width: 0, height: 2 },
