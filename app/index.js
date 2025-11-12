@@ -158,7 +158,7 @@ export default function WelcomeScreen() {
             </TouchableOpacity>
 
             <TouchableOpacity
-              onPress={() => router.push('/Partner')}
+              onPress={() => router.push('Partner')}
               activeOpacity={0.9}
             >
               <LinearGradient

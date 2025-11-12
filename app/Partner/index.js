@@ -222,7 +222,7 @@ export default function index() {
                 />
                 <ScrollView
                     style={styles.scrollViewInner}
-                    contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(20), paddingTop: sh(28), paddingBottom: sh(140) }]}
+                    contentContainerStyle={[styles.scrollContent, { paddingHorizontal: sw(20), paddingTop: sh(40), paddingBottom: sh(140) }]}
                     showsVerticalScrollIndicator={false}
                 >
                 {/* Section Title */}
@@ -337,7 +337,7 @@ const styles = StyleSheet.create({
     
     scrollView: {
         flex: 1,
-        marginTop: -20,
+        marginTop: 0,
         borderTopLeftRadius: 24,
         borderTopRightRadius: 24,
         overflow: 'hidden',
