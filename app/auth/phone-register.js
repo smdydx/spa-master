@@ -1,19 +1,18 @@
 
 import React, { useState } from 'react';
-import { View, Text, TouchableOpacity, StyleSheet, Dimensions, TextInput, KeyboardAvoidingView, Platform } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet, Dimensions, TextInput, KeyboardAvoidingView, Platform, ScrollView } from 'react-native';
 import { useRouter } from 'expo-router';
 import { ArrowLeft, Phone, Gift, Lock, Mail, Sparkles } from 'lucide-react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useAuth } from '../../context/AuthContext';
-import { OmbaroTheme } from '../../constants/theme';
 
 const { height, width } = Dimensions.get('window');
 const scale = (size) => (width / 375) * size;
 const verticalScale = (size) => (height / 812) * size;
 
 export default function PhoneRegisterScreen() {
-  const [mode, setMode] = useState('phone'); // 'phone' or 'email'
+  const [mode, setMode] = useState('phone');
   const [mobile, setMobile] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -33,7 +32,6 @@ export default function PhoneRegisterScreen() {
         setError(result.error);
       }
     } else {
-      // Handle email registration
       if (email && password) {
         router.push('/auth/otp-verification');
       } else {
@@ -51,161 +49,163 @@ export default function PhoneRegisterScreen() {
         behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
         keyboardVerticalOffset={0}
       >
-        {/* Blue Gradient Header */}
-        <LinearGradient
-          colors={['#1e40af', '#2563eb', '#3b82f6']}
-          style={styles.header}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
+        <ScrollView 
+          style={styles.scrollView}
+          contentContainerStyle={styles.scrollContent}
+          showsVerticalScrollIndicator={false}
+          bounces={false}
         >
-          <TouchableOpacity
-            onPress={() => router.back()}
-            style={styles.backButton}
-            activeOpacity={0.7}
+          <LinearGradient
+            colors={['#064e3b', '#047857', '#059669']}
+            style={styles.header}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
           >
-            <ArrowLeft size={scale(22)} color="#FFFFFF" strokeWidth={2.5} />
-          </TouchableOpacity>
+            <TouchableOpacity
+              onPress={() => router.back()}
+              style={styles.backButton}
+              activeOpacity={0.7}
+            >
+              <ArrowLeft size={scale(22)} color="#FFFFFF" strokeWidth={2.5} />
+            </TouchableOpacity>
 
-          <View style={styles.brandSection}>
-            <View style={styles.iconContainer}>
-              <Sparkles size={scale(32)} color="#FFFFFF" strokeWidth={2.5} />
-            </View>
-            <Text style={styles.brand}>OMBARO</Text>
-            <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
-            
-            <View style={styles.welcomeBox}>
-              <Text style={styles.welcomeMessage}>
-                Welcome! Join thousands of{'\n'}beauty enthusiasts
-              </Text>
-            </View>
-          </View>
-        </LinearGradient>
-
-        {/* White Form Section */}
-        <View style={styles.formSection}>
-          <View style={styles.formContainer}>
-            <Text style={styles.formTitle}>Get Started</Text>
-            <Text style={styles.formSubtitle}>Enter your details to continue</Text>
-
-            {/* Mode Toggle */}
-            <View style={styles.modeToggle}>
-              <TouchableOpacity
-                style={[styles.modeButton, mode === 'phone' && styles.modeButtonActive]}
-                onPress={() => setMode('phone')}
-                activeOpacity={0.7}
-              >
-                <Phone size={scale(16)} color={mode === 'phone' ? '#FFFFFF' : '#64748b'} />
-                <Text style={[styles.modeText, mode === 'phone' && styles.modeTextActive]}>Phone</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.modeButton, mode === 'email' && styles.modeButtonActive]}
-                onPress={() => setMode('email')}
-                activeOpacity={0.7}
-              >
-                <Mail size={scale(16)} color={mode === 'email' ? '#FFFFFF' : '#64748b'} />
-                <Text style={[styles.modeText, mode === 'email' && styles.modeTextActive]}>Email</Text>
-              </TouchableOpacity>
-            </View>
-
-            {/* Referral Code */}
-            <View style={styles.inputGroup}>
-              <Text style={styles.label}>Referral Code (Optional)</Text>
-              <View style={styles.inputWrapper}>
-                <View style={styles.iconBox}>
-                  <Gift size={scale(18)} color="#3b82f6" />
-                </View>
-                <TextInput
-                  style={styles.input}
-                  placeholder="Enter referral code"
-                  placeholderTextColor="#94a3b8"
-                  value={referral}
-                  onChangeText={(text) => setReferral(text.toUpperCase())}
-                  autoCapitalize="characters"
-                />
+            <View style={styles.brandSection}>
+              <View style={styles.iconContainer}>
+                <Sparkles size={scale(32)} color="#FFFFFF" strokeWidth={2.5} />
               </View>
-              <View style={styles.hintContainer}>
-                <Gift size={scale(11)} color="#3b82f6" />
-                <Text style={styles.hint}>Get 10% off your first booking!</Text>
+              <Text style={styles.brand}>OMBARO</Text>
+              <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
+              
+              <View style={styles.welcomeBox}>
+                <Text style={styles.welcomeMessage}>
+                  Welcome! Join thousands of{'\n'}beauty enthusiasts
+                </Text>
               </View>
             </View>
+          </LinearGradient>
 
-            {/* Conditional Fields based on mode */}
-            {mode === 'phone' ? (
+          <View style={styles.formSection}>
+            <View style={styles.formContainer}>
+              <Text style={styles.formTitle}>Get Started</Text>
+              <Text style={styles.formSubtitle}>Enter your details to continue</Text>
+
+              <View style={styles.modeToggle}>
+                <TouchableOpacity
+                  style={[styles.modeButton, mode === 'phone' && styles.modeButtonActive]}
+                  onPress={() => setMode('phone')}
+                  activeOpacity={0.7}
+                >
+                  <Phone size={scale(16)} color={mode === 'phone' ? '#FFFFFF' : '#64748b'} />
+                  <Text style={[styles.modeText, mode === 'phone' && styles.modeTextActive]}>Phone</Text>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  style={[styles.modeButton, mode === 'email' && styles.modeButtonActive]}
+                  onPress={() => setMode('email')}
+                  activeOpacity={0.7}
+                >
+                  <Mail size={scale(16)} color={mode === 'email' ? '#FFFFFF' : '#64748b'} />
+                  <Text style={[styles.modeText, mode === 'email' && styles.modeTextActive]}>Email</Text>
+                </TouchableOpacity>
+              </View>
+
               <View style={styles.inputGroup}>
-                <Text style={styles.label}>Mobile Number *</Text>
-                <View style={[styles.inputWrapper, error && styles.inputError]}>
+                <Text style={styles.label}>Referral Code (Optional)</Text>
+                <View style={styles.inputWrapper}>
                   <View style={styles.iconBox}>
-                    <Phone size={scale(18)} color="#3b82f6" />
+                    <Gift size={scale(18)} color="#059669" />
                   </View>
                   <TextInput
                     style={styles.input}
-                    placeholder="Enter 10-digit number"
+                    placeholder="Enter referral code"
                     placeholderTextColor="#94a3b8"
-                    keyboardType="phone-pad"
-                    maxLength={10}
-                    value={mobile}
-                    onChangeText={(text) => setMobile(text.replace(/[^0-9]/g, ''))}
+                    value={referral}
+                    onChangeText={(text) => setReferral(text.toUpperCase())}
+                    autoCapitalize="characters"
                   />
                 </View>
-                {error && <Text style={styles.errorText}>{error}</Text>}
+                <View style={styles.hintContainer}>
+                  <Gift size={scale(11)} color="#059669" />
+                  <Text style={styles.hint}>Get 10% off your first booking!</Text>
+                </View>
               </View>
-            ) : (
-              <>
+
+              {mode === 'phone' ? (
                 <View style={styles.inputGroup}>
-                  <Text style={styles.label}>Email Address *</Text>
+                  <Text style={styles.label}>Mobile Number *</Text>
                   <View style={[styles.inputWrapper, error && styles.inputError]}>
                     <View style={styles.iconBox}>
-                      <Mail size={scale(18)} color="#3b82f6" />
+                      <Phone size={scale(18)} color="#059669" />
                     </View>
                     <TextInput
                       style={styles.input}
-                      placeholder="Enter your email"
+                      placeholder="Enter 10-digit number"
                       placeholderTextColor="#94a3b8"
-                      keyboardType="email-address"
-                      autoCapitalize="none"
-                      value={email}
-                      onChangeText={setEmail}
+                      keyboardType="phone-pad"
+                      maxLength={10}
+                      value={mobile}
+                      onChangeText={(text) => setMobile(text.replace(/[^0-9]/g, ''))}
                     />
                   </View>
+                  {error ? <Text style={styles.errorText}>{error}</Text> : null}
                 </View>
-
-                <View style={styles.inputGroup}>
-                  <Text style={styles.label}>Password *</Text>
-                  <View style={[styles.inputWrapper, error && styles.inputError]}>
-                    <View style={styles.iconBox}>
-                      <Lock size={scale(18)} color="#3b82f6" />
+              ) : (
+                <>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Email Address *</Text>
+                    <View style={[styles.inputWrapper, error && styles.inputError]}>
+                      <View style={styles.iconBox}>
+                        <Mail size={scale(18)} color="#059669" />
+                      </View>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Enter your email"
+                        placeholderTextColor="#94a3b8"
+                        keyboardType="email-address"
+                        autoCapitalize="none"
+                        value={email}
+                        onChangeText={setEmail}
+                      />
                     </View>
-                    <TextInput
-                      style={styles.input}
-                      placeholder="Create a password"
-                      placeholderTextColor="#94a3b8"
-                      secureTextEntry
-                      value={password}
-                      onChangeText={setPassword}
-                    />
                   </View>
-                  {error && <Text style={styles.errorText}>{error}</Text>}
-                </View>
-              </>
-            )}
 
-            <TouchableOpacity
-              style={[styles.button, !isValid && styles.buttonDisabled]}
-              onPress={handleSendOTP}
-              disabled={!isValid}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.buttonText}>
-                {mode === 'phone' ? 'SEND OTP' : 'SIGN UP'}
-              </Text>
-            </TouchableOpacity>
+                  <View style={styles.inputGroup}>
+                    <Text style={styles.label}>Password *</Text>
+                    <View style={[styles.inputWrapper, error && styles.inputError]}>
+                      <View style={styles.iconBox}>
+                        <Lock size={scale(18)} color="#059669" />
+                      </View>
+                      <TextInput
+                        style={styles.input}
+                        placeholder="Create a password"
+                        placeholderTextColor="#94a3b8"
+                        secureTextEntry
+                        value={password}
+                        onChangeText={setPassword}
+                      />
+                    </View>
+                    {error ? <Text style={styles.errorText}>{error}</Text> : null}
+                  </View>
+                </>
+              )}
 
-            <View style={styles.privacyNote}>
-              <Lock size={scale(13)} color="#64748b" />
-              <Text style={styles.privacyText}>Your privacy is protected</Text>
+              <TouchableOpacity
+                style={[styles.button, !isValid && styles.buttonDisabled]}
+                onPress={handleSendOTP}
+                disabled={!isValid}
+                activeOpacity={0.8}
+              >
+                <Text style={styles.buttonText}>
+                  {mode === 'phone' ? 'SEND OTP' : 'SIGN UP'}
+                </Text>
+              </TouchableOpacity>
+
+              <View style={styles.privacyNote}>
+                <Lock size={scale(13)} color="#64748b" />
+                <Text style={styles.privacyText}>Your privacy is protected</Text>
+              </View>
             </View>
           </View>
-        </View>
+        </ScrollView>
       </KeyboardAvoidingView>
     </SafeAreaView>
   );
@@ -219,14 +219,21 @@ const styles = StyleSheet.create({
   keyboardView: {
     flex: 1,
   },
+  scrollView: {
+    flex: 1,
+  },
+  scrollContent: {
+    flexGrow: 1,
+    paddingBottom: verticalScale(20),
+  },
   
-  // Header Section
   header: {
     paddingHorizontal: scale(20),
     paddingTop: verticalScale(10),
     paddingBottom: verticalScale(30),
     borderBottomLeftRadius: scale(24),
     borderBottomRightRadius: scale(24),
+    minHeight: verticalScale(280),
   },
   backButton: {
     width: scale(42),
@@ -268,7 +275,7 @@ const styles = StyleSheet.create({
   welcomeBox: {
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
     borderRadius: scale(12),
-    paddingVertical: scale(12),
+    paddingVertical: verticalScale(12),
     paddingHorizontal: scale(20),
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.25)',
@@ -281,12 +288,10 @@ const styles = StyleSheet.create({
     lineHeight: scale(18),
   },
 
-  // Form Section
   formSection: {
-    flex: 1,
     paddingHorizontal: scale(20),
     paddingTop: verticalScale(24),
-    justifyContent: 'center',
+    paddingBottom: verticalScale(20),
   },
   formContainer: {
     width: '100%',
@@ -304,7 +309,6 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  // Mode Toggle
   modeToggle: {
     flexDirection: 'row',
     backgroundColor: '#f1f5f9',
@@ -322,7 +326,7 @@ const styles = StyleSheet.create({
     gap: scale(6),
   },
   modeButtonActive: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#059669',
   },
   modeText: {
     fontSize: scale(13),
@@ -333,7 +337,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
   },
 
-  // Input Fields
   inputGroup: {
     marginBottom: verticalScale(16),
   },
@@ -355,7 +358,7 @@ const styles = StyleSheet.create({
   iconBox: {
     width: scale(50),
     height: '100%',
-    backgroundColor: '#e0e7ff',
+    backgroundColor: '#d1fae5',
     borderTopLeftRadius: scale(10),
     borderBottomLeftRadius: scale(10),
     alignItems: 'center',
@@ -382,7 +385,7 @@ const styles = StyleSheet.create({
   },
   hint: {
     fontSize: scale(11),
-    color: '#3b82f6',
+    color: '#059669',
     fontWeight: '500',
   },
   errorText: {
@@ -393,15 +396,14 @@ const styles = StyleSheet.create({
     fontWeight: '500',
   },
 
-  // Button
   button: {
-    backgroundColor: '#3b82f6',
+    backgroundColor: '#059669',
     borderRadius: scale(12),
     paddingVertical: verticalScale(14),
     alignItems: 'center',
     justifyContent: 'center',
     marginTop: verticalScale(8),
-    shadowColor: '#3b82f6',
+    shadowColor: '#059669',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 8,
@@ -420,7 +422,6 @@ const styles = StyleSheet.create({
     letterSpacing: 0.5,
   },
 
-  // Privacy Note
   privacyNote: {
     flexDirection: 'row',
     alignItems: 'center',
