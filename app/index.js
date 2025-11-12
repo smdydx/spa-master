@@ -2,6 +2,7 @@
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import { Building2, MapPin, Zap, Sparkles } from "lucide-react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { useState } from "react";
 import {
   Dimensions,
@@ -67,11 +68,11 @@ export default function WelcomeScreen() {
       {/* Background with optimized image loading */}
       <View style={styles.backgroundContainer}>
         <LinearGradient
-          colors={["#1e3a8a", "#3b82f6", "#1e40af"]}
+          colors={["#00FF87", "#016B3A", "#013B1F", "#012B17"]}
           style={StyleSheet.absoluteFillObject}
         />
         <LinearGradient
-          colors={["rgba(30, 58, 138, 0.05)", "rgba(59, 130, 246, 0.03)", "rgba(30, 64, 175, 0.05)"]}
+          colors={["rgba(1, 107, 58, 0.05)", "rgba(0, 255, 135, 0.03)", "rgba(1, 59, 31, 0.05)"]}
           style={StyleSheet.absoluteFillObject}
         />
       </View>
@@ -95,7 +96,7 @@ export default function WelcomeScreen() {
             progressiveRenderingEnabled={true}
           />
           <LinearGradient
-            colors={['rgba(30, 58, 138, 0.5)', 'rgba(30, 58, 138, 0.4)', 'rgba(30, 58, 138, 0.55)']}
+            colors={['rgba(1, 107, 58, 0.5)', 'rgba(1, 107, 58, 0.4)', 'rgba(1, 59, 31, 0.55)']}
             style={styles.topSectionOverlay}
           />
           <View style={styles.topContent}>
@@ -110,9 +111,19 @@ export default function WelcomeScreen() {
         {/* Bottom Section (3 parts) */}
         <View style={styles.bottomSection}>
           <LinearGradient
-            colors={['#1e1e1e', '#2a2520', '#1a1a1a']}
+            colors={['#E8F5E9', '#F1F8F1', '#FFFFFF']}
             style={styles.bottomSectionGradient}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 0, y: 1 }}
           />
+          
+          {/* Leaf Pattern Overlay */}
+          <View style={styles.leafPatternWelcome}>
+            <Ionicons name="leaf" size={width * 0.3} color="rgba(1, 107, 58, 0.03)" style={{ position: 'absolute', top: height * 0.05, right: -width * 0.05, transform: [{ rotate: '25deg' }] }} />
+            <Ionicons name="leaf" size={width * 0.2} color="rgba(1, 107, 58, 0.04)" style={{ position: 'absolute', top: height * 0.25, left: -width * 0.03, transform: [{ rotate: '-15deg' }] }} />
+            <Ionicons name="leaf" size={width * 0.25} color="rgba(1, 107, 58, 0.03)" style={{ position: 'absolute', bottom: height * 0.15, right: width * 0.02, transform: [{ rotate: '45deg' }] }} />
+            <Ionicons name="leaf" size={width * 0.18} color="rgba(1, 107, 58, 0.05)" style={{ position: 'absolute', bottom: height * 0.05, left: width * 0.05, transform: [{ rotate: '-30deg' }] }} />
+          </View>
           
           {/* Features Section */}
           <View style={styles.featuresSection}>
@@ -147,7 +158,7 @@ export default function WelcomeScreen() {
               onPress={() => router.push('/auth/phone-register')}
             >
               <LinearGradient
-                colors={["#1e3a8a", "#3b82f6"]}
+                colors={["#016B3A", "#00FF87"]}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 0 }}
                 style={styles.primaryBtn}
