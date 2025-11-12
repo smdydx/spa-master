@@ -1,6 +1,7 @@
+
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
-import { ArrowLeft, Gift, Lock, Mail, Phone, Sparkles, User } from 'lucide-react-native';
+import { ArrowLeft, Gift, Lock, Mail, Phone, Sparkles, User, CheckCircle } from 'lucide-react-native';
 import { useEffect, useRef, useState } from 'react';
 import {
   Dimensions,
@@ -14,25 +15,33 @@ import {
   TextInput,
   TouchableOpacity,
   View,
+  Animated,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { OmbaroTheme } from '../../constants/theme';
 
 const { height, width } = Dimensions.get('window');
+const isTablet = width >= 768;
+const isSmallDevice = width < 375;
 const scale = (size) => (width / 375) * size;
 const verticalScale = (size) => (height / 812) * size;
+const moderateScale = (size, factor = 0.5) => size + (scale(size) - size) * factor;
 
-const onboardingHighlights = [
-  'Secure OTP in seconds',
-  'Curated salons & spas',
-  'Exclusive welcome perks',
-];
-
-const trustMetrics = [
-  { value: '850+', label: 'Partner studios' },
-  { value: '48k', label: 'Happy members' },
-  { value: '4.9/5', label: 'Average rating' },
-];
+const COLORS = {
+  primary: '#016B3A',
+  primaryLight: '#00FF87',
+  primaryDark: '#013B1F',
+  darkestGreen: '#012B17',
+  white: '#FFFFFF',
+  textDark: '#1F2937',
+  textGray: '#6B7280',
+  textLight: '#9CA3AF',
+  border: '#E5E7EB',
+  borderLight: '#F3F4F6',
+  error: '#EF4444',
+  errorLight: '#FEE2E2',
+  success: '#10B981',
+  successLight: '#D1FAE5',
+};
 
 const ContinueWithEmail = ({
   fullName,
@@ -42,150 +51,296 @@ const ContinueWithEmail = ({
   emailError,
   isEmailValid,
   handleEmailContinue,
-}) => (
-  <View style={styles.formContainer}>
-   
-    <View style={styles.inputGroup}>
-      <Text style={styles.label}>Full Name *</Text>
-      <View style={styles.inputWrapper}>
-        <View style={styles.iconBox}>
-          <User size={scale(18)} color="#016B3A" />
+}) => {
+  const [focusedField, setFocusedField] = useState(null);
+  const nameAnimation = useRef(new Animated.Value(0)).current;
+  const emailAnimation = useRef(new Animated.Value(0)).current;
+
+  const handleFocus = (field, animation) => {
+    setFocusedField(field);
+    Animated.spring(animation, {
+      toValue: 1,
+      useNativeDriver: false,
+      tension: 50,
+      friction: 7,
+    }).start();
+  };
+
+  const handleBlur = (animation) => {
+    setFocusedField(null);
+    Animated.spring(animation, {
+      toValue: 0,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  return (
+    <View style={styles.formContainer}>
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Full Name *</Text>
+        <Animated.View
+          style={[
+            styles.inputWrapper,
+            {
+              borderColor: nameAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [COLORS.border, COLORS.primary],
+              }),
+              borderWidth: nameAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1.5, 2],
+              }),
+            },
+          ]}
+        >
+          <View style={[styles.iconBox, focusedField === 'name' && styles.iconBoxActive]}>
+            <User size={moderateScale(18)} color={focusedField === 'name' ? COLORS.primary : COLORS.textGray} />
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter your full name"
+            value={fullName}
+            onChangeText={onChangeFullName}
+            placeholderTextColor={COLORS.textLight}
+            returnKeyType="next"
+            onFocus={() => handleFocus('name', nameAnimation)}
+            onBlur={() => handleBlur(nameAnimation)}
+          />
+          {fullName.length > 1 && (
+            <CheckCircle size={moderateScale(18)} color={COLORS.success} style={styles.checkIcon} />
+          )}
+        </Animated.View>
+      </View>
+
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Email Address *</Text>
+        <Animated.View
+          style={[
+            styles.inputWrapper,
+            emailError && styles.inputError,
+            {
+              borderColor: emailAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [emailError ? COLORS.error : COLORS.border, emailError ? COLORS.error : COLORS.primary],
+              }),
+              borderWidth: emailAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1.5, 2],
+              }),
+            },
+          ]}
+        >
+          <View style={[styles.iconBox, focusedField === 'email' && !emailError && styles.iconBoxActive]}>
+            <Mail size={moderateScale(18)} color={focusedField === 'email' ? COLORS.primary : COLORS.textGray} />
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="name@company.com"
+            keyboardType="email-address"
+            autoCapitalize="none"
+            autoCorrect={false}
+            value={email}
+            onChangeText={onChangeEmail}
+            placeholderTextColor={COLORS.textLight}
+            returnKeyType="done"
+            onFocus={() => handleFocus('email', emailAnimation)}
+            onBlur={() => handleBlur(emailAnimation)}
+          />
+          {isEmailValid && (
+            <CheckCircle size={moderateScale(18)} color={COLORS.success} style={styles.checkIcon} />
+          )}
+        </Animated.View>
+        {emailError ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>⚠ {emailError}</Text>
+          </View>
+        ) : null}
+      </View>
+
+      <TouchableOpacity
+        style={[styles.button, !isEmailValid && styles.buttonDisabled]}
+        onPress={handleEmailContinue}
+        disabled={!isEmailValid}
+        activeOpacity={0.85}
+      >
+        <LinearGradient
+          colors={isEmailValid ? [COLORS.primaryLight, COLORS.primary] : [COLORS.textLight, COLORS.textGray]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.buttonGradient}
+        >
+          <Mail size={moderateScale(18)} color={COLORS.white} style={styles.buttonIcon} />
+          <Text style={styles.buttonText}>Send Magic Link</Text>
+        </LinearGradient>
+      </TouchableOpacity>
+
+      <View style={styles.privacyNote}>
+        <View style={styles.privacyIconBox}>
+          <Lock size={moderateScale(12)} color={COLORS.primary} />
         </View>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter your name"
-          value={fullName}
-          onChangeText={onChangeFullName}
-          placeholderTextColor="#9CA3AF"
-          returnKeyType="next"
-        />
+        <Text style={styles.privacyText}>No spam — unsubscribe anytime</Text>
       </View>
     </View>
-
-    <View style={styles.inputGroup}>
-      <Text style={styles.label}>Email Address *</Text>
-      <View style={[styles.inputWrapper, emailError && styles.inputError]}>
-        <View style={styles.iconBox}>
-          <Mail size={scale(18)} color="#016B3A" />
-        </View>
-        <TextInput
-          style={styles.input}
-          placeholder="name@company.com"
-          keyboardType="email-address"
-          autoCapitalize="none"
-          autoCorrect={false}
-          value={email}
-          onChangeText={onChangeEmail}
-          placeholderTextColor="#9CA3AF"
-          returnKeyType="done"
-        />
-      </View>
-      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
-    </View>
-
-    <TouchableOpacity
-      style={[styles.button, !isEmailValid && styles.buttonDisabled]}
-      onPress={handleEmailContinue}
-      disabled={!isEmailValid}
-      activeOpacity={0.85}
-    >
-      <Text style={styles.buttonText}>Send magic link</Text>
-    </TouchableOpacity>
-
-    <View style={styles.privacyNote}>
-      <Lock size={scale(13)} color={OmbaroTheme.colors.textGray} />
-      <Text style={styles.privacyText}>No spam — unsubscribe anytime.</Text>
-    </View>
-  </View>
-);
+  );
+};
 
 const ContinueWithPhone = ({
   referral,
   setReferral,
-  referralY,
-  setReferralY,
   mobile,
   setMobile,
-  phoneY,
-  setPhoneY,
   error,
   isValid,
   handleSendOTP,
-  scrollToY,
-}) => (
-  <View style={styles.formContainer}>
-    <Text style={styles.formTitle}>Verify with your phone</Text>
-    <Text style={styles.formSubtitle}>We’ll text a one-time password to continue.</Text>
+}) => {
+  const [focusedField, setFocusedField] = useState(null);
+  const referralAnimation = useRef(new Animated.Value(0)).current;
+  const phoneAnimation = useRef(new Animated.Value(0)).current;
 
-    <View style={styles.inputGroup} onLayout={(e) => setReferralY(e.nativeEvent.layout.y)}>
-      <Text style={styles.label}>Referral Code (Optional)</Text>
-      <View style={styles.inputWrapper}>
-        <View style={styles.iconBox}>
-          <Gift size={scale(18)} color="#016B3A" />
+  const handleFocus = (field, animation) => {
+    setFocusedField(field);
+    Animated.spring(animation, {
+      toValue: 1,
+      useNativeDriver: false,
+      tension: 50,
+      friction: 7,
+    }).start();
+  };
+
+  const handleBlur = (animation) => {
+    setFocusedField(null);
+    Animated.spring(animation, {
+      toValue: 0,
+      useNativeDriver: false,
+    }).start();
+  };
+
+  return (
+    <View style={styles.formContainer}>
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Referral Code (Optional)</Text>
+        <Animated.View
+          style={[
+            styles.inputWrapper,
+            {
+              borderColor: referralAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [COLORS.border, COLORS.primary],
+              }),
+              borderWidth: referralAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1.5, 2],
+              }),
+            },
+          ]}
+        >
+          <View style={[styles.iconBox, focusedField === 'referral' && styles.iconBoxActive]}>
+            <Gift size={moderateScale(18)} color={focusedField === 'referral' ? COLORS.primary : COLORS.textGray} />
+          </View>
+          <TextInput
+            style={styles.input}
+            placeholder="Enter referral code"
+            value={referral}
+            onChangeText={(text) => setReferral(text.toUpperCase())}
+            autoCapitalize="characters"
+            placeholderTextColor={COLORS.textLight}
+            onFocus={() => handleFocus('referral', referralAnimation)}
+            onBlur={() => handleBlur(referralAnimation)}
+          />
+          {referral.length > 0 && (
+            <CheckCircle size={moderateScale(18)} color={COLORS.success} style={styles.checkIcon} />
+          )}
+        </Animated.View>
+        <View style={styles.hintContainer}>
+          <Sparkles size={moderateScale(11)} color={COLORS.primary} />
+          <Text style={styles.hint}>Unlock extra rewards on your first booking</Text>
         </View>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter referral code"
-          value={referral}
-          onChangeText={(text) => setReferral(text.toUpperCase())}
-          autoCapitalize="characters"
-          placeholderTextColor="#9CA3AF"
-          onFocus={() => scrollToY(referralY)}
-        />
       </View>
-      <View style={styles.hintContainer}>
-        <Gift size={scale(11)} color="#016B3A" />
-        <Text style={styles.hint}>Unlock extra rewards on your first booking.</Text>
-      </View>
-    </View>
 
-    <View style={styles.inputGroup} onLayout={(e) => setPhoneY(e.nativeEvent.layout.y)}>
-      <Text style={styles.label}>Mobile Number *</Text>
-      <View style={[styles.inputWrapper, error && styles.inputError]}>
-        <View style={styles.iconBox}>
-          <Phone size={scale(18)} color="#016B3A" />
+      <View style={styles.inputGroup}>
+        <Text style={styles.label}>Mobile Number *</Text>
+        <Animated.View
+          style={[
+            styles.inputWrapper,
+            error && styles.inputError,
+            {
+              borderColor: phoneAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [error ? COLORS.error : COLORS.border, error ? COLORS.error : COLORS.primary],
+              }),
+              borderWidth: phoneAnimation.interpolate({
+                inputRange: [0, 1],
+                outputRange: [1.5, 2],
+              }),
+            },
+          ]}
+        >
+          <View style={[styles.iconBox, focusedField === 'phone' && !error && styles.iconBoxActive]}>
+            <Phone size={moderateScale(18)} color={focusedField === 'phone' ? COLORS.primary : COLORS.textGray} />
+          </View>
+          <View style={styles.phoneInputContainer}>
+            <Text style={styles.countryCode}>+91</Text>
+            <TextInput
+              style={[styles.input, styles.phoneInput]}
+              placeholder="Enter 10-digit number"
+              keyboardType="number-pad"
+              maxLength={10}
+              value={mobile}
+              onChangeText={(text) => setMobile(text.replace(/[^0-9]/g, ''))}
+              placeholderTextColor={COLORS.textLight}
+              onFocus={() => handleFocus('phone', phoneAnimation)}
+              onBlur={() => handleBlur(phoneAnimation)}
+            />
+          </View>
+          {mobile.length === 10 && (
+            <CheckCircle size={moderateScale(18)} color={COLORS.success} style={styles.checkIcon} />
+          )}
+        </Animated.View>
+        {error ? (
+          <View style={styles.errorContainer}>
+            <Text style={styles.errorText}>⚠ {error}</Text>
+          </View>
+        ) : null}
+      </View>
+
+      <View style={styles.infoNote}>
+        <View style={styles.infoIconBox}>
+          <Sparkles size={moderateScale(12)} color={COLORS.primary} />
         </View>
-        <TextInput
-          style={styles.input}
-          placeholder="Enter 10-digit number"
-          keyboardType="number-pad"
-          maxLength={10}
-          value={mobile}
-          onChangeText={(text) => setMobile(text.replace(/[^0-9]/g, ''))}
-          placeholderTextColor="#9CA3AF"
-          onFocus={() => scrollToY(phoneY)}
-        />
+        <Text style={styles.infoNoteText}>Works seamlessly with all major Indian carriers</Text>
       </View>
-      {error ? <Text style={styles.errorText}>{error}</Text> : null}
-    </View>
 
-    <View style={styles.infoNote}>
-      <Sparkles size={scale(12)} color="#016B3A" />
-      <Text style={styles.infoNoteText}>Works seamlessly with all major Indian carriers.</Text>
-    </View>
+      <TouchableOpacity
+        style={[styles.button, !isValid && styles.buttonDisabled]}
+        onPress={handleSendOTP}
+        disabled={!isValid}
+        activeOpacity={0.85}
+      >
+        <LinearGradient
+          colors={isValid ? [COLORS.primaryLight, COLORS.primary] : [COLORS.textLight, COLORS.textGray]}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 0 }}
+          style={styles.buttonGradient}
+        >
+          <Phone size={moderateScale(18)} color={COLORS.white} style={styles.buttonIcon} />
+          <Text style={styles.buttonText}>Send OTP</Text>
+        </LinearGradient>
+      </TouchableOpacity>
 
-    <TouchableOpacity
-      style={[styles.button, !isValid && styles.buttonDisabled]}
-      onPress={handleSendOTP}
-      disabled={!isValid}
-      activeOpacity={0.85}
-    >
-      <Text style={styles.buttonText}>Send OTP</Text>
-    </TouchableOpacity>
-
-    <View style={styles.privacyNote}>
-      <Lock size={scale(13)} color={OmbaroTheme.colors.textGray} />
-      <Text style={styles.privacyText}>Your privacy is protected with bank-grade security.</Text>
+      <View style={styles.privacyNote}>
+        <View style={styles.privacyIconBox}>
+          <Lock size={moderateScale(12)} color={COLORS.primary} />
+        </View>
+        <Text style={styles.privacyText}>Your privacy is protected with bank-grade security</Text>
+      </View>
     </View>
-  </View>
-);
+  );
+};
 
 export default function PhoneRegisterScreen() {
   const [mobile, setMobile] = useState('');
   const [referral, setReferral] = useState('');
   const [error, setError] = useState('');
-  const [referralY, setReferralY] = useState(0);
-  const [phoneY, setPhoneY] = useState(0);
   const scrollRef = useRef(null);
   const [kbHeight, setKbHeight] = useState(0);
   const [selectedTab, setSelectedTab] = useState('phone');
@@ -229,12 +384,6 @@ export default function PhoneRegisterScreen() {
     router.push('/auth/otp-verification');
   };
 
-  const scrollToY = (y) => {
-    if (!scrollRef.current) return;
-    const target = Math.max(y - verticalScale(12), 0);
-    scrollRef.current.scrollTo({ y: target, animated: true });
-  };
-
   const tabOptions = [
     { key: 'phone', label: 'Phone', helper: 'Fastest verification', icon: Phone },
     { key: 'email', label: 'Email', helper: 'Prefer your inbox?', icon: Mail },
@@ -242,11 +391,11 @@ export default function PhoneRegisterScreen() {
 
   return (
     <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
-      <StatusBar backgroundColor="#016B3A" barStyle="light-content" />
+      <StatusBar backgroundColor={COLORS.primary} barStyle="light-content" />
       <View style={styles.mainContainer}>
         <View style={styles.navySection}>
           <LinearGradient
-            colors={['#00FF87', '#016B3A', '#013B1F', '#012B17']}
+            colors={[COLORS.primaryLight, COLORS.primary, COLORS.primaryDark, COLORS.darkestGreen]}
             style={StyleSheet.absoluteFillObject}
             start={{ x: 0, y: 0 }}
             end={{ x: 1, y: 1 }}
@@ -259,18 +408,35 @@ export default function PhoneRegisterScreen() {
           </View>
 
           <TouchableOpacity onPress={() => router.back()} style={styles.backButton} activeOpacity={0.7}>
-            <ArrowLeft size={scale(22)} color={OmbaroTheme.colors.white} strokeWidth={2.5} />
+            <ArrowLeft size={moderateScale(22)} color={COLORS.white} strokeWidth={2.5} />
           </TouchableOpacity>
 
           <View style={styles.brandSection}>
             <View style={styles.iconContainer}>
-              <Sparkles size={scale(36)} color={OmbaroTheme.colors.white} strokeWidth={2.5} />
+              <Sparkles size={moderateScale(40)} color={COLORS.white} strokeWidth={2.5} />
             </View>
             <Text style={styles.brand}>OMBARO</Text>
             <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
 
             <View style={styles.welcomeBox}>
               <Text style={styles.welcomeMessage}>Welcome! Join thousands of beauty enthusiasts</Text>
+            </View>
+
+            <View style={styles.trustMetrics}>
+              <View style={styles.metricItem}>
+                <Text style={styles.metricValue}>850+</Text>
+                <Text style={styles.metricLabel}>Partner Studios</Text>
+              </View>
+              <View style={styles.metricDivider} />
+              <View style={styles.metricItem}>
+                <Text style={styles.metricValue}>48k</Text>
+                <Text style={styles.metricLabel}>Happy Members</Text>
+              </View>
+              <View style={styles.metricDivider} />
+              <View style={styles.metricItem}>
+                <Text style={styles.metricValue}>4.9★</Text>
+                <Text style={styles.metricLabel}>Average Rating</Text>
+              </View>
             </View>
           </View>
         </View>
@@ -292,31 +458,25 @@ export default function PhoneRegisterScreen() {
               contentInsetAdjustmentBehavior="automatic"
               automaticallyAdjustKeyboardInsets
               style={{ flex: 1 }}
-              scrollIndicatorInsets={{ bottom: 12 }}
             >
-              
-
               <View style={styles.tabSwitch}>
-                {tabOptions.map((tab, index) => {
+                {tabOptions.map((tab) => {
                   const isActive = selectedTab === tab.key;
                   const Icon = tab.icon;
                   return (
                     <TouchableOpacity
                       key={tab.key}
-                      style={[
-                        styles.tabButton,
-                        index !== 0 && styles.tabButtonSpacing,
-                        isActive && styles.tabButtonActive,
-                      ]}
+                      style={[styles.tabButton, isActive && styles.tabButtonActive]}
                       onPress={() => setSelectedTab(tab.key)}
                       activeOpacity={0.85}
                     >
                       <View style={styles.tabButtonInner}>
                         <View style={[styles.tabIconBadge, isActive && styles.tabIconBadgeActive]}>
-                          <Icon size={scale(18)} color={isActive ? '#016B3A' : '#6B7280'} />
+                          <Icon size={moderateScale(20)} color={isActive ? COLORS.primary : COLORS.textGray} />
                         </View>
-                        <View>
+                        <View style={styles.tabTextContainer}>
                           <Text style={isActive ? styles.tabLabelActive : styles.tabLabel}>{tab.label}</Text>
+                          <Text style={styles.tabHelper}>{tab.helper}</Text>
                         </View>
                       </View>
                     </TouchableOpacity>
@@ -329,16 +489,11 @@ export default function PhoneRegisterScreen() {
                   <ContinueWithPhone
                     referral={referral}
                     setReferral={setReferral}
-                    referralY={referralY}
-                    setReferralY={setReferralY}
                     mobile={mobile}
                     setMobile={setMobile}
-                    phoneY={phoneY}
-                    setPhoneY={setPhoneY}
                     error={error}
                     isValid={isPhoneValid}
                     handleSendOTP={handleSendOTP}
-                    scrollToY={scrollToY}
                   />
                 ) : (
                   <ContinueWithEmail
@@ -358,9 +513,21 @@ export default function PhoneRegisterScreen() {
                 )}
               </View>
 
-             
-
-              
+              <View style={styles.benefitsSection}>
+                <Text style={styles.benefitsTitle}>Why choose OMBARO?</Text>
+                <View style={styles.benefitsList}>
+                  {[
+                    { icon: '⚡', text: 'Instant bookings with verified professionals' },
+                    { icon: '🎁', text: 'Exclusive rewards & special offers' },
+                    { icon: '🔒', text: 'Secure payments with 100% protection' },
+                  ].map((benefit, index) => (
+                    <View key={index} style={styles.benefitItem}>
+                      <Text style={styles.benefitIcon}>{benefit.icon}</Text>
+                      <Text style={styles.benefitText}>{benefit.text}</Text>
+                    </View>
+                  ))}
+                </View>
+              </View>
             </ScrollView>
           </KeyboardAvoidingView>
         </View>
@@ -372,20 +539,20 @@ export default function PhoneRegisterScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: OmbaroTheme.colors.white,
+    backgroundColor: COLORS.white,
   },
   mainContainer: {
     flex: 1,
-    flexDirection: width >= 768 ? 'row' : 'column',
+    flexDirection: isTablet ? 'row' : 'column',
     height,
   },
   navySection: {
-    backgroundColor: OmbaroTheme.colors.primary,
-    width: width >= 768 ? '50%' : '100%',
-    height: width >= 768 ? '100%' : height * 0.44,
-    paddingHorizontal: scale(20),
-    paddingTop: verticalScale(10),
-    paddingBottom: verticalScale(24),
+    backgroundColor: COLORS.primary,
+    width: isTablet ? '45%' : '100%',
+    height: isTablet ? '100%' : height * 0.48,
+    paddingHorizontal: moderateScale(24),
+    paddingTop: verticalScale(12),
+    paddingBottom: verticalScale(28),
     justifyContent: 'space-between',
     position: 'relative',
     overflow: 'hidden',
@@ -400,418 +567,470 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(255, 255, 255, 0.08)',
   },
   circle1: {
-    width: scale(280),
-    height: scale(280),
-    top: -scale(100),
-    right: -scale(80),
+    width: moderateScale(320),
+    height: moderateScale(320),
+    top: -moderateScale(120),
+    right: -moderateScale(100),
   },
   circle2: {
-    width: scale(200),
-    height: scale(200),
-    bottom: -scale(60),
-    left: -scale(50),
+    width: moderateScale(220),
+    height: moderateScale(220),
+    bottom: -moderateScale(80),
+    left: -moderateScale(60),
     backgroundColor: 'rgba(255, 255, 255, 0.05)',
   },
   circle3: {
-    width: scale(150),
-    height: scale(150),
-    top: '40%',
-    left: -scale(40),
+    width: moderateScale(160),
+    height: moderateScale(160),
+    top: '42%',
+    left: -moderateScale(50),
     backgroundColor: 'rgba(255, 255, 255, 0.06)',
   },
   backButton: {
     zIndex: 1,
-    width: scale(42),
-    height: scale(42),
-    borderRadius: scale(12),
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    width: moderateScale(46),
+    height: moderateScale(46),
+    borderRadius: moderateScale(14),
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     alignItems: 'center',
     justifyContent: 'center',
     alignSelf: 'flex-start',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   brandSection: {
     alignItems: 'center',
-    paddingHorizontal: scale(12),
-    paddingBottom: verticalScale(16),
+    paddingHorizontal: moderateScale(16),
+    paddingBottom: verticalScale(20),
     zIndex: 1,
   },
   iconContainer: {
-    width: scale(60),
-    height: scale(60),
-    borderRadius: scale(15),
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    width: moderateScale(72),
+    height: moderateScale(72),
+    borderRadius: moderateScale(18),
+    backgroundColor: 'rgba(255, 255, 255, 0.25)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: verticalScale(10),
-    borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.3)',
+    marginBottom: verticalScale(14),
+    borderWidth: 2,
+    borderColor: 'rgba(255, 255, 255, 0.4)',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   brand: {
-    fontSize: scale(30),
-    fontWeight: OmbaroTheme.fontWeight.bold,
-    color: OmbaroTheme.colors.white,
-    letterSpacing: 2.5,
-    marginBottom: verticalScale(3),
+    fontSize: moderateScale(34),
+    fontWeight: '900',
+    color: COLORS.white,
+    letterSpacing: 3,
+    marginBottom: verticalScale(4),
   },
   tagline: {
-    fontSize: scale(11),
+    fontSize: moderateScale(12),
     color: 'rgba(255, 255, 255, 0.95)',
-    fontWeight: OmbaroTheme.fontWeight.medium,
-    marginBottom: verticalScale(12),
-    letterSpacing: 0.5,
+    fontWeight: '600',
+    marginBottom: verticalScale(16),
+    letterSpacing: 0.8,
   },
   welcomeBox: {
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    borderRadius: scale(14),
-    paddingVertical: scale(12),
-    paddingHorizontal: scale(18),
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderRadius: moderateScale(16),
+    paddingVertical: moderateScale(14),
+    paddingHorizontal: moderateScale(20),
     borderWidth: 1.5,
-    borderColor: 'rgba(255, 255, 255, 0.25)',
-    width: '88%',
-    maxWidth: scale(300),
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+    width: '92%',
+    maxWidth: moderateScale(320),
+    marginBottom: verticalScale(18),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   welcomeMessage: {
-    fontSize: scale(14),
-    fontWeight: OmbaroTheme.fontWeight.semibold,
-    color: OmbaroTheme.colors.white,
+    fontSize: moderateScale(14),
+    fontWeight: '600',
+    color: COLORS.white,
     textAlign: 'center',
-    lineHeight: scale(20),
+    lineHeight: moderateScale(20),
+  },
+  trustMetrics: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    width: '100%',
+    paddingHorizontal: moderateScale(12),
+  },
+  metricItem: {
+    alignItems: 'center',
+    flex: 1,
+  },
+  metricValue: {
+    fontSize: moderateScale(18),
+    fontWeight: '900',
+    color: COLORS.white,
+    marginBottom: verticalScale(2),
+  },
+  metricLabel: {
+    fontSize: moderateScale(10),
+    color: 'rgba(255, 255, 255, 0.85)',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  metricDivider: {
+    width: 1,
+    height: moderateScale(32),
+    backgroundColor: 'rgba(255, 255, 255, 0.3)',
   },
   whiteSection: {
-    backgroundColor: OmbaroTheme.colors.white,
-    width: width >= 768 ? '50%' : '100%',
+    backgroundColor: COLORS.white,
+    width: isTablet ? '55%' : '100%',
     flex: 1,
-    paddingHorizontal: scale(20),
+    paddingHorizontal: moderateScale(20),
     paddingTop: verticalScale(24),
     paddingBottom: verticalScale(16),
-    borderTopLeftRadius: width >= 768 ? 0 : scale(32),
-    borderTopRightRadius: width >= 768 ? 0 : scale(32),
-    marginTop: width >= 768 ? 0 : -scale(20),
-    justifyContent: 'center',
   },
   formScrollContent: {
     flexGrow: 1,
-    paddingBottom: verticalScale(16),
-  },
-  formHeader: {
-    width: '100%',
-    maxWidth: scale(460),
-    alignSelf: 'center',
-    marginBottom: verticalScale(18),
-  },
-  formEyebrow: {
-    fontSize: scale(11),
-    letterSpacing: 1.5,
-    color: '#0F5132',
-    fontWeight: OmbaroTheme.fontWeight.semibold,
-    marginBottom: verticalScale(6),
-  },
-  sectionTitle: {
-    fontSize: scale(24),
-    fontWeight: OmbaroTheme.fontWeight.bold,
-    color: '#111827',
-    marginBottom: verticalScale(6),
-  },
-  sectionSubtitle: {
-    fontSize: scale(13),
-    color: OmbaroTheme.colors.textGray,
-    lineHeight: scale(18),
-    marginBottom: verticalScale(12),
-  },
-  highlightChips: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-  },
-  highlightChip: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F6FFF7',
-    borderRadius: scale(999),
-    paddingVertical: verticalScale(6),
-    paddingHorizontal: scale(12),
-    borderWidth: 1,
-    borderColor: 'rgba(1, 107, 58, 0.15)',
-    marginRight: scale(8),
-    marginBottom: verticalScale(8),
-  },
-  highlightChipText: {
-    fontSize: scale(11),
-    color: '#016B3A',
-    fontWeight: OmbaroTheme.fontWeight.semibold,
-    marginLeft: scale(4),
+    paddingBottom: verticalScale(24),
   },
   tabSwitch: {
     flexDirection: 'row',
-    flexWrap: 'wrap',
-    marginBottom: verticalScale(18),
+    backgroundColor: COLORS.borderLight,
+    borderRadius: moderateScale(16),
+    padding: moderateScale(4),
+    marginBottom: verticalScale(24),
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 1 },
+        shadowOpacity: 0.05,
+        shadowRadius: 2,
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
   },
   tabButton: {
     flex: 1,
-    minWidth: scale(120),
-    borderRadius: scale(16),
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    backgroundColor: '#F9FAFB',
-    paddingVertical: verticalScale(12),
-    paddingHorizontal: scale(12),
-  },
-  tabButtonSpacing: {
-    marginLeft: scale(10),
+    borderRadius: moderateScale(12),
+    paddingVertical: moderateScale(12),
+    paddingHorizontal: moderateScale(8),
+    backgroundColor: 'transparent',
   },
   tabButtonActive: {
-    borderColor: '#016B3A',
-    backgroundColor: 'rgba(1, 107, 58, 0.08)',
+    backgroundColor: COLORS.white,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.1,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 2,
+      },
+    }),
   },
   tabButtonInner: {
     flexDirection: 'row',
     alignItems: 'center',
-  },
-  tabIconBadge: {
-    width: scale(42),
-    height: scale(42),
-    borderRadius: scale(12),
-    backgroundColor: '#FFFFFF',
-    marginRight: scale(10),
-    alignItems: 'center',
     justifyContent: 'center',
   },
+  tabIconBadge: {
+    width: moderateScale(38),
+    height: moderateScale(38),
+    borderRadius: moderateScale(10),
+    backgroundColor: COLORS.borderLight,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: moderateScale(10),
+  },
   tabIconBadgeActive: {
-    backgroundColor: '#E8FFF1',
+    backgroundColor: '#E8F5E9',
+  },
+  tabTextContainer: {
+    flex: 1,
   },
   tabLabel: {
-    fontSize: scale(14),
-    color: '#374151',
-    fontWeight: OmbaroTheme.fontWeight.semibold,
+    fontSize: moderateScale(14),
+    fontWeight: '600',
+    color: COLORS.textGray,
+    marginBottom: verticalScale(2),
   },
   tabLabelActive: {
-    fontSize: scale(14),
-    color: '#016B3A',
-    fontWeight: OmbaroTheme.fontWeight.bold,
+    fontSize: moderateScale(14),
+    fontWeight: '700',
+    color: COLORS.textDark,
+    marginBottom: verticalScale(2),
   },
   tabHelper: {
-    fontSize: scale(11),
-    color: '#6B7280',
-    marginTop: verticalScale(2),
-  },
-  tabHelperActive: {
-    fontSize: scale(11),
-    color: '#065F46',
-    marginTop: verticalScale(2),
+    fontSize: moderateScale(10),
+    color: COLORS.textLight,
+    fontWeight: '500',
   },
   formCard: {
-    width: '100%',
-    alignSelf: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: scale(24),
-    paddingVertical: verticalScale(22),
-    paddingHorizontal: scale(18),
-    shadowColor: '#000000',
- 
+    backgroundColor: COLORS.white,
+    borderRadius: moderateScale(20),
+    padding: moderateScale(20),
+    marginBottom: verticalScale(20),
+    borderWidth: 1.5,
+    borderColor: COLORS.border,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.08,
+        shadowRadius: 12,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
   formContainer: {
     width: '100%',
-    maxWidth: scale(420),
-    alignSelf: 'center',
-  },
-  formTitle: {
-    fontSize: scale(22),
-    fontWeight: OmbaroTheme.fontWeight.bold,
-    color: '#016B3A',
-    marginBottom: verticalScale(4),
-  },
-  formSubtitle: {
-    fontSize: scale(12),
-    color: OmbaroTheme.colors.textGray,
-    marginBottom: verticalScale(18),
-    fontWeight: OmbaroTheme.fontWeight.medium,
   },
   inputGroup: {
-    marginBottom: verticalScale(14),
+    marginBottom: verticalScale(20),
   },
   label: {
-    fontSize: scale(12),
-    fontWeight: OmbaroTheme.fontWeight.semibold,
-    color: OmbaroTheme.colors.textDark,
-    marginBottom: verticalScale(6),
+    fontSize: moderateScale(13),
+    fontWeight: '700',
+    color: COLORS.textDark,
+    marginBottom: verticalScale(8),
+    letterSpacing: 0.3,
   },
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: scale(12),
+    backgroundColor: COLORS.white,
     borderWidth: 1.5,
-    borderColor: '#E0E7FF',
-    paddingRight: scale(12),
-    height: verticalScale(46),
+    borderColor: COLORS.border,
+    borderRadius: moderateScale(14),
+    paddingHorizontal: moderateScale(14),
+    paddingVertical: Platform.OS === 'ios' ? moderateScale(14) : moderateScale(4),
+    minHeight: moderateScale(54),
+  },
+  inputError: {
+    borderColor: COLORS.error,
+    backgroundColor: COLORS.errorLight,
   },
   iconBox: {
-    width: scale(50),
-    height: '100%',
-    backgroundColor: '#F0F4FF',
-    borderTopLeftRadius: scale(10),
-    borderBottomLeftRadius: scale(10),
+    width: moderateScale(36),
+    height: moderateScale(36),
+    borderRadius: moderateScale(10),
+    backgroundColor: COLORS.borderLight,
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: moderateScale(12),
+  },
+  iconBoxActive: {
+    backgroundColor: '#E8F5E9',
   },
   input: {
     flex: 1,
-    marginLeft: scale(12),
-    fontSize: scale(14),
-    fontWeight: OmbaroTheme.fontWeight.medium,
-    color: OmbaroTheme.colors.textDark,
-    backgroundColor: 'transparent',
+    fontSize: moderateScale(15),
+    fontWeight: '600',
+    color: COLORS.textDark,
+    paddingVertical: moderateScale(8),
   },
-  inputError: {
-    borderColor: OmbaroTheme.colors.error,
-    backgroundColor: '#FEF2F2',
+  phoneInputContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  countryCode: {
+    fontSize: moderateScale(15),
+    fontWeight: '700',
+    color: COLORS.textDark,
+    marginRight: moderateScale(8),
+    paddingRight: moderateScale(8),
+    borderRightWidth: 1,
+    borderRightColor: COLORS.border,
+  },
+  phoneInput: {
+    flex: 1,
+    marginLeft: 0,
+  },
+  checkIcon: {
+    marginLeft: moderateScale(8),
+  },
+  errorContainer: {
+    marginTop: verticalScale(8),
+    backgroundColor: COLORS.errorLight,
+    paddingHorizontal: moderateScale(12),
+    paddingVertical: moderateScale(8),
+    borderRadius: moderateScale(8),
+    borderLeftWidth: 3,
+    borderLeftColor: COLORS.error,
+  },
+  errorText: {
+    fontSize: moderateScale(12),
+    color: COLORS.error,
+    fontWeight: '600',
   },
   hintContainer: {
     flexDirection: 'row',
     alignItems: 'center',
-    marginTop: verticalScale(5),
-    marginLeft: scale(4),
+    marginTop: verticalScale(8),
+    paddingHorizontal: moderateScale(4),
   },
   hint: {
-    fontSize: scale(11),
-    color: '#016B3A',
-    fontWeight: OmbaroTheme.fontWeight.medium,
-    marginLeft: scale(4),
-  },
-  errorText: {
-    fontSize: scale(11),
-    color: OmbaroTheme.colors.error,
-    marginTop: verticalScale(5),
-    marginLeft: scale(4),
-    fontWeight: OmbaroTheme.fontWeight.medium,
+    fontSize: moderateScale(11),
+    color: COLORS.textGray,
+    marginLeft: moderateScale(6),
+    fontWeight: '500',
   },
   infoNote: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: verticalScale(8),
-    paddingHorizontal: scale(12),
-    backgroundColor: '#F6FFF7',
-    borderRadius: scale(12),
-    borderWidth: 1,
-    borderColor: 'rgba(1, 107, 58, 0.1)',
-    marginBottom: verticalScale(12),
+    backgroundColor: '#E8F5E9',
+    paddingHorizontal: moderateScale(12),
+    paddingVertical: moderateScale(10),
+    borderRadius: moderateScale(10),
+    marginBottom: verticalScale(20),
+    borderLeftWidth: 3,
+    borderLeftColor: COLORS.primary,
   },
-  infoNoteText: {
-    fontSize: scale(11),
-    color: '#065F46',
-    marginLeft: scale(6),
-    fontWeight: OmbaroTheme.fontWeight.medium,
-  },
-  button: {
-    backgroundColor: '#016B3A',
-    borderRadius: scale(12),
-    paddingVertical: verticalScale(14),
+  infoIconBox: {
+    width: moderateScale(28),
+    height: moderateScale(28),
+    borderRadius: moderateScale(8),
+    backgroundColor: 'rgba(1, 107, 58, 0.1)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: verticalScale(8),
-    shadowColor: OmbaroTheme.colors.primary,
-    shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.3,
-    shadowRadius: 8,
-    elevation: 4,
+    marginRight: moderateScale(10),
+  },
+  infoNoteText: {
+    flex: 1,
+    fontSize: moderateScale(12),
+    color: COLORS.primary,
+    fontWeight: '600',
+    lineHeight: moderateScale(16),
+  },
+  button: {
+    borderRadius: moderateScale(14),
+    overflow: 'hidden',
+    marginBottom: verticalScale(16),
+    ...Platform.select({
+      ios: {
+        shadowColor: COLORS.primary,
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.3,
+        shadowRadius: 8,
+      },
+      android: {
+        elevation: 4,
+      },
+    }),
   },
   buttonDisabled: {
-    backgroundColor: '#D1D5DB',
-    opacity: 0.6,
-    shadowOpacity: 0,
-    elevation: 0,
+    opacity: 0.5,
+    ...Platform.select({
+      ios: {
+        shadowOpacity: 0.1,
+      },
+      android: {
+        elevation: 1,
+      },
+    }),
+  },
+  buttonGradient: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingVertical: moderateScale(16),
+    paddingHorizontal: moderateScale(20),
+  },
+  buttonIcon: {
+    marginRight: moderateScale(10),
   },
   buttonText: {
-    fontSize: scale(14),
-    fontWeight: OmbaroTheme.fontWeight.bold,
-    color: OmbaroTheme.colors.white,
-    textTransform: 'uppercase',
-    letterSpacing: 0.8,
+    fontSize: moderateScale(16),
+    fontWeight: '800',
+    color: COLORS.white,
+    letterSpacing: 0.5,
   },
   privacyNote: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: verticalScale(12),
-    paddingHorizontal: scale(12),
+    paddingVertical: moderateScale(12),
   },
-  privacyText: {
-    fontSize: scale(11),
-    color: OmbaroTheme.colors.textGray,
-    fontWeight: OmbaroTheme.fontWeight.medium,
-    marginLeft: scale(6),
-    textAlign: 'center',
-  },
-  metricsRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: '100%',
-    marginTop: verticalScale(18),
-    marginBottom: verticalScale(10),
-  },
-  metricCard: {
-    flex: 1,
-    backgroundColor: '#F9FAFB',
-    borderRadius: scale(16),
-    paddingVertical: verticalScale(12),
-    paddingHorizontal: scale(10),
-    borderWidth: 1,
-    borderColor: '#E5E7EB',
-    marginHorizontal: scale(4),
-    alignItems: 'center',
-  },
-  metricValue: {
-    fontSize: scale(18),
-    fontWeight: OmbaroTheme.fontWeight.bold,
-    color: '#0F172A',
-    marginBottom: verticalScale(4),
-  },
-  metricLabel: {
-    fontSize: scale(11),
-    color: '#6B7280',
-    textAlign: 'center',
-  },
-  supportCard: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    backgroundColor: '#F1F5F9',
-    borderRadius: scale(18),
-    paddingVertical: verticalScale(14),
-    paddingHorizontal: scale(14),
-    borderWidth: 1,
-    borderColor: '#E2E8F0',
-  },
-  supportIcon: {
-    width: scale(44),
-    height: scale(44),
-    borderRadius: scale(12),
-    backgroundColor: '#E8FFF1',
+  privacyIconBox: {
+    width: moderateScale(24),
+    height: moderateScale(24),
+    borderRadius: moderateScale(6),
+    backgroundColor: '#E8F5E9',
     alignItems: 'center',
     justifyContent: 'center',
-    marginRight: scale(12),
+    marginRight: moderateScale(8),
   },
-  supportTitle: {
-    fontSize: scale(14),
-    fontWeight: OmbaroTheme.fontWeight.semibold,
-    color: '#0F172A',
-    marginBottom: verticalScale(4),
+  privacyText: {
+    fontSize: moderateScale(12),
+    color: COLORS.textGray,
+    fontWeight: '500',
   },
-  supportSubtitle: {
-    fontSize: scale(11),
-    color: '#475569',
-    lineHeight: scale(16),
+  benefitsSection: {
+    backgroundColor: COLORS.borderLight,
+    borderRadius: moderateScale(16),
+    padding: moderateScale(20),
+    marginTop: verticalScale(12),
   },
-  supportBadge: {
-    paddingVertical: verticalScale(6),
-    paddingHorizontal: scale(12),
-    borderRadius: scale(999),
-    backgroundColor: '#FFFFFF',
+  benefitsTitle: {
+    fontSize: moderateScale(16),
+    fontWeight: '800',
+    color: COLORS.textDark,
+    marginBottom: verticalScale(16),
+    textAlign: 'center',
+  },
+  benefitsList: {
+    gap: verticalScale(12),
+  },
+  benefitItem: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: COLORS.white,
+    padding: moderateScale(12),
+    borderRadius: moderateScale(12),
     borderWidth: 1,
-    borderColor: '#E2E8F0',
-    marginLeft: scale(12),
+    borderColor: COLORS.border,
   },
-  supportBadgeText: {
-    fontSize: scale(11),
-    fontWeight: OmbaroTheme.fontWeight.semibold,
-    color: '#016B3A',
+  benefitIcon: {
+    fontSize: moderateScale(20),
+    marginRight: moderateScale(12),
+  },
+  benefitText: {
+    flex: 1,
+    fontSize: moderateScale(13),
+    fontWeight: '600',
+    color: COLORS.textGray,
+    lineHeight: moderateScale(18),
   },
 });
