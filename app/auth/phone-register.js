@@ -18,13 +18,49 @@ export default function PhoneRegisterScreen() {
   const [password, setPassword] = useState('');
   const [referral, setReferral] = useState('');
   const [error, setError] = useState('');
+  const [focusedField, setFocusedField] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const [passwordError, setPasswordError] = useState('');
+  const [mobileError, setMobileError] = useState('');
   
   const router = useRouter();
   const { registerPhone } = useAuth();
 
+  const validateEmail = (text) => {
+    setEmail(text);
+    setEmailError('');
+    if (text.length > 0) {
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(text)) {
+        setEmailError('Please enter a valid email address');
+      }
+    }
+  };
+
+  const validatePassword = (text) => {
+    setPassword(text);
+    setPasswordError('');
+    if (text.length > 0 && text.length < 6) {
+      setPasswordError('Password must be at least 6 characters');
+    }
+  };
+
+  const validateMobile = (text) => {
+    const cleaned = text.replace(/[^0-9]/g, '');
+    setMobile(cleaned);
+    setMobileError('');
+    if (cleaned.length > 0 && cleaned.length < 10) {
+      setMobileError('Mobile number must be 10 digits');
+    }
+  };
+
   const handleSendOTP = () => {
     setError('');
     if (mode === 'phone') {
+      if (mobile.length !== 10) {
+        setMobileError('Mobile number must be 10 digits');
+        return;
+      }
       const result = registerPhone(mobile);
       if (result.success) {
         router.push('/auth/otp-verification');
@@ -32,28 +68,34 @@ export default function PhoneRegisterScreen() {
         setError(result.error);
       }
     } else {
-      if (email && password) {
-        router.push('/auth/otp-verification');
-      } else {
-        setError('Please fill in all required fields');
+      if (!email || emailError) {
+        setEmailError('Please enter a valid email address');
+        return;
       }
+      if (!password || passwordError) {
+        setPasswordError('Password must be at least 6 characters');
+        return;
+      }
+      router.push('/auth/otp-verification');
     }
   };
 
-  const isValid = mode === 'phone' ? mobile.length >= 10 : email.length > 0 && password.length >= 6;
+  const isValid = mode === 'phone' 
+    ? mobile.length === 10 && !mobileError
+    : email.length > 0 && password.length >= 6 && !emailError && !passwordError;
 
   return (
     <SafeAreaView style={styles.container} edges={['top']}>
       <KeyboardAvoidingView 
         style={styles.keyboardView}
-        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-        keyboardVerticalOffset={0}
+        behavior={Platform.OS === 'ios' ? 'padding' : undefined}
       >
         <ScrollView 
           style={styles.scrollView}
           contentContainerStyle={styles.scrollContent}
           showsVerticalScrollIndicator={false}
-          bounces={false}
+          showsHorizontalScrollIndicator={false}
+          bounces={true}
         >
           <LinearGradient
             colors={['#064e3b', '#047857', '#059669']}
@@ -71,7 +113,7 @@ export default function PhoneRegisterScreen() {
 
             <View style={styles.brandSection}>
               <View style={styles.iconContainer}>
-                <Sparkles size={scale(32)} color="#FFFFFF" strokeWidth={2.5} />
+                <Sparkles size={scale(26)} color="#FFFFFF" strokeWidth={2.5} />
               </View>
               <Text style={styles.brand}>OMBARO</Text>
               <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
@@ -116,10 +158,10 @@ export default function PhoneRegisterScreen() {
 
               <View style={styles.inputGroup}>
                 <Text style={styles.label}>Referral Code (Optional)</Text>
-                <View style={styles.inputWrapper}>
-                  <View style={styles.iconBox}>
-                    <Gift size={scale(18)} color="#059669" />
-                  </View>
+                <View style={[
+                  styles.inputWrapper,
+                  focusedField === 'referral' && styles.inputFocused
+                ]}>
                   <TextInput
                     style={styles.input}
                     placeholder="Enter referral code"
@@ -127,6 +169,8 @@ export default function PhoneRegisterScreen() {
                     value={referral}
                     onChangeText={(text) => setReferral(text.toUpperCase())}
                     autoCapitalize="characters"
+                    onFocus={() => setFocusedField('referral')}
+                    onBlur={() => setFocusedField('')}
                   />
                 </View>
                 <View style={styles.hintContainer}>
@@ -138,10 +182,11 @@ export default function PhoneRegisterScreen() {
               {mode === 'phone' ? (
                 <View style={styles.inputGroup}>
                   <Text style={styles.label}>Mobile Number *</Text>
-                  <View style={[styles.inputWrapper, error && styles.inputError]}>
-                    <View style={styles.iconBox}>
-                      <Phone size={scale(18)} color="#059669" />
-                    </View>
+                  <View style={[
+                    styles.inputWrapper,
+                    focusedField === 'mobile' && styles.inputFocused,
+                    mobileError && styles.inputError
+                  ]}>
                     <TextInput
                       style={styles.input}
                       placeholder="Enter 10-digit number"
@@ -149,19 +194,22 @@ export default function PhoneRegisterScreen() {
                       keyboardType="phone-pad"
                       maxLength={10}
                       value={mobile}
-                      onChangeText={(text) => setMobile(text.replace(/[^0-9]/g, ''))}
+                      onChangeText={validateMobile}
+                      onFocus={() => setFocusedField('mobile')}
+                      onBlur={() => setFocusedField('')}
                     />
                   </View>
-                  {error ? <Text style={styles.errorText}>{error}</Text> : null}
+                  {mobileError ? <Text style={styles.errorText}>{mobileError}</Text> : null}
                 </View>
               ) : (
                 <>
                   <View style={styles.inputGroup}>
                     <Text style={styles.label}>Email Address *</Text>
-                    <View style={[styles.inputWrapper, error && styles.inputError]}>
-                      <View style={styles.iconBox}>
-                        <Mail size={scale(18)} color="#059669" />
-                      </View>
+                    <View style={[
+                      styles.inputWrapper,
+                      focusedField === 'email' && styles.inputFocused,
+                      emailError && styles.inputError
+                    ]}>
                       <TextInput
                         style={styles.input}
                         placeholder="Enter your email"
@@ -169,28 +217,33 @@ export default function PhoneRegisterScreen() {
                         keyboardType="email-address"
                         autoCapitalize="none"
                         value={email}
-                        onChangeText={setEmail}
-                        scrollEnabled={false}
+                        onChangeText={validateEmail}
+                        onFocus={() => setFocusedField('email')}
+                        onBlur={() => setFocusedField('')}
                       />
                     </View>
+                    {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
                   </View>
 
                   <View style={styles.inputGroup}>
                     <Text style={styles.label}>Password *</Text>
-                    <View style={[styles.inputWrapper, error && styles.inputError]}>
-                      <View style={styles.iconBox}>
-                        <Lock size={scale(18)} color="#059669" />
-                      </View>
+                    <View style={[
+                      styles.inputWrapper,
+                      focusedField === 'password' && styles.inputFocused,
+                      passwordError && styles.inputError
+                    ]}>
                       <TextInput
                         style={styles.input}
                         placeholder="Create a password"
                         placeholderTextColor="#94a3b8"
                         secureTextEntry
                         value={password}
-                        onChangeText={setPassword}
+                        onChangeText={validatePassword}
+                        onFocus={() => setFocusedField('password')}
+                        onBlur={() => setFocusedField('')}
                       />
                     </View>
-                    {error ? <Text style={styles.errorText}>{error}</Text> : null}
+                    {passwordError ? <Text style={styles.errorText}>{passwordError}</Text> : null}
                   </View>
                 </>
               )}
@@ -231,16 +284,15 @@ const styles = StyleSheet.create({
   },
   scrollContent: {
     flexGrow: 1,
-    paddingBottom: verticalScale(20),
   },
   
   header: {
     paddingHorizontal: scale(20),
-    paddingTop: verticalScale(10),
-    paddingBottom: verticalScale(30),
+    paddingTop: verticalScale(8),
+    paddingBottom: verticalScale(20),
     borderBottomLeftRadius: scale(24),
     borderBottomRightRadius: scale(24),
-    minHeight: verticalScale(280),
+    minHeight: verticalScale(220),
   },
   backButton: {
     width: scale(42),
@@ -256,49 +308,49 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(20),
   },
   iconContainer: {
-    width: scale(60),
-    height: scale(60),
-    borderRadius: scale(15),
+    width: scale(50),
+    height: scale(50),
+    borderRadius: scale(12),
     backgroundColor: 'rgba(255, 255, 255, 0.2)',
     alignItems: 'center',
     justifyContent: 'center',
-    marginBottom: verticalScale(12),
+    marginBottom: verticalScale(10),
     borderWidth: 1.5,
     borderColor: 'rgba(255, 255, 255, 0.3)',
   },
   brand: {
-    fontSize: scale(28),
+    fontSize: scale(24),
     fontWeight: '700',
     color: '#FFFFFF',
     letterSpacing: 2,
-    marginBottom: verticalScale(4),
+    marginBottom: verticalScale(3),
   },
   tagline: {
-    fontSize: scale(12),
+    fontSize: scale(11),
     color: 'rgba(255, 255, 255, 0.9)',
     fontWeight: '500',
-    marginBottom: verticalScale(16),
+    marginBottom: verticalScale(12),
   },
   welcomeBox: {
     backgroundColor: 'rgba(255, 255, 255, 0.15)',
-    borderRadius: scale(12),
-    paddingVertical: verticalScale(12),
-    paddingHorizontal: scale(20),
+    borderRadius: scale(10),
+    paddingVertical: verticalScale(10),
+    paddingHorizontal: scale(16),
     borderWidth: 1,
     borderColor: 'rgba(255, 255, 255, 0.25)',
   },
   welcomeMessage: {
-    fontSize: scale(13),
+    fontSize: scale(12),
     fontWeight: '600',
     color: '#FFFFFF',
     textAlign: 'center',
-    lineHeight: scale(18),
+    lineHeight: scale(16),
   },
 
   formSection: {
     paddingHorizontal: scale(20),
-    paddingTop: verticalScale(24),
-    paddingBottom: verticalScale(20),
+    paddingTop: verticalScale(20),
+    paddingBottom: verticalScale(16),
     position: 'relative',
   },
   formBackgroundEffect: {
@@ -316,32 +368,32 @@ const styles = StyleSheet.create({
     zIndex: 1,
   },
   formTitle: {
-    fontSize: scale(24),
+    fontSize: scale(22),
     fontWeight: '700',
     color: '#1e293b',
-    marginBottom: verticalScale(6),
+    marginBottom: verticalScale(4),
   },
   formSubtitle: {
     fontSize: scale(13),
     color: '#64748b',
-    marginBottom: verticalScale(20),
+    marginBottom: verticalScale(16),
     fontWeight: '500',
   },
 
   modeToggle: {
     flexDirection: 'row',
     backgroundColor: '#f1f5f9',
-    borderRadius: scale(12),
+    borderRadius: scale(10),
     padding: scale(4),
-    marginBottom: verticalScale(20),
+    marginBottom: verticalScale(16),
   },
   modeButton: {
     flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: verticalScale(10),
-    borderRadius: scale(10),
+    paddingVertical: verticalScale(9),
+    borderRadius: scale(8),
     gap: scale(6),
   },
   modeButtonActive: {
@@ -357,7 +409,7 @@ const styles = StyleSheet.create({
   },
 
   inputGroup: {
-    marginBottom: verticalScale(16),
+    marginBottom: verticalScale(14),
   },
   label: {
     fontSize: scale(13),
@@ -366,39 +418,31 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(8),
   },
   inputWrapper: {
-    flexDirection: 'row',
-    alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderRadius: scale(12),
+    borderRadius: scale(10),
     borderWidth: 1,
-    borderColor: '#e2e8f0',
-    height: verticalScale(52),
-    paddingHorizontal: scale(14),
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
-  },
-  iconBox: {
-    width: scale(36),
-    height: scale(36),
-    backgroundColor: '#f0fdf4',
-    borderRadius: scale(8),
-    alignItems: 'center',
+    borderColor: '#d1d5db',
+    height: verticalScale(48),
     justifyContent: 'center',
-    marginRight: scale(10),
+    transition: 'border-color 0.2s ease',
+  },
+  inputFocused: {
+    borderColor: '#059669',
+    borderWidth: 2,
   },
   inputError: {
     borderColor: '#ef4444',
-    borderWidth: 1.5,
+    borderWidth: 2,
+    backgroundColor: '#fef2f2',
   },
   input: {
     flex: 1,
-    fontSize: scale(14),
-    fontWeight: '500',
+    fontSize: scale(15),
+    fontWeight: '400',
     color: '#1e293b',
-    paddingVertical: 0,
+    paddingHorizontal: scale(16),
+    paddingVertical: verticalScale(12),
+    height: '100%',
   },
   hintContainer: {
     flexDirection: 'row',
