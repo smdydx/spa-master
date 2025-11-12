@@ -213,12 +213,12 @@ export default function index() {
             </LinearGradient>
 
             {/* Content */}
-            <View style={styles.scrollView}>
+            <View style={[styles.scrollView, { borderTopLeftRadius: sw(24), borderTopRightRadius: sw(24) }]}>
                 <LinearGradient
                     colors={['#F8FAFC', '#FFFFFF', '#F8FAFC']}
                     start={{ x: 0, y: 0 }}
                     end={{ x: 1, y: 0 }}
-                    style={styles.contentGradient}
+                    style={[styles.contentGradient, { borderTopLeftRadius: sw(24), borderTopRightRadius: sw(24) }]}
                 />
                 <ScrollView
                     style={styles.scrollViewInner}
@@ -338,9 +338,8 @@ const styles = StyleSheet.create({
     scrollView: {
         flex: 1,
         marginTop: 0,
-        borderTopLeftRadius: 24,
-        borderTopRightRadius: 24,
         overflow: 'hidden',
+        backgroundColor: '#FFFFFF',
     },
     contentGradient: {
         ...StyleSheet.absoluteFillObject,
