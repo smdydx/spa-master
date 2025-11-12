@@ -1,0 +1,817 @@
+import { LinearGradient } from 'expo-linear-gradient';
+import { useRouter } from 'expo-router';
+import { ArrowLeft, Gift, Lock, Mail, Phone, Sparkles, User } from 'lucide-react-native';
+import { useEffect, useRef, useState } from 'react';
+import {
+  Dimensions,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
+  ScrollView,
+  StatusBar,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { OmbaroTheme } from '../../constants/theme';
+
+const { height, width } = Dimensions.get('window');
+const scale = (size) => (width / 375) * size;
+const verticalScale = (size) => (height / 812) * size;
+
+const onboardingHighlights = [
+  'Secure OTP in seconds',
+  'Curated salons & spas',
+  'Exclusive welcome perks',
+];
+
+const trustMetrics = [
+  { value: '850+', label: 'Partner studios' },
+  { value: '48k', label: 'Happy members' },
+  { value: '4.9/5', label: 'Average rating' },
+];
+
+const ContinueWithEmail = ({
+  fullName,
+  onChangeFullName,
+  email,
+  onChangeEmail,
+  emailError,
+  isEmailValid,
+  handleEmailContinue,
+}) => (
+  <View style={styles.formContainer}>
+   
+    <View style={styles.inputGroup}>
+      <Text style={styles.label}>Full Name *</Text>
+      <View style={styles.inputWrapper}>
+        <View style={styles.iconBox}>
+          <User size={scale(18)} color="#016B3A" />
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter your name"
+          value={fullName}
+          onChangeText={onChangeFullName}
+          placeholderTextColor="#9CA3AF"
+          returnKeyType="next"
+        />
+      </View>
+    </View>
+
+    <View style={styles.inputGroup}>
+      <Text style={styles.label}>Email Address *</Text>
+      <View style={[styles.inputWrapper, emailError && styles.inputError]}>
+        <View style={styles.iconBox}>
+          <Mail size={scale(18)} color="#016B3A" />
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="name@company.com"
+          keyboardType="email-address"
+          autoCapitalize="none"
+          autoCorrect={false}
+          value={email}
+          onChangeText={onChangeEmail}
+          placeholderTextColor="#9CA3AF"
+          returnKeyType="done"
+        />
+      </View>
+      {emailError ? <Text style={styles.errorText}>{emailError}</Text> : null}
+    </View>
+
+    <TouchableOpacity
+      style={[styles.button, !isEmailValid && styles.buttonDisabled]}
+      onPress={handleEmailContinue}
+      disabled={!isEmailValid}
+      activeOpacity={0.85}
+    >
+      <Text style={styles.buttonText}>Send magic link</Text>
+    </TouchableOpacity>
+
+    <View style={styles.privacyNote}>
+      <Lock size={scale(13)} color={OmbaroTheme.colors.textGray} />
+      <Text style={styles.privacyText}>No spam — unsubscribe anytime.</Text>
+    </View>
+  </View>
+);
+
+const ContinueWithPhone = ({
+  referral,
+  setReferral,
+  referralY,
+  setReferralY,
+  mobile,
+  setMobile,
+  phoneY,
+  setPhoneY,
+  error,
+  isValid,
+  handleSendOTP,
+  scrollToY,
+}) => (
+  <View style={styles.formContainer}>
+    <Text style={styles.formTitle}>Verify with your phone</Text>
+    <Text style={styles.formSubtitle}>We’ll text a one-time password to continue.</Text>
+
+    <View style={styles.inputGroup} onLayout={(e) => setReferralY(e.nativeEvent.layout.y)}>
+      <Text style={styles.label}>Referral Code (Optional)</Text>
+      <View style={styles.inputWrapper}>
+        <View style={styles.iconBox}>
+          <Gift size={scale(18)} color="#016B3A" />
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter referral code"
+          value={referral}
+          onChangeText={(text) => setReferral(text.toUpperCase())}
+          autoCapitalize="characters"
+          placeholderTextColor="#9CA3AF"
+          onFocus={() => scrollToY(referralY)}
+        />
+      </View>
+      <View style={styles.hintContainer}>
+        <Gift size={scale(11)} color="#016B3A" />
+        <Text style={styles.hint}>Unlock extra rewards on your first booking.</Text>
+      </View>
+    </View>
+
+    <View style={styles.inputGroup} onLayout={(e) => setPhoneY(e.nativeEvent.layout.y)}>
+      <Text style={styles.label}>Mobile Number *</Text>
+      <View style={[styles.inputWrapper, error && styles.inputError]}>
+        <View style={styles.iconBox}>
+          <Phone size={scale(18)} color="#016B3A" />
+        </View>
+        <TextInput
+          style={styles.input}
+          placeholder="Enter 10-digit number"
+          keyboardType="number-pad"
+          maxLength={10}
+          value={mobile}
+          onChangeText={(text) => setMobile(text.replace(/[^0-9]/g, ''))}
+          placeholderTextColor="#9CA3AF"
+          onFocus={() => scrollToY(phoneY)}
+        />
+      </View>
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
+    </View>
+
+    <View style={styles.infoNote}>
+      <Sparkles size={scale(12)} color="#016B3A" />
+      <Text style={styles.infoNoteText}>Works seamlessly with all major Indian carriers.</Text>
+    </View>
+
+    <TouchableOpacity
+      style={[styles.button, !isValid && styles.buttonDisabled]}
+      onPress={handleSendOTP}
+      disabled={!isValid}
+      activeOpacity={0.85}
+    >
+      <Text style={styles.buttonText}>Send OTP</Text>
+    </TouchableOpacity>
+
+    <View style={styles.privacyNote}>
+      <Lock size={scale(13)} color={OmbaroTheme.colors.textGray} />
+      <Text style={styles.privacyText}>Your privacy is protected with bank-grade security.</Text>
+    </View>
+  </View>
+);
+
+export default function PhoneRegisterScreen() {
+  const [mobile, setMobile] = useState('');
+  const [referral, setReferral] = useState('');
+  const [error, setError] = useState('');
+  const [referralY, setReferralY] = useState(0);
+  const [phoneY, setPhoneY] = useState(0);
+  const scrollRef = useRef(null);
+  const [kbHeight, setKbHeight] = useState(0);
+  const [selectedTab, setSelectedTab] = useState('phone');
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [emailError, setEmailError] = useState('');
+  const router = useRouter();
+
+  useEffect(() => {
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow';
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide';
+    const onShow = (e) => setKbHeight(e?.endCoordinates?.height || 0);
+    const onHide = () => setKbHeight(0);
+    const subShow = Keyboard.addListener(showEvent, onShow);
+    const subHide = Keyboard.addListener(hideEvent, onHide);
+    return () => {
+      subShow.remove();
+      subHide.remove();
+    };
+  }, []);
+
+  const handleSendOTP = () => {
+    setError('');
+    if (mobile.trim().length === 10) {
+      router.push('/auth/otp-verification');
+    } else {
+      setError('Please enter a valid 10-digit number');
+    }
+  };
+
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const isPhoneValid = mobile.length === 10;
+  const isEmailValid = emailRegex.test(email.trim()) && fullName.trim().length > 1;
+
+  const handleEmailContinue = () => {
+    if (!isEmailValid) {
+      setEmailError('Please enter your name and a valid email address');
+      return;
+    }
+    setEmailError('');
+    router.push('/auth/otp-verification');
+  };
+
+  const scrollToY = (y) => {
+    if (!scrollRef.current) return;
+    const target = Math.max(y - verticalScale(12), 0);
+    scrollRef.current.scrollTo({ y: target, animated: true });
+  };
+
+  const tabOptions = [
+    { key: 'phone', label: 'Phone', helper: 'Fastest verification', icon: Phone },
+    { key: 'email', label: 'Email', helper: 'Prefer your inbox?', icon: Mail },
+  ];
+
+  return (
+    <SafeAreaView style={styles.container} edges={['top', 'bottom']}>
+      <StatusBar backgroundColor="#016B3A" barStyle="light-content" />
+      <View style={styles.mainContainer}>
+        <View style={styles.navySection}>
+          <LinearGradient
+            colors={['#00FF87', '#016B3A', '#013B1F', '#012B17']}
+            style={StyleSheet.absoluteFillObject}
+            start={{ x: 0, y: 0 }}
+            end={{ x: 1, y: 1 }}
+          />
+
+          <View style={styles.decorativeCircles}>
+            <View style={[styles.circle, styles.circle1]} />
+            <View style={[styles.circle, styles.circle2]} />
+            <View style={[styles.circle, styles.circle3]} />
+          </View>
+
+          <TouchableOpacity onPress={() => router.back()} style={styles.backButton} activeOpacity={0.7}>
+            <ArrowLeft size={scale(22)} color={OmbaroTheme.colors.white} strokeWidth={2.5} />
+          </TouchableOpacity>
+
+          <View style={styles.brandSection}>
+            <View style={styles.iconContainer}>
+              <Sparkles size={scale(36)} color={OmbaroTheme.colors.white} strokeWidth={2.5} />
+            </View>
+            <Text style={styles.brand}>OMBARO</Text>
+            <Text style={styles.tagline}>Beauty & Wellness Hub</Text>
+
+            <View style={styles.welcomeBox}>
+              <Text style={styles.welcomeMessage}>Welcome! Join thousands of beauty enthusiasts</Text>
+            </View>
+          </View>
+        </View>
+
+        <View style={styles.whiteSection}>
+          <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 0 : 24}
+          >
+            <ScrollView
+              ref={scrollRef}
+              keyboardShouldPersistTaps="always"
+              contentContainerStyle={[
+                styles.formScrollContent,
+                { paddingBottom: Math.max(verticalScale(24), kbHeight + verticalScale(12)) },
+              ]}
+              showsVerticalScrollIndicator={false}
+              contentInsetAdjustmentBehavior="automatic"
+              automaticallyAdjustKeyboardInsets
+              style={{ flex: 1 }}
+              scrollIndicatorInsets={{ bottom: 12 }}
+            >
+              
+
+              <View style={styles.tabSwitch}>
+                {tabOptions.map((tab, index) => {
+                  const isActive = selectedTab === tab.key;
+                  const Icon = tab.icon;
+                  return (
+                    <TouchableOpacity
+                      key={tab.key}
+                      style={[
+                        styles.tabButton,
+                        index !== 0 && styles.tabButtonSpacing,
+                        isActive && styles.tabButtonActive,
+                      ]}
+                      onPress={() => setSelectedTab(tab.key)}
+                      activeOpacity={0.85}
+                    >
+                      <View style={styles.tabButtonInner}>
+                        <View style={[styles.tabIconBadge, isActive && styles.tabIconBadgeActive]}>
+                          <Icon size={scale(18)} color={isActive ? '#016B3A' : '#6B7280'} />
+                        </View>
+                        <View>
+                          <Text style={isActive ? styles.tabLabelActive : styles.tabLabel}>{tab.label}</Text>
+                        </View>
+                      </View>
+                    </TouchableOpacity>
+                  );
+                })}
+              </View>
+
+              <View style={styles.formCard}>
+                {selectedTab === 'phone' ? (
+                  <ContinueWithPhone
+                    referral={referral}
+                    setReferral={setReferral}
+                    referralY={referralY}
+                    setReferralY={setReferralY}
+                    mobile={mobile}
+                    setMobile={setMobile}
+                    phoneY={phoneY}
+                    setPhoneY={setPhoneY}
+                    error={error}
+                    isValid={isPhoneValid}
+                    handleSendOTP={handleSendOTP}
+                    scrollToY={scrollToY}
+                  />
+                ) : (
+                  <ContinueWithEmail
+                    fullName={fullName}
+                    onChangeFullName={setFullName}
+                    email={email}
+                    onChangeEmail={(value) => {
+                      if (emailError) {
+                        setEmailError('');
+                      }
+                      setEmail(value);
+                    }}
+                    emailError={emailError}
+                    isEmailValid={isEmailValid}
+                    handleEmailContinue={handleEmailContinue}
+                  />
+                )}
+              </View>
+
+             
+
+              
+            </ScrollView>
+          </KeyboardAvoidingView>
+        </View>
+      </View>
+    </SafeAreaView>
+  );
+}
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: OmbaroTheme.colors.white,
+  },
+  mainContainer: {
+    flex: 1,
+    flexDirection: width >= 768 ? 'row' : 'column',
+    height,
+  },
+  navySection: {
+    backgroundColor: OmbaroTheme.colors.primary,
+    width: width >= 768 ? '50%' : '100%',
+    height: width >= 768 ? '100%' : height * 0.44,
+    paddingHorizontal: scale(20),
+    paddingTop: verticalScale(10),
+    paddingBottom: verticalScale(24),
+    justifyContent: 'space-between',
+    position: 'relative',
+    overflow: 'hidden',
+  },
+  decorativeCircles: {
+    ...StyleSheet.absoluteFillObject,
+    zIndex: 0,
+  },
+  circle: {
+    position: 'absolute',
+    borderRadius: 999,
+    backgroundColor: 'rgba(255, 255, 255, 0.08)',
+  },
+  circle1: {
+    width: scale(280),
+    height: scale(280),
+    top: -scale(100),
+    right: -scale(80),
+  },
+  circle2: {
+    width: scale(200),
+    height: scale(200),
+    bottom: -scale(60),
+    left: -scale(50),
+    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+  },
+  circle3: {
+    width: scale(150),
+    height: scale(150),
+    top: '40%',
+    left: -scale(40),
+    backgroundColor: 'rgba(255, 255, 255, 0.06)',
+  },
+  backButton: {
+    zIndex: 1,
+    width: scale(42),
+    height: scale(42),
+    borderRadius: scale(12),
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    alignSelf: 'flex-start',
+  },
+  brandSection: {
+    alignItems: 'center',
+    paddingHorizontal: scale(12),
+    paddingBottom: verticalScale(16),
+    zIndex: 1,
+  },
+  iconContainer: {
+    width: scale(60),
+    height: scale(60),
+    borderRadius: scale(15),
+    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: verticalScale(10),
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.3)',
+  },
+  brand: {
+    fontSize: scale(30),
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: OmbaroTheme.colors.white,
+    letterSpacing: 2.5,
+    marginBottom: verticalScale(3),
+  },
+  tagline: {
+    fontSize: scale(11),
+    color: 'rgba(255, 255, 255, 0.95)',
+    fontWeight: OmbaroTheme.fontWeight.medium,
+    marginBottom: verticalScale(12),
+    letterSpacing: 0.5,
+  },
+  welcomeBox: {
+    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+    borderRadius: scale(14),
+    paddingVertical: scale(12),
+    paddingHorizontal: scale(18),
+    borderWidth: 1.5,
+    borderColor: 'rgba(255, 255, 255, 0.25)',
+    width: '88%',
+    maxWidth: scale(300),
+  },
+  welcomeMessage: {
+    fontSize: scale(14),
+    fontWeight: OmbaroTheme.fontWeight.semibold,
+    color: OmbaroTheme.colors.white,
+    textAlign: 'center',
+    lineHeight: scale(20),
+  },
+  whiteSection: {
+    backgroundColor: OmbaroTheme.colors.white,
+    width: width >= 768 ? '50%' : '100%',
+    flex: 1,
+    paddingHorizontal: scale(20),
+    paddingTop: verticalScale(24),
+    paddingBottom: verticalScale(16),
+    borderTopLeftRadius: width >= 768 ? 0 : scale(32),
+    borderTopRightRadius: width >= 768 ? 0 : scale(32),
+    marginTop: width >= 768 ? 0 : -scale(20),
+    justifyContent: 'center',
+  },
+  formScrollContent: {
+    flexGrow: 1,
+    paddingBottom: verticalScale(16),
+  },
+  formHeader: {
+    width: '100%',
+    maxWidth: scale(460),
+    alignSelf: 'center',
+    marginBottom: verticalScale(18),
+  },
+  formEyebrow: {
+    fontSize: scale(11),
+    letterSpacing: 1.5,
+    color: '#0F5132',
+    fontWeight: OmbaroTheme.fontWeight.semibold,
+    marginBottom: verticalScale(6),
+  },
+  sectionTitle: {
+    fontSize: scale(24),
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: '#111827',
+    marginBottom: verticalScale(6),
+  },
+  sectionSubtitle: {
+    fontSize: scale(13),
+    color: OmbaroTheme.colors.textGray,
+    lineHeight: scale(18),
+    marginBottom: verticalScale(12),
+  },
+  highlightChips: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+  },
+  highlightChip: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F6FFF7',
+    borderRadius: scale(999),
+    paddingVertical: verticalScale(6),
+    paddingHorizontal: scale(12),
+    borderWidth: 1,
+    borderColor: 'rgba(1, 107, 58, 0.15)',
+    marginRight: scale(8),
+    marginBottom: verticalScale(8),
+  },
+  highlightChipText: {
+    fontSize: scale(11),
+    color: '#016B3A',
+    fontWeight: OmbaroTheme.fontWeight.semibold,
+    marginLeft: scale(4),
+  },
+  tabSwitch: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    marginBottom: verticalScale(18),
+  },
+  tabButton: {
+    flex: 1,
+    minWidth: scale(120),
+    borderRadius: scale(16),
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    backgroundColor: '#F9FAFB',
+    paddingVertical: verticalScale(12),
+    paddingHorizontal: scale(12),
+  },
+  tabButtonSpacing: {
+    marginLeft: scale(10),
+  },
+  tabButtonActive: {
+    borderColor: '#016B3A',
+    backgroundColor: 'rgba(1, 107, 58, 0.08)',
+  },
+  tabButtonInner: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  tabIconBadge: {
+    width: scale(42),
+    height: scale(42),
+    borderRadius: scale(12),
+    backgroundColor: '#FFFFFF',
+    marginRight: scale(10),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  tabIconBadgeActive: {
+    backgroundColor: '#E8FFF1',
+  },
+  tabLabel: {
+    fontSize: scale(14),
+    color: '#374151',
+    fontWeight: OmbaroTheme.fontWeight.semibold,
+  },
+  tabLabelActive: {
+    fontSize: scale(14),
+    color: '#016B3A',
+    fontWeight: OmbaroTheme.fontWeight.bold,
+  },
+  tabHelper: {
+    fontSize: scale(11),
+    color: '#6B7280',
+    marginTop: verticalScale(2),
+  },
+  tabHelperActive: {
+    fontSize: scale(11),
+    color: '#065F46',
+    marginTop: verticalScale(2),
+  },
+  formCard: {
+    width: '100%',
+    alignSelf: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: scale(24),
+    paddingVertical: verticalScale(22),
+    paddingHorizontal: scale(18),
+    shadowColor: '#000000',
+ 
+  },
+  formContainer: {
+    width: '100%',
+    maxWidth: scale(420),
+    alignSelf: 'center',
+  },
+  formTitle: {
+    fontSize: scale(22),
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: '#016B3A',
+    marginBottom: verticalScale(4),
+  },
+  formSubtitle: {
+    fontSize: scale(12),
+    color: OmbaroTheme.colors.textGray,
+    marginBottom: verticalScale(18),
+    fontWeight: OmbaroTheme.fontWeight.medium,
+  },
+  inputGroup: {
+    marginBottom: verticalScale(14),
+  },
+  label: {
+    fontSize: scale(12),
+    fontWeight: OmbaroTheme.fontWeight.semibold,
+    color: OmbaroTheme.colors.textDark,
+    marginBottom: verticalScale(6),
+  },
+  inputWrapper: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    borderRadius: scale(12),
+    borderWidth: 1.5,
+    borderColor: '#E0E7FF',
+    paddingRight: scale(12),
+    height: verticalScale(46),
+  },
+  iconBox: {
+    width: scale(50),
+    height: '100%',
+    backgroundColor: '#F0F4FF',
+    borderTopLeftRadius: scale(10),
+    borderBottomLeftRadius: scale(10),
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  input: {
+    flex: 1,
+    marginLeft: scale(12),
+    fontSize: scale(14),
+    fontWeight: OmbaroTheme.fontWeight.medium,
+    color: OmbaroTheme.colors.textDark,
+    backgroundColor: 'transparent',
+  },
+  inputError: {
+    borderColor: OmbaroTheme.colors.error,
+    backgroundColor: '#FEF2F2',
+  },
+  hintContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: verticalScale(5),
+    marginLeft: scale(4),
+  },
+  hint: {
+    fontSize: scale(11),
+    color: '#016B3A',
+    fontWeight: OmbaroTheme.fontWeight.medium,
+    marginLeft: scale(4),
+  },
+  errorText: {
+    fontSize: scale(11),
+    color: OmbaroTheme.colors.error,
+    marginTop: verticalScale(5),
+    marginLeft: scale(4),
+    fontWeight: OmbaroTheme.fontWeight.medium,
+  },
+  infoNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    paddingVertical: verticalScale(8),
+    paddingHorizontal: scale(12),
+    backgroundColor: '#F6FFF7',
+    borderRadius: scale(12),
+    borderWidth: 1,
+    borderColor: 'rgba(1, 107, 58, 0.1)',
+    marginBottom: verticalScale(12),
+  },
+  infoNoteText: {
+    fontSize: scale(11),
+    color: '#065F46',
+    marginLeft: scale(6),
+    fontWeight: OmbaroTheme.fontWeight.medium,
+  },
+  button: {
+    backgroundColor: '#016B3A',
+    borderRadius: scale(12),
+    paddingVertical: verticalScale(14),
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: verticalScale(8),
+    shadowColor: OmbaroTheme.colors.primary,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 8,
+    elevation: 4,
+  },
+  buttonDisabled: {
+    backgroundColor: '#D1D5DB',
+    opacity: 0.6,
+    shadowOpacity: 0,
+    elevation: 0,
+  },
+  buttonText: {
+    fontSize: scale(14),
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: OmbaroTheme.colors.white,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
+  },
+  privacyNote: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: verticalScale(12),
+    paddingHorizontal: scale(12),
+  },
+  privacyText: {
+    fontSize: scale(11),
+    color: OmbaroTheme.colors.textGray,
+    fontWeight: OmbaroTheme.fontWeight.medium,
+    marginLeft: scale(6),
+    textAlign: 'center',
+  },
+  metricsRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    width: '100%',
+    marginTop: verticalScale(18),
+    marginBottom: verticalScale(10),
+  },
+  metricCard: {
+    flex: 1,
+    backgroundColor: '#F9FAFB',
+    borderRadius: scale(16),
+    paddingVertical: verticalScale(12),
+    paddingHorizontal: scale(10),
+    borderWidth: 1,
+    borderColor: '#E5E7EB',
+    marginHorizontal: scale(4),
+    alignItems: 'center',
+  },
+  metricValue: {
+    fontSize: scale(18),
+    fontWeight: OmbaroTheme.fontWeight.bold,
+    color: '#0F172A',
+    marginBottom: verticalScale(4),
+  },
+  metricLabel: {
+    fontSize: scale(11),
+    color: '#6B7280',
+    textAlign: 'center',
+  },
+  supportCard: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#F1F5F9',
+    borderRadius: scale(18),
+    paddingVertical: verticalScale(14),
+    paddingHorizontal: scale(14),
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+  },
+  supportIcon: {
+    width: scale(44),
+    height: scale(44),
+    borderRadius: scale(12),
+    backgroundColor: '#E8FFF1',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginRight: scale(12),
+  },
+  supportTitle: {
+    fontSize: scale(14),
+    fontWeight: OmbaroTheme.fontWeight.semibold,
+    color: '#0F172A',
+    marginBottom: verticalScale(4),
+  },
+  supportSubtitle: {
+    fontSize: scale(11),
+    color: '#475569',
+    lineHeight: scale(16),
+  },
+  supportBadge: {
+    paddingVertical: verticalScale(6),
+    paddingHorizontal: scale(12),
+    borderRadius: scale(999),
+    backgroundColor: '#FFFFFF',
+    borderWidth: 1,
+    borderColor: '#E2E8F0',
+    marginLeft: scale(12),
+  },
+  supportBadgeText: {
+    fontSize: scale(11),
+    fontWeight: OmbaroTheme.fontWeight.semibold,
+    color: '#016B3A',
+  },
+});
