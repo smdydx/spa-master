@@ -85,6 +85,12 @@ export default function PhoneRegisterScreen() {
           </LinearGradient>
 
           <View style={styles.formSection}>
+            <LinearGradient
+              colors={['rgba(5, 150, 105, 0.05)', 'rgba(255, 255, 255, 0)']}
+              start={{ x: 0, y: 0.5 }}
+              end={{ x: 1, y: 0.5 }}
+              style={styles.formBackgroundEffect}
+            />
             <View style={styles.formContainer}>
               <Text style={styles.formTitle}>Get Started</Text>
               <Text style={styles.formSubtitle}>Enter your details to continue</Text>
@@ -164,6 +170,7 @@ export default function PhoneRegisterScreen() {
                         autoCapitalize="none"
                         value={email}
                         onChangeText={setEmail}
+                        scrollEnabled={false}
                       />
                     </View>
                   </View>
@@ -292,9 +299,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(20),
     paddingTop: verticalScale(24),
     paddingBottom: verticalScale(20),
+    position: 'relative',
+  },
+  formBackgroundEffect: {
+    position: 'absolute',
+    left: 0,
+    top: 0,
+    bottom: 0,
+    width: '40%',
+    borderTopRightRadius: scale(80),
+    borderBottomRightRadius: scale(80),
   },
   formContainer: {
     width: '100%',
+    position: 'relative',
+    zIndex: 1,
   },
   formTitle: {
     fontSize: scale(24),
@@ -349,32 +368,37 @@ const styles = StyleSheet.create({
   inputWrapper: {
     flexDirection: 'row',
     alignItems: 'center',
-    backgroundColor: '#f8fafc',
+    backgroundColor: '#FFFFFF',
     borderRadius: scale(12),
-    borderWidth: 1.5,
+    borderWidth: 1,
     borderColor: '#e2e8f0',
-    height: verticalScale(50),
+    height: verticalScale(52),
+    paddingHorizontal: scale(14),
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 1 },
+    shadowOpacity: 0.05,
+    shadowRadius: 2,
+    elevation: 1,
   },
   iconBox: {
-    width: scale(50),
-    height: '100%',
-    backgroundColor: '#d1fae5',
-    borderTopLeftRadius: scale(10),
-    borderBottomLeftRadius: scale(10),
+    width: scale(36),
+    height: scale(36),
+    backgroundColor: '#f0fdf4',
+    borderRadius: scale(8),
     alignItems: 'center',
     justifyContent: 'center',
+    marginRight: scale(10),
   },
   inputError: {
     borderColor: '#ef4444',
-    backgroundColor: '#fef2f2',
+    borderWidth: 1.5,
   },
   input: {
     flex: 1,
-    marginLeft: scale(12),
-    marginRight: scale(12),
     fontSize: scale(14),
     fontWeight: '500',
     color: '#1e293b',
+    paddingVertical: 0,
   },
   hintContainer: {
     flexDirection: 'row',
